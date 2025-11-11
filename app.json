@@ -1,0 +1,56 @@
+{
+  "expo": {
+    "name": "GrabItMobile",
+    "slug": "GrabItMobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icons/logo.png",
+    "scheme": "grabitmobile",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.zigmund.GrabIt",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#FFFFFF",
+        "foregroundImage": "./assets/icons/logo.png"
+      },
+      "package": "com.zigmund.GrabIt",
+      "edgeToEdgeEnabled": true
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/icons/logo.png"
+    },
+    "plugins": [
+      [
+        "expo-router",
+        {
+          "asyncRoutes": false
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/icons/logo.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff",
+          "dark": {
+            "backgroundColor": "#000000"
+          }
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}
