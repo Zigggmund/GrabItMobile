@@ -15,6 +15,10 @@ module.exports = {
           dark: '#16a34a',
         },
       },
+      fontFamily: {
+        inter: ['Inter'],
+        mulish: ['Mulish'],
+      },
     },
   },
   plugins: [],

@@ -1,4 +1,5 @@
-export const baseColors = {
+// РЕАЛЬНЫЕ ЦВЕТА ПРИЛОЖЕНИЯ, ознакомительно
+export const baseColorsReal = {
   orange: {
     dark: '#E57200',
     primary: '#FF8104',
@@ -22,7 +23,7 @@ export const baseColors = {
   },
 };
 
-export const themeColors = {
+export const themeColorsReal = {
   light: {
     grey: {
       primary: '#7D7F88',

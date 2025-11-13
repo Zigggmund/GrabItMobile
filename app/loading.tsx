@@ -1,16 +1,18 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+
+import { CustomText } from '@/components/ui/text/CustomText';
 
 interface LoadingScreenProps {
   onPress: () => void;
+  loading?: boolean;
 }
 
-const LoadingScreen: React.FC<LoadingScreenProps> = ({ onPress }) => {
-
+const LoadingScreen: React.FC<LoadingScreenProps> = ({ onPress, loading }) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={onPress} style={styles.wrapper}>
         <View style={styles.label}>
-          <Text style={styles.text}>Welcome!</Text>
+          <CustomText highlight>Welcome!</CustomText>
         </View>
       </TouchableOpacity>
     </View>
@@ -40,9 +42,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 8,
     // backgroundColor: colors.green.textBlock, // Пример фона для текста
-  },
-  text: {
-    fontSize: 32,
   },
   wrapper: {
     zIndex: 1,
