@@ -1,38 +1,31 @@
 import { baseColors } from './baseColors';
 
 export const componentColors = {
+  // кнопки
   button: {
-    primary: {
-      light: {
-        bg: baseColors.orange.primary,
-        text: baseColors.neutral.whiteBright,
-      },
-      dark: {
-        bg: baseColors.orange.primary,
-        text: baseColors.neutral.whiteBright,
-      },
-    },
     secondary: {
       light: {
         bg: baseColors.neutral.blackPrimary,
-        text: baseColors.neutral.whiteBright,
       },
       dark: {
         bg: baseColors.neutral.greyBlueBright,
-        text: baseColors.neutral.whiteBright,
-      },
-    },
-    tag: {
-      light: {
-        bg: baseColors.grey.bright,
-        text: baseColors.neutral.whitePrimary,
-      },
-      dark: {
-        bg: baseColors.neutral.greyBlueBright,
-        text: baseColors.grey.bright,
       },
     },
   },
+  // теги
+  tag: {
+    default: {
+      light: {
+        bg: baseColors.grey.bright,
+        border: baseColors.neutral.blackPrimary,
+      },
+      dark: {
+        bg: baseColors.neutral.greyBlueBright,
+        border: baseColors.neutral.greyBlueBright,
+      },
+    },
+  },
+  // карточки
   card: {
     rent: {
       light: {
@@ -43,6 +36,7 @@ export const componentColors = {
       },
     },
   },
+  // панельки
   bar: {
     search: {
       light: {
@@ -54,6 +48,17 @@ export const componentColors = {
         bg: baseColors.neutral.greyBluePrimary,
         text: baseColors.grey.primary,
         border: baseColors.neutral.greyBluePrimary,
+      },
+    },
+  },
+  // линии
+  line: {
+    header: {
+      light: {
+        bg: baseColors.orange.dark,
+      },
+      dark: {
+        bg: baseColors.neutral.greyBlueBright,
       },
     },
   },

@@ -1,24 +1,60 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: "class",
   content: [
-    './components/**/*.{js,tsx,ts,jsx}',
-    './components/ui/**/*.{js,tsx,ts,jsx}',
-    './app/**/*.{js,tsx,ts,jsx}',
-    // If you use a `src` directory, add: './src/**/*.{js,tsx,ts,jsx}'
-    // Do the same with `components`, `hooks`, `styles`, or any other top-level directories
+    "./App.{js,jsx,ts,tsx}",
+    "./app/**/*.{js,jsx,ts,tsx}",
+    "./components/**/*.{js,jsx,ts,tsx}",
   ],
+  presets: [require("nativewind/preset")],
   theme: {
     extend: {
-      colors: {
-        brand: {
-          light: '#22c55e',
-          dark: '#16a34a',
+      fontFamily:
+        {
+        // VariableFont не сработает - на мобильных он предоставляет лишь одно значение - default
+          inter: ["InterRegular"],
+          interMedium: ["InterMedium"],
+          interBold: ["InterBold"],
+
+          mulish: ["MulishRegular"],
+          mulishMedium: ["MulishMedium"],
+          mulishBold: ["MulishBold"],
         },
+      fontSize: {
+        '10': '10px',
+        '11': '11px',
+        '12': '12px',
+        '13': '13px',
+        '14': '14px',
+        '15': '15px',
+        '16': '16px',
+        '17': '17px',
+        '18': '18px',
+        '19': '19px',
+        '20': '20px',
+        '24': '24px',
+        '26': '26px',
+        '28': '28px',
+        '30': '30px',
+        '50': '50px',
+        '60': '60px',
       },
-      fontFamily: {
-        inter: ['Inter'],
-        mulish: ['Mulish'],
+      fontWeight: {
+        // для унификации CustomText
+        normal: "400",
+        medium: "500",
+        semibold: "600",
+        bold: "700",
       },
+      // гарантия, что эти классы не исчезнут при оптимизации
+      safelist: [
+        "font-inter",
+        "font-interMedium",
+        "font-interBold",
+        "font-mulish",
+        "font-mulishMedium",
+        "font-mulishBold",
+      ],
     },
   },
   plugins: [],

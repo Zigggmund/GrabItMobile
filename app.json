@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/icons/logo.png",
     "scheme": "grabitmobile",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
@@ -29,6 +29,7 @@
       "favicon": "./assets/icons/logo.png"
     },
     "plugins": [
+      "./plugins/no-dark-mode.js",
       [
         "expo-router",
         {
@@ -51,6 +52,14 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {
+        "asyncRoutes": false
+      },
+      "eas": {
+        "projectId": "53c71e4c-bff9-4143-99eb-12ea949c9bb7"
+      }
     }
   }
 }

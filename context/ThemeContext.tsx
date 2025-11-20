@@ -4,32 +4,15 @@ import { createContext } from 'react';
 import { baseColors } from '@/constants/colors/baseColors';
 import { componentColors } from '@/constants/colors/componentColors';
 import { themeColors } from '@/constants/colors/themeColors';
+import { ColorType, ComponentColorsType } from '@/types/colorType';
 
 export const defaultTheme = 'light';
 export type ThemeType = 'light' | 'dark';
 
-// тип для componentColors, поддерживающий варианты (primary, secondary)
-export type ComponentColors = {
-  [K in keyof typeof componentColors]: {
-    [V in keyof (typeof componentColors)[K]]: {
-      bg: string;
-      text: string;
-      [key: string]: string;
-    };
-  };
-};
-
-// тип цветовой палитры
-export type colorType = {
-  base: typeof baseColors;
-  theme: (typeof themeColors)['light'];
-  components: ComponentColors;
-};
-
 interface ThemeContextProps {
   theme: ThemeType;
   setTheme: (theme: ThemeType) => void;
-  colors: colorType;
+  colors: ColorType;
   isLoading: boolean;
 }
 
@@ -49,7 +32,7 @@ export const ThemeContext = createContext<ThemeContextProps>({
           ]),
         ),
       ]),
-    ) as ComponentColors,
+    ) as ComponentColorsType,
   },
   isLoading: true,
 });

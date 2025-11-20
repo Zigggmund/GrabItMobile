@@ -13,7 +13,7 @@ export const storage = {
 
   set: async (key: string, value: string) => {
     try {
-      await AsyncStorage.setItem(key, value);
+      await AsyncStorage.setItem(key, JSON.stringify(value));
     } catch (e) {
       console.error('Ошибка при записи данных в AsyncStorage:', e);
     }

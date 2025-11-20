@@ -17,7 +17,7 @@ export const baseColors = {
     primary: '#C2C4CC',
     bright: '#F2F2F3',
   },
-  // !!!только для удобства назначения цветов в componentColors.
+  // !!!только для удобства назначения цветов в componentColors и компонентах ui.
   // Не дублируются с другими категориями в baseColors
   neutral: {
     blackDark: '#000000',

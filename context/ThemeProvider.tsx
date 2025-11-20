@@ -1,13 +1,9 @@
 // c ComponentColors
-import { ReactNode, useEffect, useState } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ComponentColorsType } from '@/types/colorType';
 
-import {
-  ComponentColors,
-  defaultTheme,
-  ThemeContext,
-  ThemeType,
-} from '@/context/ThemeContext';
+import { ReactNode, useEffect, useState } from 'react';
+
+import { defaultTheme, ThemeContext, ThemeType } from '@/context/ThemeContext';
 
 import { baseColors } from '@/constants/colors/baseColors';
 import { componentColors } from '@/constants/colors/componentColors';
@@ -27,17 +23,17 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
       setThemeState(saved ?? defaultTheme);
       setIsLoading(false);
     };
-
     loadTheme();
   }, []);
 
   const setTheme = async (newTheme: ThemeType) => {
     setThemeState(newTheme);
-    AsyncStorage.setItem(THEME_KEY, newTheme);
+    await storage.set(THEME_KEY, newTheme);
+    console.log('Тема изменена на:', theme);
   };
 
   // для componentColors
-  const components: ComponentColors = Object.fromEntries(
+  const components: ComponentColorsType = Object.fromEntries(
     Object.entries(componentColors).map(([compKey, variants]) => [
       compKey,
       Object.fromEntries(
@@ -47,7 +43,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
         ]),
       ),
     ]),
-  ) as ComponentColors;
+  ) as ComponentColorsType;
 
   // Итоговая палитра
   const colors = {

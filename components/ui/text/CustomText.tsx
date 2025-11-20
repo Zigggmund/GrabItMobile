@@ -7,15 +7,33 @@ interface CustomTextProps extends TextProps {
 
 export const CustomText = ({
   className = '',
-  highlight,
+  highlight, // true - mulish, false - inter
   children,
   ...props
 }: CustomTextProps) => {
-  const fontClass = highlight ? 'font-mulish' : 'font-inter';
-  const finalClassName = `${fontClass} ${className}`.trim();
+  const family = highlight ? 'mulish' : 'inter';
+  // унификация передачи fontWeight: без привязки к fontFamily (пример - font-bold)
+  const isBold = className.includes('font-bold');
+  const isMedium = className.includes('font-medium');
+
+  const weightClass = isBold
+    ? `font-${family}Bold`
+    : isMedium
+      ? `font-${family}Medium`
+      : `font-${family}`;
+
+  // удаление font-bold / font-medium
+  const clean = className
+    .replace('font-bold', '')
+    .replace('font-medium', '')
+    .trim();
+
+  const final = `${weightClass} ${clean}`.trim();
+
+  console.log(final);
 
   return (
-    <Text {...props} className={finalClassName}>
+    <Text {...props} className={final}>
       {children}
     </Text>
   );
