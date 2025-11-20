@@ -12,48 +12,67 @@ import { icons } from '@/constants/icons';
 interface CustomHeaderProps {
   hasBack?: boolean;
   isUserProfile?: boolean;
+  isSettingsScreen?: boolean;
 }
 
 export default function CustomHeader({
   hasBack = false,
   isUserProfile = false,
+  isSettingsScreen = false,
 }: CustomHeaderProps) {
   const { colors } = useTheme();
   const { user } = useProfile();
+  console.log('hasback', hasBack);
+  console.log('isUserProfile', isUserProfile);
+  console.log('isSettingsScreen', isSettingsScreen);
 
   return (
     <>
       <View
         style={{ backgroundColor: colors.theme.white.bright }}
-        className={'flex-row justify-between px-3 py-1 items-center '}
+        className={'flex-row px-3 py-1 items-center'}
       >
         {/* НАСТРОЙКИ */}
-        {hasBack && isUserProfile && (
+        {(isSettingsScreen || isUserProfile) && (
           <CustomIcon
-            color={colors.theme.grey.dark}
+            className="mr-3"
+            color={
+              isSettingsScreen
+                ? colors.base.orange.primary
+                : colors.theme.grey.dark
+            }
             source={icons.settings}
             size={40}
             onPress={() => router.push('/(tabs)/users/settings')}
           />
         )}
         {/* СТРЕЛКА */}
-        {hasBack && !isUserProfile && (
+        {hasBack && !isUserProfile && !isSettingsScreen && (
           <CustomIcon
-            className={'self-center'}
+            className={'mr-3'}
             color={colors.theme.grey.dark}
             source={icons.arrowBack}
             onPress={() => router.back()}
             size={30}
           />
         )}
-        <CitySelector />
-        {/* ПРОФИЛЬ */}
-        <CustomIcon
-          color={colors.theme.grey.dark}
-          source={icons.profile}
-          size={60}
-          onPress={() => router.push(`/(tabs)/users/${user?.id}`)}
-        />
+        <View
+          style={{ backgroundColor: colors.theme.white.bright }}
+          className={'flex-row flex-1 justify-between items-center'}
+        >
+          <CitySelector />
+          {/* ПРОФИЛЬ */}
+          <CustomIcon
+            color={
+              isUserProfile
+                ? colors.base.orange.primary
+                : colors.theme.grey.dark
+            }
+            source={icons.profile}
+            size={70}
+            onPress={() => router.push(`/(tabs)/users/${user?.id}`)}
+          />
+        </View>
       </View>
       <View
         style={{

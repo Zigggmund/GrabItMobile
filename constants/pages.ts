@@ -16,22 +16,22 @@ export type Page = {
 export const pages: Page[] = [
   {
     title: 'search',
-    link: 'index',
+    link: 'ads/search',
     icon: 'search',
   },
   {
     title: 'myAds',
-    link: 'myAds',
+    link: 'ads/myAds',
     icon: 'myAds',
   },
   {
     title: 'rent',
-    link: 'rent',
+    link: 'ads/rent',
     icon: 'rent',
   },
   {
     title: 'chats',
-    link: 'chats',
+    link: 'chats/myChats',
     icon: 'chat',
   },
 ];

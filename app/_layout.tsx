@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { LogBox } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider } from 'react-redux';
 import { loadAsync } from 'expo-font'; // tailwind
@@ -31,9 +30,6 @@ export default function RootLayout() {
   //   };
   //   clear();
   // }, []);
-
-  // Игнорирование неиспользуемых в проекте импортов, которые подтягиваются другими библиотеками
-  LogBox.ignoreLogs(['SafeAreaView has been deprecated']);
 
   useEffect(() => {
     console.log('Загрузка шрифта...');

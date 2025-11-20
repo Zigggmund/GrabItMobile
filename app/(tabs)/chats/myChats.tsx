@@ -5,8 +5,9 @@ import { CustomText } from '@/components/ui/text/CustomText';
 import { CustomButton } from '@/components/ui/button/CustomButton';
 import { router } from 'expo-router';
 
-export default function RentPage() {
+export default function MyChats() {
   const { colors } = useTheme();
+
   return (
     <ScreenContainer>
       <CustomText
@@ -14,7 +15,7 @@ export default function RentPage() {
         className={'text-50'}
         highlight
       >
-        rent
+        chats
       </CustomText>
 
       <CustomButton
