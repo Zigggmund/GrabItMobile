@@ -14,7 +14,7 @@ export type ComponentColorsType = {
 };
 
 // тип цветовой палитры
-export type ColorType = {
+export interface ColorType {
   base: typeof baseColors;
   theme: (typeof themeColors)['light'];
   components: ComponentColorsType;

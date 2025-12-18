@@ -1,7 +1,12 @@
 import React from 'react';
-import { Image, ImageSourcePropType, Pressable } from 'react-native';
+import {
+  Image,
+  ImageProps,
+  ImageSourcePropType,
+  Pressable,
+} from 'react-native';
 
-interface CustomIconProps {
+interface CustomIconProps extends ImageProps {
   source: ImageSourcePropType;
   size?: number;
   color?: string;
@@ -15,6 +20,7 @@ export const CustomIcon = ({
   color,
   onPress,
   className = '',
+  ...props
 }: CustomIconProps) => {
   const tintStyle = color ? { tintColor: color } : {};
 
@@ -31,12 +37,17 @@ export const CustomIcon = ({
             { resizeMode: 'contain', width: size, height: size },
             tintStyle,
           ]}
+          {...props}
         />
       </Pressable>
     );
   }
 
   return (
-    <Image className={className} source={source} style={[{ resizeMode: 'contain', width: size, height: size }, tintStyle]} />
+    <Image
+      className={className}
+      source={source}
+      style={[{ resizeMode: 'contain', width: size, height: size }, tintStyle]}
+    />
   );
 };

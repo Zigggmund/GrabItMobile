@@ -1,8 +1,12 @@
+// сохранение истории (НЕ РАБОТАЕТ)
+// export const unstable_settings = {
+//   history: 'memory',
+// };
+
 import { useEffect, useState } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider } from 'react-redux';
 import { loadAsync } from 'expo-font'; // tailwind
-import { useRootNavigationState } from 'expo-router';
 
 import { LanguageProvider } from '@/context/LanguageProvider';
 import { ProfileProvider } from '@/context/ProfileProvider';
@@ -20,7 +24,6 @@ export default function RootLayout() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const [dbInitialized, setDbInitialized] = useState(false);
   const [isAppReady, setIsAppReady] = useState(false);
-  const rootNavigationState = useRootNavigationState();
 
   // ДЛЯ РАЗОВОЙ ОЧИСТКИ ПРИ ОШИБОЧНЫХ ДАННЫХ В ХРАНИЛИЩЕ
   // useEffect(() => {
@@ -30,6 +33,14 @@ export default function RootLayout() {
   //   };
   //   clear();
   // }, []);
+
+  // Проверка маршрутов
+  // const rootNavigationState = useRootNavigationState();
+  // useEffect(() => {
+  //   if (rootNavigationState) {
+  //     console.log("Root navigation state:", JSON.stringify(rootNavigationState, null, 2));
+  //   }
+  // }, [rootNavigationState]);
 
   useEffect(() => {
     console.log('Загрузка шрифта...');
@@ -57,13 +68,6 @@ export default function RootLayout() {
     };
     initializeDb();
   }, []);
-
-  // Проверка маршрутов
-  useEffect(() => {
-    if (rootNavigationState) {
-      console.log("Root navigation state:", JSON.stringify(rootNavigationState, null, 2));
-    }
-  }, [rootNavigationState]);
 
   return (
     <SafeAreaProvider>

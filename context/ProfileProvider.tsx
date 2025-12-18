@@ -1,9 +1,9 @@
-import { UserType } from '@/types/userType';
+import { UserType } from '@/types/UserType';
 
 import { FC, ReactNode, useEffect, useState } from 'react';
 
 import { ProfileContext } from './ProfileContext';
-import { mockUser } from '@/constants/mocks/mockUser';
+import { mockCurrentUser } from '@/constants/mocks/mockUser';
 
 interface ProfileContextProviderProps {
   children: ReactNode;
@@ -22,7 +22,7 @@ export const ProfileProvider: FC<ProfileContextProviderProps> = ({
         // setUser(res.data);
 
         // Временно — тестовый юзер
-        setUser(mockUser);
+        setUser(mockCurrentUser);
       } catch (err) {
         console.log('Not authorized or error fetching user', err);
         setUser(null);

@@ -1,34 +1,35 @@
-import { useTheme } from '@/hooks/useTheme';
-
-import ScreenContainer from '@/components/layout/ScreenContainer';
-import { CustomText } from '@/components/ui/text/CustomText';
-import { CustomButton } from '@/components/ui/button/CustomButton';
+import { FlatList, View } from 'react-native';
 import { router } from 'expo-router';
 
+import { useLanguage } from '@/hooks/useLanguage';
+import { useTheme } from '@/hooks/useTheme';
+
+import BigAd from '@/components/items/BigAd';
+import ScreenContainer from '@/components/layout/ScreenContainer';
+import { CustomButton } from '@/components/ui/button/CustomButton';
+import { CustomText } from '@/components/ui/text/CustomText';
+
+import { mockAds } from '@/constants/mocks/mockAds';
+
 export default function MyAdsPage() {
+  const itemWidth = 340; // ширина BigAd
+
   const { colors } = useTheme();
+  const { l } = useLanguage();
 
   return (
     <ScreenContainer>
-      <CustomText
-        style={{ color: colors.theme.blue.dark }}
-        className={'text-50'}
-        highlight
-      >
-        My ads
-      </CustomText>
+      <FlatList
+        data={mockAds}
+        renderItem={({ item }) => <BigAd width={itemWidth} ad={item} />}
+        ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+      />
 
       <CustomButton
-        onPress={() => router.push('/(auth)/login')}
-        text={'login'}
-      />
-      <CustomButton
-        onPress={() => router.push('/(tabs)/ads/booking/123')}
-        text={'booking-123'}
-      />
-      <CustomButton
-        onPress={() => router.push('/(tabs)/users/1')}
-        text={'settings'}
+        text={l.btnNewAd}
+        onPress={() => router.push('/(tabs)/ads/createAd')}
+        textClassName="text-26"
+        className={'bottom-4 absolute'}
       />
     </ScreenContainer>
   );

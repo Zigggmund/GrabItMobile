@@ -1,4 +1,4 @@
-import { Image, ImageSourcePropType, TouchableOpacity } from 'react-native';
+import { Image, ImageSourcePropType, TouchableOpacity, TouchableOpacityProps } from 'react-native';
 
 import { useTheme } from '@/hooks/useTheme';
 
@@ -6,7 +6,7 @@ import { CustomText } from '@/components/ui/text/CustomText';
 
 type buttonType = 'primary' | 'secondary' | 'red' | 'green';
 
-interface CustomButtonProps {
+interface CustomButtonProps extends TouchableOpacityProps {
   type?: buttonType;
   onPress?: () => void;
   disabled?: boolean;
@@ -15,6 +15,7 @@ interface CustomButtonProps {
   text?: string;
   iconSource?: ImageSourcePropType;
   iconSize?: number;
+  isSmall?: boolean;
 }
 
 export const CustomButton = ({
@@ -26,6 +27,8 @@ export const CustomButton = ({
   iconSource,
   iconSize = 20,
   type = 'primary',
+  isSmall = false,
+  ...props
 }: CustomButtonProps) => {
   const { colors } = useTheme();
 
@@ -36,20 +39,22 @@ export const CustomButton = ({
     green: { bg: colors.base.orange.bright },
   } as const;
   const colorRef = buttonColorMap[type];
-  const borderClass = type == 'primary' ? 'border-2' : '';
+  const borderWidth = type == 'primary' ? (isSmall ? 1 : 2) : 0;
+  const sizeClass = isSmall ? 'px-4 py-2 gap-4' : 'px-8 py-3 gap-6 min-w-40';
 
   return (
     <TouchableOpacity
       activeOpacity={disabled ? 0.6 : 1}
       onPress={!disabled ? onPress : undefined}
       disabled={disabled}
-      style={{ backgroundColor: colorRef.bg }}
-      className={`${borderClass} rounded-2xl items-center justify-center gap-2 px-4 py-3 ${className}`}
+      style={{ backgroundColor: colorRef.bg, borderWidth: borderWidth }}
+      className={`rounded-2xl items-center justify-center flex-row ${sizeClass} ${className}`}
+      {...props}
     >
       <CustomText
         highlight
-        style={{ color: colors.base.neutral.whiteBright}}
-        className={`font-bold ${textClassName}`.trim()}
+        style={{ color: colors.base.neutral.whiteBright }}
+        className={`font-medium ${textClassName}`.trim()}
       >
         {text}
       </CustomText>

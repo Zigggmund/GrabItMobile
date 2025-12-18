@@ -1,11 +1,13 @@
 import { Text, TextProps } from 'react-native';
 
 interface CustomTextProps extends TextProps {
+  numberOfLines?: number;
   highlight?: boolean;
   className?: string; // для добавления других стилей Tailwind
 }
 
 export const CustomText = ({
+  numberOfLines = 0,
   className = '',
   highlight, // true - mulish, false - inter
   children,
@@ -30,10 +32,13 @@ export const CustomText = ({
 
   const final = `${weightClass} ${clean}`.trim();
 
-  console.log(final);
-
   return (
-    <Text {...props} className={final}>
+    <Text
+      {...props}
+      className={final}
+      numberOfLines={numberOfLines > 0 ? numberOfLines : undefined}
+      ellipsizeMode={numberOfLines > 0 ? 'tail' : undefined}
+    >
       {children}
     </Text>
   );

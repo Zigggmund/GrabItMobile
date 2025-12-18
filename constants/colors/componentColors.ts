@@ -18,10 +18,12 @@ export const componentColors = {
       light: {
         bg: baseColors.grey.bright,
         border: baseColors.neutral.blackPrimary,
+        text: baseColors.neutral.greyDark,
       },
       dark: {
         bg: baseColors.neutral.greyBlueBright,
         border: baseColors.neutral.greyBlueBright,
+        text: baseColors.neutral.whitePrimary,
       },
     },
   },
@@ -53,7 +55,7 @@ export const componentColors = {
   },
   // линии
   line: {
-    header: {
+    headerFooter: {
       light: {
         bg: baseColors.orange.dark,
       },

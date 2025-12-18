@@ -13,7 +13,6 @@ interface LoadingScreenProps {
   loading?: boolean;
 }
 
-// STATUSBAR поменять нельзя - он может быть лишь один для приложения
 const LoadingScreen: React.FC<LoadingScreenProps> = ({ onPress, loading }) => {
   const { l, language } = useLanguage();
   const { colors, theme } = useTheme();
@@ -24,6 +23,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onPress, loading }) => {
     <SafeAreaView
       style={{ flex: 1, backgroundColor: colors.theme.white.bright }}
     >
+
       <LinearGradient
         colors={
           theme === 'light'
@@ -63,6 +63,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onPress, loading }) => {
             textClassName={'text-28'}
             text={l.btnStart}
             onPress={onPress}
+            className={'w-full'}
           />
         ) : (
           <ActivityIndicator />

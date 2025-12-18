@@ -3,11 +3,11 @@ import { createContext } from 'react';
 import { translations } from '@/constants/translations';
 
 export const defaultLang = 'ru' as const;
-export type Language = keyof typeof translations;
+export type LanguageType = keyof typeof translations;
 
 interface LanguageContextProps {
-  language: Language;
-  setLanguage: (lang: Language) => Promise<void>;
+  language: LanguageType;
+  setLanguage: (lang: LanguageType) => Promise<void>;
   l: Record<string, string>;
   isLoading: boolean;
 }

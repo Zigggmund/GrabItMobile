@@ -1,5 +1,5 @@
 // c ComponentColors
-import { ComponentColorsType } from '@/types/colorType';
+import { ComponentColorsType } from '@/types/ColorType';
 
 import { ReactNode, useEffect, useState } from 'react';
 

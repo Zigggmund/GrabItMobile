@@ -1,4 +1,4 @@
-import { UserType } from '@/types/userType';
+import { UserType } from '@/types/UserType';
 
 import { createContext } from 'react';
 

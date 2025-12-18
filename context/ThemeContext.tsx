@@ -4,7 +4,7 @@ import { createContext } from 'react';
 import { baseColors } from '@/constants/colors/baseColors';
 import { componentColors } from '@/constants/colors/componentColors';
 import { themeColors } from '@/constants/colors/themeColors';
-import { ColorType, ComponentColorsType } from '@/types/colorType';
+import { ColorType, ComponentColorsType } from '@/types/ColorType';
 
 export const defaultTheme = 'light';
 export type ThemeType = 'light' | 'dark';

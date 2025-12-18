@@ -22,9 +22,14 @@ export default function CustomHeader({
 }: CustomHeaderProps) {
   const { colors } = useTheme();
   const { user } = useProfile();
-  console.log('hasback', hasBack);
-  console.log('isUserProfile', isUserProfile);
-  console.log('isSettingsScreen', isSettingsScreen);
+  console.log(
+    'hasback:',
+    hasBack,
+    'isUserProfile:',
+    isUserProfile,
+    'isSettingsScreen:',
+    isSettingsScreen,
+  );
 
   return (
     <>
@@ -52,7 +57,10 @@ export default function CustomHeader({
             className={'mr-3'}
             color={colors.theme.grey.dark}
             source={icons.arrowBack}
-            onPress={() => router.back()}
+            onPress={() => {
+              if (router.canGoBack()) router.back();
+              else router.navigate('/(tabs)/ads/search');
+            }}
             size={30}
           />
         )}
@@ -76,7 +84,7 @@ export default function CustomHeader({
       </View>
       <View
         style={{
-          backgroundColor: colors.components.line.header.bg,
+          backgroundColor: colors.components.line.headerFooter.bg,
         }}
         className={'h-0.5 w-full'}
       />

@@ -4,7 +4,7 @@ import { translations } from '@/constants/translations';
 
 import { storage } from '@/services/storage/asyncStorageService';
 
-import { defaultLang, Language, LanguageContext } from './LanguageContext';
+import { defaultLang, LanguageType, LanguageContext } from './LanguageContext';
 import { useProfile } from '@/hooks/useProfile';
 
 // РАБОТА С БД
@@ -16,7 +16,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   // РАБОТА С БД
   // updateUserLanguage для сохранения на сервере
   // const { user, updateUserLanguage } = useProfile() ?? {};
-  const [language, setLanguageState] = useState<Language>(defaultLang);
+  const [language, setLanguageState] = useState<LanguageType>(defaultLang);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(
@@ -35,7 +35,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
             typeof savedLocal === 'string' &&
             savedLocal in translations
           ) {
-            setLanguageState(savedLocal as Language);
+            setLanguageState(savedLocal as LanguageType);
           } else {
             setLanguageState(defaultLang);
           }
@@ -54,7 +54,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     [],
   );
 
-  const setLanguage = async (lang: Language) => {
+  const setLanguage = async (lang: LanguageType) => {
     if (!(lang in translations)) return;
 
     try {

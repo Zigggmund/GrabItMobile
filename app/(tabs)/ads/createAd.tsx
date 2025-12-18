@@ -1,13 +1,11 @@
-import { router, useLocalSearchParams } from 'expo-router';
-
 import { useTheme } from '@/hooks/useTheme';
 
 import ScreenContainer from '@/components/layout/ScreenContainer';
 import { CustomText } from '@/components/ui/text/CustomText';
 import { CustomButton } from '@/components/ui/button/CustomButton';
+import { router } from 'expo-router';
 
-export default function Booking() {
-  const { id } = useLocalSearchParams();
+export default function CreateAd() {
   const { colors } = useTheme();
 
   return (
@@ -17,7 +15,7 @@ export default function Booking() {
         className={'text-50'}
         highlight
       >
-        Ad-{id} booking
+        createAd
       </CustomText>
 
       <CustomButton

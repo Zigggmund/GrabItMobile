@@ -43,7 +43,7 @@ export default function TabsLayout() {
 
   return (
     // SafeAreaView для предотвращения наложения системных панелей на footer/header
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.theme.white.bright }}>
       {!isAuthFlow && (
         <CustomHeader
           isSettingsScreen={isSettingsScreen}
@@ -51,7 +51,6 @@ export default function TabsLayout() {
           isUserProfile={isUserProfile}
         />
       )}
-
       <Tabs
         screenOptions={{
           headerShown: false,
@@ -62,6 +61,8 @@ export default function TabsLayout() {
             height: 75,
             paddingBottom: 5,
             backgroundColor: colors.theme.white.bright,
+            borderTopWidth: 1,
+            borderTopColor: colors.components.line.headerFooter.bg,
           },
           tabBarLabelStyle: {
             paddingTop: 8,
@@ -88,9 +89,13 @@ export default function TabsLayout() {
         <Tabs.Screen name={'users/[id]'} options={{ href: null }} />
         <Tabs.Screen name={'chats/[id]'} options={{ href: null }} />
         <Tabs.Screen name={'ads/[id]'} options={{ href: null }} />
+        <Tabs.Screen name={'ads/createAd'} options={{ href: null }} />
         <Tabs.Screen name={'ads/booking/[id]'} options={{ href: null }} />
         <Tabs.Screen name={'ads/reviews/[id]'} options={{ href: null }} />
       </Tabs>
+
+
+      {/*<Stack screenOptions={{ headerShown: false }} />*/}
     </SafeAreaView>
   );
 }

@@ -12,16 +12,49 @@ export const translations = {
     welcome: 'Добро пожаловать!',
     slogan: 'Арендуйте вещи и услуги быстро и легко!',
 
+    // логин/регистрация
+    login: 'Логин',
+    email: 'Почта',
+    password: 'Пароль',
+    confirmPassword: 'Подтвердите пароль',
+    noAccountYet: 'Еще нет аккаунта?',
+    alreadyHaveAccount: 'Уже есть аккаунт?',
+    enterPassword: 'Введите пароль',
+    enterLogin: 'Введите логин',
+    enterEmail: 'Введите почту',
+    selectLanguage: 'Выберите язык',
+
     // Основные страницы
     search: 'Поиск',
     myAds: 'Мое',
     rent: 'Аренда',
     chats: 'Чаты',
 
+    // Поиск
+    searchFor: 'Поиск вещи/помещения/услуги',
+    byCheap: 'Сначала дешевле',
+    byExpensive: 'Сначала дороже',
+    byPopular: 'По популярности',
+    byDate: 'По дате',
+    services: 'Услуги',
+    products: 'Вещи',
+    spaces: 'Помещения',
+    rublesPerHour: 'руб за час',
+
+    // Мои объявления
+    revs: 'отз.',
+
+    // Арендованное
+    rentEndSoon: 'До конца аренды',
+    hours: 'час(а)',
+    rentEnded: 'Аренда завершена',
+    current: 'Текущие',
+    ended: 'Завершенные',
+
     // Дополнительные страницы
     booking: 'Бронирование',
     reviews: 'Отзывы',
-    login: 'Вход',
+    authorization: 'Авторизация',
     registration: 'Регистрация',
     profile: 'Профиль',
     landlordAds: 'Предложения арендодателя',
@@ -95,12 +128,21 @@ export const translations = {
     btnCreateAccount: 'Создать аккаунт',
     btnSignUp: 'Зарегистрироваться',
     btnLogin: 'Войти',
+    btnNewAd: 'Новое объявление',
+    btnMessage: 'Написать',
 
     // Ошибки
     error: 'Ошибка',
     errorAPI: 'Ошибка получения данных api',
 
     // Валидация
+
+    // Пользователь
+    validationLogin: 'Логин должен содержать из не менее 6 символов',
+    validationEmail: 'Некорректная почта',
+    validationPassword: 'Пароль должен состоять из не менее 8 символов',
+    validationConfirmPassword: 'Пароли не совпадают',
+    validationLanguage: 'Необходимо выбрать язык',
   },
   en: {
     // Settings
@@ -115,19 +157,53 @@ export const translations = {
     welcome: "You're welcome!",
     slogan: 'Rent things and services quickly and easily!',
 
+    // Login/registration
+    login: 'Login',
+    email: 'Email',
+    password: 'Password',
+    confirmPassword: 'Confirm the password',
+    noAccountYet: 'Not registered yet?',
+    alreadyHaveAccount: 'Already have an account?',
+    enterPassword: 'Enter the password',
+    enterLogin: 'Enter your login',
+    enterEmail: 'Enter your email',
+    selectLanguage: 'Select a language',
+
     // Main Pages
     search: 'Search',
     myAds: 'My ads',
     rent: 'Rent',
     chats: 'Chats',
 
+    // Search page
+    searchFor: 'Search for a product/space/service',
+    byCheap: 'Cheapest first',
+    byExpensive: 'Most expensive first',
+    byPopular: 'Most popular',
+    byDate: 'Newest first',
+    services: 'Services',
+    products: 'Products',
+    spaces: 'Spaces',
+    rublesPerHour: 'rub per hour',
+
+    // MyAdsPage
+    revs: 'revs',
+
+    // Rented
+    rentEndSoon: 'Until the end of the lease',
+    hours: 'hour(s)',
+    rentEnded: 'The lease has ended',
+    current: 'Current',
+    ended: 'Completed',
+
     // Additional pages
     booking: 'Booking',
     reviews: 'Reviews',
-    login: 'Login',
+    authorization: 'Authorization',
     registration: 'Registration',
     profile: 'Profile',
     landlordAds: 'Landlord ads',
+    settings: 'Settings',
     chat: 'Chat',
 
     // Ad
@@ -197,12 +273,21 @@ export const translations = {
     btnCreateAccount: 'Create an account',
     btnSignUp: 'Sign up',
     btnLogin: 'Log in',
+    btnNewAd: 'New ad',
+    btnMessage: 'Message',
 
     // Errors
     error: 'Error',
     errorAPI: 'Error receiving api data.',
 
     // Валидация
+
+    // User
+    validationLogin: 'Login must be at least 5 symbols long',
+    validationEmail: 'Incorrect email',
+    validationPassword: 'The password must be at least 8 characters long.',
+    validationConfirmPassword: "Passwords aren't equal",
+    validationLanguage: 'Language selection is required',
   },
 } as const;
 // as const satisfies Record - гарантия совпадения ключей
