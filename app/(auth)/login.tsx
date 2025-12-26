@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Alert, View } from 'react-native';
+import { View } from 'react-native';
 import { router } from 'expo-router';
 
 import { useLanguage } from '@/hooks/useLanguage';
+import { useProfileLogin } from '@/hooks/useLogin';
 import { useTheme } from '@/hooks/useTheme';
 
 import ScreenContainer from '@/components/layout/ScreenContainer';
@@ -11,33 +12,45 @@ import CustomInput from '@/components/ui/input/CustomInput';
 import { CustomText } from '@/components/ui/text/CustomText';
 
 export default function LoginPage() {
+  const profileLogin = useProfileLogin();
   const { colors } = useTheme();
   const { l } = useLanguage();
 
-  const [login, setLogin] = useState('');
-  const [password, setPassword] = useState('');
+  const [form, setForm] = useState({
+    login: '',
+    password: '',
+  });
+  const [errors, setErrors] = useState({
+    login: '',
+    password: '',
+  });
 
-  const [errors, setErrors] = useState({ login: '', password: '' });
+  const setField = <K extends keyof typeof form>(
+    key: K,
+    value: (typeof form)[K],
+  ) => {
+    setForm(prev => ({ ...prev, [key]: value }));
+  };
+
+  const validate = () => {
+    const newErrors = {
+      login: '',
+      password: '',
+    };
+
+    if (form.login.length < 6) newErrors.login = l.validationLogin;
+    if (form.password.length < 8) newErrors.password = l.validationPassword;
+
+    setErrors(newErrors);
+
+    return !Object.values(newErrors).some(Boolean);
+  };
 
   const handleLogin = async () => {
-    let hasError = false;
+    if (!validate()) return;
 
-    if (login.length < 6) {
-      setErrors(prev => ({ ...prev, login: l.validationLogin }));
-      hasError = true;
-    }
-
-    if (password.length < 8) {
-      setErrors(prev => ({ ...prev, password: l.validationPassword }));
-      hasError = true;
-    }
-
-    if (hasError) return;
-
-    console.log('Form data:', { login, password });
-    Alert.alert('Success', `Login: ${login}\nPassword: ${password}`);
-
-    router.push('/(tabs)/ads/search');
+    console.log('Form data:', form);
+    profileLogin.mutate(form);
   };
 
   return (
@@ -55,8 +68,8 @@ export default function LoginPage() {
           inputClassName={'py-3'}
           label={l.login}
           placeholder={l.enterLogin}
-          value={login}
-          onChangeText={setLogin}
+          value={form.login}
+          onChangeText={v => setField('login', v)}
           onClearError={() => setErrors(prev => ({ ...prev, login: '' }))}
           errorMessage={errors.login}
         />
@@ -66,8 +79,8 @@ export default function LoginPage() {
           label={l.password}
           placeholder={l.enterPassword}
           isPassword={true}
-          value={password}
-          onChangeText={setPassword}
+          value={form.password}
+          onChangeText={v => setField('password', v)}
           onClearError={() => setErrors(prev => ({ ...prev, password: '' }))}
           errorMessage={errors.password}
         />

@@ -1,5 +1,6 @@
+import { useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Tabs, usePathname, useSegments } from 'expo-router';
+import { router, Tabs, usePathname, useSegments } from 'expo-router';
 
 import { useLanguage } from '@/hooks/useLanguage';
 import { useProfile } from '@/hooks/useProfile';
@@ -43,7 +44,9 @@ export default function TabsLayout() {
 
   return (
     // SafeAreaView для предотвращения наложения системных панелей на footer/header
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.theme.white.bright }}>
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: colors.theme.white.bright }}
+    >
       {!isAuthFlow && (
         <CustomHeader
           isSettingsScreen={isSettingsScreen}
@@ -55,7 +58,7 @@ export default function TabsLayout() {
         screenOptions={{
           headerShown: false,
           tabBarActiveTintColor: colors.base.orange.primary,
-          tabBarInactiveTintColor: colors.theme.grey.dark,
+          tabBarInactiveTintColor: colors.components.icon.navIcon.bg,
           tabBarStyle: {
             paddingTop: 5,
             height: 75,
@@ -92,8 +95,8 @@ export default function TabsLayout() {
         <Tabs.Screen name={'ads/createAd'} options={{ href: null }} />
         <Tabs.Screen name={'ads/booking/[id]'} options={{ href: null }} />
         <Tabs.Screen name={'ads/reviews/[id]'} options={{ href: null }} />
+        <Tabs.Screen name={'users/reviews/[id]'} options={{ href: null }} />
       </Tabs>
-
 
       {/*<Stack screenOptions={{ headerShown: false }} />*/}
     </SafeAreaView>

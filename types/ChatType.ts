@@ -1,14 +1,14 @@
 import { MediaType } from '@/types/MediaType';
-import { UserCardType } from '@/types/UserCardType';
+import { UserCardType } from '@/types/UserType';
 
 export interface MessageType {
   id: number;
   text: string;
   userId: number;
-  date: number;
+  date: string;
   isReceive: boolean;
   isRead: boolean;
-  media: MediaType[];
+  media?: MediaType[];
 }
 
 export interface ChatType {

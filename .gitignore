@@ -39,3 +39,6 @@ app-example
 # other directories
 .idea
 .vscode
+/notUsable/
+db.json
+ip_info.ts

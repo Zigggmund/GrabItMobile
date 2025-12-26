@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Alert, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { router } from 'expo-router';
 
 import { useLanguage } from '@/hooks/useLanguage';
+import { useProfileRegister } from '@/hooks/useRegister';
 import { useTheme } from '@/hooks/useTheme';
 
 import ScreenContainer from '@/components/layout/ScreenContainer';
@@ -17,13 +18,15 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export default function RegistrationPage() {
   const { colors } = useTheme();
   const { l } = useLanguage();
+  const profileRegister = useProfileRegister();
 
-  const [login, setLogin] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [email, setEmail] = useState('');
-  const [language, setLanguage] = useState<'ru' | 'en' | null>(null);
-
+  const [form, setForm] = useState({
+    login: '',
+    password: '',
+    confirmPassword: '',
+    email: '',
+    language: null as 'ru' | 'en' | null,
+  });
   const [errors, setErrors] = useState({
     login: '',
     password: '',
@@ -32,46 +35,45 @@ export default function RegistrationPage() {
     language: '',
   });
 
+  const setField = <K extends keyof typeof form>(
+    key: K,
+    value: (typeof form)[K],
+  ) => {
+    setForm(prev => ({ ...prev, [key]: value }));
+  };
+
+  const validate = () => {
+    const newErrors = {
+      login: '',
+      password: '',
+      confirmPassword: '',
+      email: '',
+      language: '',
+    };
+
+    if (form.login.length < 6) newErrors.login = l.validationLogin;
+    if (!emailRegex.test(form.email)) newErrors.email = l.validationEmail;
+    if (form.password.length < 8) newErrors.password = l.validationPassword;
+    if (form.password !== form.confirmPassword)
+      newErrors.confirmPassword = l.validationConfirmPassword;
+    if (!form.language) newErrors.language = l.validationLanguage;
+
+    setErrors(newErrors);
+
+    return !Object.values(newErrors).some(Boolean);
+  };
+
   const handleRegistration = async () => {
-    let hasError = false;
+    if (!validate()) return;
 
-    if (login.length < 6) {
-      setErrors(prev => ({ ...prev, login: l.validationLogin }));
-      hasError = true;
-    }
-
-    if (password.length < 8) {
-      setErrors(prev => ({ ...prev, password: l.validationPassword }));
-      hasError = true;
-    }
-
-    if (password != confirmPassword) {
-      setErrors(prev => ({
-        ...prev,
-        confirmPassword: l.validationConfirmPassword,
-      }));
-      hasError = true;
-    }
-
-    if (!emailRegex.test(email)) {
-      setErrors(prev => ({ ...prev, email: l.validationEmail }));
-      hasError = true;
-    }
-
-    if (language == null) {
-      setErrors(prev => ({ ...prev, language: l.validationLanguage }));
-      hasError = true;
-    }
-
-    if (hasError) return;
-
-    console.log('Form data:', { login, email, password, language });
-    Alert.alert(
-      'Success',
-      `Login: ${login}\nPassword: ${password}\nEmail: ${email}\nLanguage: ${language}`,
-    );
-
-    router.push('/(tabs)/ads/search');
+    console.log('Form data:', form);
+    const payload = {
+      login: form.login,
+      password: form.password,
+      email: form.email,
+      language: form.language as string,
+    };
+    profileRegister.mutate(payload);
   };
 
   return (
@@ -87,8 +89,8 @@ export default function RegistrationPage() {
         <CustomInput
           label={l.login}
           placeholder={l.enterLogin}
-          value={login}
-          onChangeText={setLogin}
+          value={form.login}
+          onChangeText={v => setField('login', v)}
           onClearError={() => setErrors(prev => ({ ...prev, login: '' }))}
           errorMessage={errors.login}
         />
@@ -96,8 +98,8 @@ export default function RegistrationPage() {
         <CustomInput
           label={l.email}
           placeholder={l.enterEmail}
-          value={email}
-          onChangeText={setEmail}
+          value={form.email}
+          onChangeText={v => setField('email', v)}
           onClearError={() => setErrors(prev => ({ ...prev, email: '' }))}
           errorMessage={errors.email}
         />
@@ -106,8 +108,8 @@ export default function RegistrationPage() {
           label={l.password}
           placeholder={l.enterPassword}
           isPassword={true}
-          value={password}
-          onChangeText={setPassword}
+          value={form.password}
+          onChangeText={v => setField('password', v)}
           onClearError={() => setErrors(prev => ({ ...prev, password: '' }))}
           errorMessage={errors.password}
         />
@@ -116,8 +118,8 @@ export default function RegistrationPage() {
           label={l.confirmPassword}
           placeholder={l.enterPassword}
           isPassword={true}
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
+          value={form.confirmPassword}
+          onChangeText={v => setField('confirmPassword', v)}
           onClearError={() =>
             setErrors(prev => ({ ...prev, confirmPassword: '' }))
           }
@@ -130,9 +132,9 @@ export default function RegistrationPage() {
             { label: l.russian, value: 'ru' },
             { label: l.english, value: 'en' },
           ]}
-          value={language}
+          value={form.language}
           placeholder={l.selectLanguage}
-          onSelect={v => setLanguage(v)}
+          onSelect={v => setField('language', v)}
           errorMessage={errors.language}
           onClearError={() => setErrors(prev => ({ ...prev, language: '' }))}
         />

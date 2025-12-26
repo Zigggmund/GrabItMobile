@@ -95,7 +95,7 @@ export function CustomInputMenu<T extends string>({
             style={{
               color: value
                 ? colors.base.neutral.blackPrimary
-                : colors.base.neutral.greyDark,
+                : colors.theme.grey.dark,
             }}
           >
             {selectedItem?.label ?? placeholder}
@@ -113,7 +113,7 @@ export function CustomInputMenu<T extends string>({
           style={{
             backgroundColor: colors.base.grey.bright,
             borderWidth: 1,
-            borderColor: colors.base.neutral.greyDark,
+            borderColor: colors.theme.grey.dark,
           }}
           className="absolute top-full left-0 w-full z-50 rounded-xl shadow-xl mt-2 py-2"
         >

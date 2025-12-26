@@ -3,7 +3,6 @@ import { UserType } from '@/types/UserType';
 import { FC, ReactNode, useEffect, useState } from 'react';
 
 import { ProfileContext } from './ProfileContext';
-import { mockCurrentUser } from '@/constants/mocks/mockUser';
 
 interface ProfileContextProviderProps {
   children: ReactNode;
@@ -14,15 +13,12 @@ export const ProfileProvider: FC<ProfileContextProviderProps> = ({
 }) => {
   const [user, setUser] = useState<UserType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const isAuth = !!user;
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        // const res = await UserService.getUser();
-        // setUser(res.data);
-
-        // Временно — тестовый юзер
-        setUser(mockCurrentUser);
+        // setUser()
       } catch (err) {
         console.log('Not authorized or error fetching user', err);
         setUser(null);
@@ -30,20 +26,15 @@ export const ProfileProvider: FC<ProfileContextProviderProps> = ({
         setIsLoading(false);
       }
     };
-
     fetchUser();
   }, []);
 
-  const logout = () => {
-    // await SecureStore.deleteItemAsync('accessToken');
-    // await SecureStore.deleteItemAsync('refreshToken');
-    // router.replace('/login');
-
-    setUser(null);
-  };
+  useEffect(() => {
+    console.log('User was changed:', user);
+  }, [user]);
 
   return (
-    <ProfileContext.Provider value={{ user, setUser, isLoading, logout }}>
+    <ProfileContext.Provider value={{ user, setUser, isLoading, isAuth }}>
       {children}
     </ProfileContext.Provider>
   );

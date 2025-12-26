@@ -33,7 +33,7 @@ export const CustomButton = ({
   const { colors } = useTheme();
 
   const buttonColorMap = {
-    primary: { bg: colors.base.orange.bright },
+    primary: colors.components.button.primary,
     secondary: colors.components.button.secondary,
     red: { bg: colors.base.orange.bright },
     green: { bg: colors.base.orange.bright },

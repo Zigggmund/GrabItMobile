@@ -3,6 +3,14 @@ import { baseColors } from './baseColors';
 export const componentColors = {
   // кнопки
   button: {
+    primary: {
+      light: {
+        bg: baseColors.orange.bright,
+      },
+      dark: {
+        bg: baseColors.orange.semibright,
+      },
+    },
     secondary: {
       light: {
         bg: baseColors.neutral.blackPrimary,
@@ -61,6 +69,17 @@ export const componentColors = {
       },
       dark: {
         bg: baseColors.neutral.greyBlueBright,
+      },
+    },
+  },
+  // иконки
+  icon: {
+    navIcon: {
+      light: {
+        bg: baseColors.neutral.greyDark,
+      },
+      dark: {
+        bg: baseColors.neutral.whiteBright,
       },
     },
   },

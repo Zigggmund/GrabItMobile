@@ -39,7 +39,6 @@ export const translations = {
     services: 'Услуги',
     products: 'Вещи',
     spaces: 'Помещения',
-    rublesPerHour: 'руб за час',
 
     // Мои объявления
     revs: 'отз.',
@@ -50,6 +49,16 @@ export const translations = {
     rentEnded: 'Аренда завершена',
     current: 'Текущие',
     ended: 'Завершенные',
+
+    // Чаты и сообщения
+    writeSomething: 'Напишите что-нибудь',
+    online: 'В сети',
+    offline: 'Не в сети',
+
+    // Профили
+    personalInfo: 'Персональная информация',
+    offers: 'Предложения',
+    rating: 'Рейтинг',
 
     // Дополнительные страницы
     booking: 'Бронирование',
@@ -68,6 +77,12 @@ export const translations = {
     // Другое
     success: 'Успех',
     loading: 'Загрузка',
+
+    // ОплатаПоПериоду
+    rubPerHour: '₽/час',
+    rubPerDay: '₽/день',
+    rubPerWeek: '₽/неделя',
+    rubPerMonth: '₽/месяц',
 
     // Города
     city: 'город',
@@ -119,6 +134,21 @@ export const translations = {
     ulyanovsk: 'Ульяновск',
     cheboksary: 'Чебоксары',
 
+    // Категории
+    categoryTransport: 'Транспорт',
+    categoryRealEstate: 'Недвижимость',
+    categoryElectronics: 'Электроника',
+    categoryTools: 'Инструменты и техника',
+    categoryHomeAndLife: 'Дом и быт',
+    categoryEvents: 'Мероприятия',
+    categorySportsAndLeisure: 'Спорт и отдых',
+    categoryHealthAndBeauty: 'Здоровье и красота',
+    categoryKids: 'Детские товары',
+    categoryClothing: 'Одежда и аксессуары',
+    categoryBusiness: 'Бизнес и офис',
+    categoryOther: 'Другое',
+    noCategory: 'Без категории',
+
     // Кнопки
     btnStart: 'Начать',
     btnCancel: 'Отмена',
@@ -130,14 +160,18 @@ export const translations = {
     btnLogin: 'Войти',
     btnNewAd: 'Новое объявление',
     btnMessage: 'Написать',
+    btnEdit: 'Изменить',
+    btnLogout: 'Выйти из аккаунта',
+    btnToReviews: 'Посмотреть отзывы',
+    btnToOffers: 'Посмотреть предложения',
 
     // Ошибки
     error: 'Ошибка',
     errorAPI: 'Ошибка получения данных api',
+    errorUserNotFound: 'Пользователь не найден',
+    errorChatNotFound: 'Чат не найден',
 
     // Валидация
-
-    // Пользователь
     validationLogin: 'Логин должен содержать из не менее 6 символов',
     validationEmail: 'Некорректная почта',
     validationPassword: 'Пароль должен состоять из не менее 8 символов',
@@ -184,7 +218,6 @@ export const translations = {
     services: 'Services',
     products: 'Products',
     spaces: 'Spaces',
-    rublesPerHour: 'rub per hour',
 
     // MyAdsPage
     revs: 'revs',
@@ -195,6 +228,16 @@ export const translations = {
     rentEnded: 'The lease has ended',
     current: 'Current',
     ended: 'Completed',
+
+    // Chats and messages
+    writeSomething: 'Write something',
+    online: 'online',
+    offline: 'offline',
+
+    // Profiles
+    personalInfo: 'Personal information',
+    offers: 'Offers',
+    rating: 'Rating',
 
     // Additional pages
     booking: 'Booking',
@@ -213,6 +256,12 @@ export const translations = {
     // Other
     success: 'Success',
     loading: 'Loading',
+
+    // priceUnits
+    rubPerHour: '₽/hour',
+    rubPerDay: '₽/day',
+    rubPerWeek: '₽/week',
+    rubPerMonth: '₽/month',
 
     // Cities
     city: 'city',
@@ -264,6 +313,21 @@ export const translations = {
     ulyanovsk: 'Ulyanovsk',
     cheboksary: 'Cheboksary',
 
+    // Categories
+    categoryTransport: 'Transport',
+    categoryRealEstate: 'Real Estate',
+    categoryElectronics: 'Electronics',
+    categoryTools: 'Tools and Equipment',
+    categoryHomeAndLife: 'Home and Living',
+    categoryEvents: 'Events',
+    categorySportsAndLeisure: 'Sports and Leisure',
+    categoryHealthAndBeauty: 'Health and Beauty',
+    categoryKids: 'Kids',
+    categoryClothing: 'Clothing and Accessories',
+    categoryBusiness: 'Business and Office',
+    categoryOther: 'Other',
+    noCategory: 'No Category',
+
     // Buttons
     btnStart: 'Start',
     btnCancel: 'Cancel',
@@ -275,14 +339,18 @@ export const translations = {
     btnLogin: 'Log in',
     btnNewAd: 'New ad',
     btnMessage: 'Message',
+    btnEdit: 'Edit',
+    btnLogout: 'Log out',
+    btnToReviews: 'View reviews',
+    btnToOffers: 'View offers',
 
     // Errors
     error: 'Error',
     errorAPI: 'Error receiving api data.',
+    errorUserNotFound: 'The user was not found',
+    errorChatNotFound: 'The chat was not found',
 
-    // Валидация
-
-    // User
+    // Validation
     validationLogin: 'Login must be at least 5 symbols long',
     validationEmail: 'Incorrect email',
     validationPassword: 'The password must be at least 8 characters long.',

@@ -19,11 +19,13 @@ import AppContainer from '@/components/layout/AppContainer';
 import 'react-native-reanimated';
 import '../global.css';
 import LoadingScreen from '@/app/loading';
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 
 export default function RootLayout() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const [dbInitialized, setDbInitialized] = useState(false);
   const [isAppReady, setIsAppReady] = useState(false);
+  const queryClient = new QueryClient();
 
   // ДЛЯ РАЗОВОЙ ОЧИСТКИ ПРИ ОШИБОЧНЫХ ДАННЫХ В ХРАНИЛИЩЕ
   // useEffect(() => {
@@ -71,22 +73,24 @@ export default function RootLayout() {
 
   return (
     <SafeAreaProvider>
-      <Provider store={store}>
-        <ProfileProvider>
-          <LanguageProvider>
-            <ThemeProvider>
-              {!dbInitialized || !fontsLoaded ? (
-                <LoadingScreen loading />
-              ) : !isAppReady ? (
-                <LoadingScreen onPress={() => setIsAppReady(true)} />
-              ) : (
-                // для корректного взаимодействия с bgColor из Theme
-                <AppContainer />
-              )}
-            </ThemeProvider>
-          </LanguageProvider>
-        </ProfileProvider>
-      </Provider>
+      <QueryClientProvider client={queryClient}>
+        <Provider store={store}>
+          <ProfileProvider>
+            <LanguageProvider>
+              <ThemeProvider>
+                {!dbInitialized || !fontsLoaded ? (
+                  <LoadingScreen loading />
+                ) : !isAppReady ? (
+                  <LoadingScreen onPress={() => setIsAppReady(true)} />
+                ) : (
+                  // для корректного взаимодействия с bgColor из Theme
+                  <AppContainer />
+                )}
+              </ThemeProvider>
+            </LanguageProvider>
+          </ProfileProvider>
+        </Provider>
+      </QueryClientProvider>
     </SafeAreaProvider>
   );
 }

@@ -6,7 +6,7 @@ import { useTheme } from '@/hooks/useTheme';
 
 import { getRemainingTime } from '@/utils/getRemainingTime';
 
-import RentedAd from '@/components/items/RentedAd';
+import RentedAd from '@/components/items/ads/RentedAd';
 import ScreenContainer from '@/components/layout/ScreenContainer';
 import { CustomIcon } from '@/components/ui/icon/CustomIcon';
 import { CustomText } from '@/components/ui/text/CustomText';
@@ -80,6 +80,7 @@ export default function RentPage() {
             renderItem={({ item }) => (
               <RentedAd width={itemWidth} ad={item} isEnded={true} />
             )}
+            contentContainerStyle={{ paddingBottom: 20 }}
           />
         )}
       </ScrollView>

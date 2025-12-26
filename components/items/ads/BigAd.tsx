@@ -1,5 +1,3 @@
-import { AdPreview } from '@/types/AdType';
-
 import { Image, View } from 'react-native';
 
 import { useLanguage } from '@/hooks/useLanguage';
@@ -7,9 +5,10 @@ import { useTheme } from '@/hooks/useTheme';
 
 import RatingStars from '@/components/common/RatingStars';
 import { CustomText } from '@/components/ui/text/CustomText';
+import { AdPreviewType } from '@/types/AdType';
 
 interface BigAdProps {
-  ad: AdPreview;
+  ad: AdPreviewType;
   width: number;
 }
 
@@ -69,19 +68,28 @@ export default function BigAd({ width, ad }: BigAdProps) {
               {l.revs}: {ad.reviewCount}
             </CustomText>
           </View>
-          <CustomText
-            style={{ color: colors.theme.blue.dark }}
-            className={'pt-1 text-11 font-bold'}
-            numberOfLines={1}
-          >
-            {ad.payment} {l.rublesPerHour}
-          </CustomText>
+          <View className={'flex-row justify-between items-center'}>
+            <CustomText
+              style={{ color: colors.theme.blue.dark }}
+              className={'pt-1 text-11 font-bold'}
+              numberOfLines={1}
+            >
+              {ad.cost[0].payment} {l[ad.cost[0].priceUnit]}
+            </CustomText>
+            <CustomText
+              style={{ color: colors.theme.blue.dark }}
+              className={'pt-1 text-11 font-bold'}
+              numberOfLines={2}
+            >
+              {ad.category.name}
+            </CustomText>
+          </View>
           <CustomText
             style={{ color: colors.theme.blue.bright }}
             className={'text-11'}
             numberOfLines={1}
           >
-            {ad.location}
+            {ad.address}
           </CustomText>
         </View>
       </View>

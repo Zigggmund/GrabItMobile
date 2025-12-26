@@ -1,4 +1,4 @@
-import { AdPreview } from '@/types/AdType';
+import { AdPreviewType } from '@/types/AdType';
 
 import { Image, View } from 'react-native';
 
@@ -9,13 +9,13 @@ import RatingStars from '@/components/common/RatingStars';
 import { CustomText } from '@/components/ui/text/CustomText';
 
 interface SmallAdProps {
-  ad: AdPreview;
+  ad: AdPreviewType;
   width: number;
 }
 
 export default function SmallAd({ width, ad }: SmallAdProps) {
-  const { l } = useLanguage();
   const { colors } = useTheme();
+  const { l } = useLanguage();
 
   return (
     <View
@@ -50,14 +50,14 @@ export default function SmallAd({ width, ad }: SmallAdProps) {
           className={'pt-1 text-11 font-bold'}
           numberOfLines={1}
         >
-          {ad.payment} {l.rublesPerHour}
+          {ad.cost[0].payment} {l[ad.cost[0].priceUnit]}
         </CustomText>
         <CustomText
           style={{ color: colors.theme.blue.bright }}
           className={'text-11'}
           numberOfLines={1}
         >
-          {ad.location}
+          {ad.address}
         </CustomText>
       </View>
     </View>

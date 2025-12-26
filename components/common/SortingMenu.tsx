@@ -10,18 +10,18 @@ import { icons } from '@/constants/icons';
 
 interface MenuItem<T> {
   label: string;
-  value: T;
+  value: T | null;
 }
 
 interface SortingMenuProps<T> {
   containerClassName?: string;
   items: MenuItem<T>[];
-  value: string | null;
-  onSelect: (value: T) => void;
+  value: T | null;
+  onSelect: (value: T | null) => void;
   width?: number;
 }
 
-export function SortingMenu<T extends string>({
+export function SortingMenu<T>({
   containerClassName = '',
   items,
   value,
@@ -36,7 +36,7 @@ export function SortingMenu<T extends string>({
   const filteredItems = items.filter(i => i.value !== value);
 
   return (
-    <View className={`flex-col gap-2 w-full ${containerClassName}`}>
+    <View className={`flex-col gap-2 ${containerClassName}`}>
       <TouchableOpacity
         style={{
           backgroundColor: colors.base.orange.primary,
@@ -44,14 +44,15 @@ export function SortingMenu<T extends string>({
           borderColor: colors.base.neutral.blackPrimary,
           width: width,
         }}
-        className={`gap-2 flex-row items-center justify-center rounded-xl py-2 ${containerClassName}`}
+        className={`gap-2 flex-row items-center rounded-xl py-2 px-2 ${containerClassName}`}
         onPress={() => {
           setOpen(prev => !prev);
         }}
       >
         <CustomText
-          className={'text-16 font-medium'}
+          className={'text-16 font-medium flex-1 text-center'}
           style={{ color: colors.base.neutral.whiteBright }}
+          numberOfLines={2}
         >
           {selectedItem?.label}
         </CustomText>
@@ -68,23 +69,23 @@ export function SortingMenu<T extends string>({
             backgroundColor: colors.base.grey.bright,
             width: width,
             borderWidth: 1,
-            borderColor: colors.base.neutral.greyDark,
+            borderColor: colors.theme.grey.dark,
           }}
           className={`absolute top-full left-0 w-full z-50 rounded-xl shadow-xl mt-2 py-2 ${containerClassName}`}
         >
           <FlatList
             data={filteredItems}
-            keyExtractor={item => item.value}
+            keyExtractor={(_, index) => index.toString()}
             renderItem={({ item }) => (
               <TouchableOpacity
-                className={`items-center py-3 px-6 rounded-lg ${containerClassName}`}
+                className={`py-3 px-6 rounded-lg ${containerClassName}`}
                 onPress={() => {
                   onSelect(item.value);
                   setOpen(false);
                 }}
               >
                 <CustomText
-                  className={'text-16 font-medium'}
+                  className={'text-16 font-medium text-center'}
                   style={{ color: colors.base.neutral.blackPrimary }}
                 >
                   {item.label}

@@ -20,7 +20,7 @@ export const themeColors = {
   },
   dark: {
     grey: {
-      dark: '#FFFFFF',
+      dark: '#C2C4CC',
     },
     blue: {
       dark: '#FFFFFF',

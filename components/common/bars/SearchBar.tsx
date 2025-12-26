@@ -36,7 +36,7 @@ export default function SearchBar({
     >
       <CustomIcon
         source={icons.search}
-        color={colors.theme.grey.dark}
+        color={colors.components.icon.navIcon.bg}
         size={30}
       />
       <TextInput

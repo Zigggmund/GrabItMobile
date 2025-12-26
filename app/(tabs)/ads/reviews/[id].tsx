@@ -5,7 +5,7 @@ import { useTheme } from '@/hooks/useTheme';
 import ScreenContainer from '@/components/layout/ScreenContainer';
 import { CustomText } from '@/components/ui/text/CustomText';
 
-export default function Reviews() {
+export default function AdReviews() {
   const { id } = useLocalSearchParams();
   const { colors } = useTheme();
 

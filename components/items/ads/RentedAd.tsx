@@ -52,9 +52,13 @@ export default function RentedAd({ width, ad, isEnded }: RentedAdProps) {
               style={{ color: colors.theme.blue.primary }}
               className={'text-12'}
             >
-              {phoneNumberFormat(ad.renter.userPhoneNumber)}
+              {phoneNumberFormat(ad.renter.phoneNumber)}
             </CustomText>
-            <ProfileAvatar size={30} source={ad.renter.avatar.url} />
+            <ProfileAvatar
+              size={30}
+              source={ad.renter.avatar?.url}
+              id={ad.renter.id}
+            />
           </View>
           <CustomText
             highlight

@@ -1,7 +1,7 @@
 import { CategoryType } from '@/types/CategoryType';
 import { CostType } from '@/types/CostType';
 import { MediaType } from '@/types/MediaType';
-import { RenterCardType } from '@/types/RenterCardType';
+import { RenterType } from '@/types/UserType';
 import { ReviewType } from '@/types/ReviewType';
 
 type ProductType = 'product' | 'space' | 'service';
@@ -22,7 +22,7 @@ export interface AdPreviewType {
 
 export interface AdRentedType {
   id: number;
-  renter: RenterCardType;
+  renter: RenterType;
   title: string;
   endTime: string;
   previewImage: MediaType;
@@ -31,7 +31,7 @@ export interface AdRentedType {
 
 export interface AdDetailsType extends AdPreviewType {
   media: MediaType[];
-  renter: RenterCardType;
+  renter: RenterType;
   bookingCalendar: string; // В ДАЛЬНЕЙШЕМ ИЗМЕНИТСЯ
   reviews: ReviewType[];
 }

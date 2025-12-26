@@ -2,6 +2,7 @@ export const baseColors = {
   orange: {
     dark: '#E57200',
     primary: '#FF8104',
+    semibright: '#E68B22',
     bright: '#EA9432',
   },
   green: {

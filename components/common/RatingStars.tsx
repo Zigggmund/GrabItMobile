@@ -35,7 +35,7 @@ export default function RatingStars({
     const basePercent = (rating % 1) * 100;
     // S-образная ease-in-out
     const percent = (0.5 + (basePercent / 100 - 0.5) * 0.6) * 100;
-    console.log(basePercent, percent);
+    // console.log(basePercent, percent);
 
     for (let i = 1; i <= 5; i++) {
       const diff = rating - i;

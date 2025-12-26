@@ -22,14 +22,14 @@ export default function CustomHeader({
 }: CustomHeaderProps) {
   const { colors } = useTheme();
   const { user } = useProfile();
-  console.log(
-    'hasback:',
-    hasBack,
-    'isUserProfile:',
-    isUserProfile,
-    'isSettingsScreen:',
-    isSettingsScreen,
-  );
+  // console.log(
+  //   'hasback:',
+  //   hasBack,
+  //   'isUserProfile:',
+  //   isUserProfile,
+  //   'isSettingsScreen:',
+  //   isSettingsScreen,
+  // );
 
   return (
     <>
@@ -44,7 +44,7 @@ export default function CustomHeader({
             color={
               isSettingsScreen
                 ? colors.base.orange.primary
-                : colors.theme.grey.dark
+                : colors.components.icon.navIcon.bg
             }
             source={icons.settings}
             size={40}
@@ -55,7 +55,7 @@ export default function CustomHeader({
         {hasBack && !isUserProfile && !isSettingsScreen && (
           <CustomIcon
             className={'mr-3'}
-            color={colors.theme.grey.dark}
+            color={colors.components.icon.navIcon.bg}
             source={icons.arrowBack}
             onPress={() => {
               if (router.canGoBack()) router.back();
@@ -74,7 +74,7 @@ export default function CustomHeader({
             color={
               isUserProfile
                 ? colors.base.orange.primary
-                : colors.theme.grey.dark
+                : colors.components.icon.navIcon.bg
             }
             source={icons.profile}
             size={70}

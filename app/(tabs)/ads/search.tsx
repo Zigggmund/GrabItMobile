@@ -3,15 +3,29 @@ import { FlatList, useWindowDimensions, View } from 'react-native';
 
 import { useLanguage } from '@/hooks/useLanguage';
 
-import SearchBar from '@/components/common/SearchBar';
+import SearchBar from '@/components/common/bars/SearchBar';
 import { SortingMenu } from '@/components/common/SortingMenu';
 import { Tag } from '@/components/common/Tag';
-import SmallAd from '@/components/items/SmallAd';
+import SmallAd from '@/components/items/ads/SmallAd';
 import ScreenContainer from '@/components/layout/ScreenContainer';
 
 import { mockAds } from '@/constants/mocks/mockAds';
 
-type sortingType = 'date' | 'cheap' | 'expensive' | 'popular';
+type SortingType = 'date' | 'cheap' | 'expensive' | 'popular';
+type CategoryType =
+  | 'transport'
+  | 'realEstate'
+  | 'electronics'
+  | 'tools'
+  | 'homeAndLife'
+  | 'events'
+  | 'sportsAndLeisure'
+  | 'healthAndBeauty'
+  | 'kids'
+  | 'clothing'
+  | 'business'
+  | 'other'
+  | null;
 
 export default function Search() {
   // АДАПТИВНОСТЬ
@@ -20,7 +34,8 @@ export default function Search() {
   const numColumns = Math.floor(width / itemWidth);
 
   const [search, setSearch] = useState('');
-  const [sortBy, setSortBy] = useState<sortingType>('date');
+  const [sortBy, setSortBy] = useState<SortingType>('date');
+  const [category, setCategory] = useState<CategoryType>(null);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const { l } = useLanguage();
 
@@ -36,9 +51,13 @@ export default function Search() {
       console.log(`Поиск по '${value}' выполнен`);
     }
   };
-  const handleSorting = (value: sortingType) => {
+  const handleSorting = (value: SortingType) => {
     setSortBy(value);
     console.log(`Сортировка по критерию ${value} выполнена`);
+  };
+  const handleCategory = (value: CategoryType) => {
+    setCategory(value);
+    console.log(`Категория ${value} выбрана`);
   };
 
   useEffect(() => {
@@ -56,16 +75,42 @@ export default function Search() {
       />
 
       <View className={'gap-2 items-center'}>
-        <SortingMenu
-          items={[
-            { label: l.byDate, value: 'date' },
-            { label: l.byCheap, value: 'cheap' },
-            { label: l.byExpensive, value: 'expensive' },
-            { label: l.byPopular, value: 'popular' },
-          ]}
-          value={sortBy}
-          onSelect={v => handleSorting(v)}
-        />
+        <View className={'flex-row justify-between w-full'}>
+          <SortingMenu<SortingType>
+            items={[
+              { label: l.byDate, value: 'date' },
+              { label: l.byCheap, value: 'cheap' },
+              { label: l.byExpensive, value: 'expensive' },
+              { label: l.byPopular, value: 'popular' },
+            ]}
+            value={sortBy}
+            onSelect={v => {
+              if (v !== null) {
+                handleSorting(v);
+              }
+            }}
+          />
+          <SortingMenu<CategoryType>
+            items={[
+              { label: l.noCategory, value: null },
+              { label: l.categoryTransport, value: 'transport' },
+              { label: l.categoryRealEstate, value: 'realEstate' },
+              { label: l.categoryElectronics, value: 'electronics' },
+              { label: l.categoryTools, value: 'tools' },
+              { label: l.categoryHomeAndLife, value: 'homeAndLife' },
+              { label: l.categoryEvents, value: 'events' },
+              { label: l.categorySportsAndLeisure, value: 'sportsAndLeisure' },
+              { label: l.categoryHealthAndBeauty, value: 'healthAndBeauty' },
+              { label: l.categoryKids, value: 'kids' },
+              { label: l.categoryClothing, value: 'clothing' },
+              { label: l.categoryBusiness, value: 'business' },
+              { label: l.categoryOther, value: 'other' },
+            ]}
+            value={category}
+            onSelect={v => handleCategory(v)}
+            width={140}
+          />
+        </View>
         <View className={'flex-row gap-4'}>
           <Tag
             label={l.products}
@@ -90,107 +135,9 @@ export default function Search() {
         renderItem={({ item }) => <SmallAd width={itemWidth} ad={item} />}
         numColumns={numColumns}
         columnWrapperStyle={{ columnGap: 20 }}
-        ItemSeparatorComponent={() => <View style={{height: 10}} />}
+        ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+        contentContainerStyle={{ paddingBottom: 20 }}
       />
-      {/*</View>*/}
-
-      {/* ТЕСТ ВСЕХ ШРИФТОВ */}
-      {/*<View className={'justify-between flex-row'}>*/}
-      {/*  <CustomText*/}
-      {/*    style={{ color: colors.theme.blue.dark }}*/}
-      {/*    className={'text-30'}*/}
-      {/*  >*/}
-      {/*    Hello there*/}
-      {/*  </CustomText>*/}
-      {/*  <CustomText*/}
-      {/*    style={{ color: colors.theme.blue.dark }}*/}
-      {/*    className={'text-30'}*/}
-      {/*  >*/}
-      {/*    Привет всем*/}
-      {/*  </CustomText>*/}
-      {/*</View>*/}
-      {/*<View className={'justify-between flex-row'}>*/}
-      {/*  <CustomText*/}
-      {/*    style={{ color: colors.theme.blue.dark }}*/}
-      {/*    className={'text-30 font-medium'}*/}
-      {/*  >*/}
-      {/*    Hello there*/}
-      {/*  </CustomText>*/}
-      {/*  <CustomText*/}
-      {/*    style={{ color: colors.theme.blue.dark }}*/}
-      {/*    className={'text-30 font-medium'}*/}
-      {/*  >*/}
-      {/*    Привет всем*/}
-      {/*  </CustomText>*/}
-      {/*</View>*/}
-      {/*<View className={'justify-between flex-row'}>*/}
-      {/*  <CustomText*/}
-      {/*    style={{ color: colors.theme.blue.dark }}*/}
-      {/*    className={'text-30 font-bold'}*/}
-      {/*  >*/}
-      {/*    Hello there*/}
-      {/*  </CustomText>*/}
-      {/*  <CustomText*/}
-      {/*    style={{ color: colors.theme.blue.dark }}*/}
-      {/*    className={'text-30 font-bold'}*/}
-      {/*  >*/}
-      {/*    Привет всем*/}
-      {/*  </CustomText>*/}
-      {/*</View>*/}
-      {/*<View className={'justify-between flex-row'}>*/}
-      {/*  <CustomText*/}
-      {/*    style={{ color: colors.theme.blue.dark }}*/}
-      {/*    className={'text-30'}*/}
-      {/*    highlight*/}
-      {/*  >*/}
-      {/*    Hello there*/}
-      {/*  </CustomText>*/}
-      {/*  <CustomText*/}
-      {/*    style={{ color: colors.theme.blue.dark }}*/}
-      {/*    className={'text-30'}*/}
-      {/*    highlight*/}
-      {/*  >*/}
-      {/*    Привет всем*/}
-      {/*  </CustomText>*/}
-      {/*</View>*/}
-      {/*<View className={'justify-between flex-row'}>*/}
-      {/*  <CustomText*/}
-      {/*    style={{ color: colors.theme.blue.dark }}*/}
-      {/*    className={'text-30 font-medium'}*/}
-      {/*    highlight*/}
-      {/*  >*/}
-      {/*    Hello there*/}
-      {/*  </CustomText>*/}
-      {/*  <CustomText*/}
-      {/*    style={{ color: colors.theme.blue.dark }}*/}
-      {/*    className={'text-30 font-medium'}*/}
-      {/*    highlight*/}
-      {/*  >*/}
-      {/*    Привет всем*/}
-      {/*  </CustomText>*/}
-      {/*</View>*/}
-      {/*<View className={'justify-between flex-row'}>*/}
-      {/*  <CustomText*/}
-      {/*    style={{ color: colors.theme.blue.dark }}*/}
-      {/*    className={'text-30 font-bold'}*/}
-      {/*    highlight*/}
-      {/*  >*/}
-      {/*    Hello there*/}
-      {/*  </CustomText>*/}
-      {/*  <CustomText*/}
-      {/*    style={{ color: colors.theme.blue.dark }}*/}
-      {/*    className={'text-30 font-bold'}*/}
-      {/*    highlight*/}
-      {/*  >*/}
-      {/*    Привет всем*/}
-      {/*  </CustomText>*/}
-      {/*</View>*/}
-
-      {/*ТЕСТ НАСТРОЕК*/}
-      {/*<CustomButton text={l.dark} onPress={() => setTheme('dark')} />*/}
-      {/*<CustomButton text={l.light} onPress={() => setTheme('light')} />*/}
-      {/*<CustomButton text={l.english} onPress={() => setLanguage('en')} />*/}
-      {/*<CustomButton text={l.russian} onPress={() => setLanguage('ru')} />*/}
     </ScreenContainer>
   );
 }
