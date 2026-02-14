@@ -3,10 +3,11 @@ import { useTheme } from '@/hooks/useTheme';
 import ScreenContainer from '@/components/layout/ScreenContainer';
 import { CustomText } from '@/components/ui/text/CustomText';
 import { CustomButton } from '@/components/ui/button/CustomButton';
-import { router } from 'expo-router';
+import { useHistory } from '@/hooks/useHistory';
 
 export default function CreateAd() {
   const { colors } = useTheme();
+  const { navigate } = useHistory();
 
   return (
     <ScreenContainer>
@@ -19,15 +20,15 @@ export default function CreateAd() {
       </CustomText>
 
       <CustomButton
-        onPress={() => router.push('/(auth)/login')}
+        onPress={() => navigate('/(auth)/login')}
         text={'login'}
       />
       <CustomButton
-        onPress={() => router.push('/(tabs)/ads/booking/123')}
+        onPress={() => navigate('/(tabs)/ads/booking/123')}
         text={'booking-123'}
       />
       <CustomButton
-        onPress={() => router.push('/(tabs)/users/settings')}
+        onPress={() => navigate('/(tabs)/users/settings')}
         text={'settings'}
       />
     </ScreenContainer>

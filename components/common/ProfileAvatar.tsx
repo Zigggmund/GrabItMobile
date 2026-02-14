@@ -1,5 +1,6 @@
 import { Image, TouchableOpacity } from 'react-native';
-import { router } from 'expo-router';
+
+import { useHistory } from '@/hooks/useHistory';
 
 import { icons } from '@/constants/icons';
 
@@ -16,6 +17,7 @@ export function ProfileAvatar({
   source,
   id = 0,
 }: ProfileAvatarProps) {
+  const { navigate } = useHistory();
   const borderRadius = isProfilePage ? size / 3 : size / 2;
   const avatar = (
     <Image
@@ -34,7 +36,11 @@ export function ProfileAvatar({
   }
 
   return (
-    <TouchableOpacity onPress={() => router.push(`/(tabs)/users/${id}`)}>
+    <TouchableOpacity
+      onPress={() =>
+        navigate({ pathname: '/(tabs)/users/[id]', params: { id: String(id) } })
+      }
+    >
       {avatar}
     </TouchableOpacity>
   );

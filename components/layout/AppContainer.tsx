@@ -7,6 +7,8 @@ import { StatusBar } from 'expo-status-bar';
 import { useProfile } from '@/hooks/useProfile';
 import { useTheme } from '@/hooks/useTheme';
 
+// !!!ЗДЕСЬ НЕ ИСПОЛЬЗУЕТСЯ useHistory.
+// Блокировка маршрутов не должна сохраняться в стеке
 export default function AppContainer() {
   const { theme } = useTheme();
   const { isAuth, isLoading } = useProfile();
@@ -18,9 +20,13 @@ export default function AppContainer() {
       return;
     }
     const isAuthGroup = segments[0] == '(auth)';
-    // блокировка маршрутов
+    // блокировка маршрутов для незалогинненых юзеров
     if (!isAuth && !isAuthGroup) {
       router.replace('/(auth)/login');
+    }
+    // ?блокировка auth маршрутов для залогиненнных юзеров
+    if (isAuth && isAuthGroup) {
+      router.replace('/(tabs)/ads/search');
     }
   }, [isAuth, isLoading, segments]);
 

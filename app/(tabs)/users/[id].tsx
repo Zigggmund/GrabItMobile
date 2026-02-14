@@ -1,7 +1,8 @@
 import { ActivityIndicator, ScrollView, View } from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 
 import { useGetUser } from '@/hooks/useGetUser';
+import { useHistory } from '@/hooks/useHistory';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useProfileLogout } from '@/hooks/useLogout';
 import { useProfile } from '@/hooks/useProfile';
@@ -20,6 +21,7 @@ export default function UserProfile() {
   const { l } = useLanguage();
   const profileLogout = useProfileLogout();
   const profile = useProfile();
+  const { navigate } = useHistory();
 
   const { id } = useLocalSearchParams<{ id: string }>();
   const userId = Number(id);
@@ -197,7 +199,10 @@ export default function UserProfile() {
                 text={l.btnToOffers}
                 className={'mb-2'}
                 onPress={() =>
-                  router.push(`/(tabs)/users/landlordAds/${user?.id}`)
+                  navigate({
+                    pathname: '/(tabs)/users/landlordAds/[id]',
+                    params: { id: user?.id },
+                  })
                 }
               />
             )}
@@ -206,7 +211,12 @@ export default function UserProfile() {
               textClassName={'text-18 font-medium'}
               className={'mb-6'}
               text={l.btnToReviews}
-              onPress={() => router.push(`/(tabs)/users/reviews/${user?.id}`)}
+              onPress={() =>
+                navigate({
+                  pathname: '/(tabs)/users/reviews/[id]',
+                  params: { id: user?.id },
+                })
+              }
             />
           </View>
         </View>

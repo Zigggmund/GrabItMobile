@@ -3,6 +3,7 @@ import { UserType } from '@/types/UserType';
 import { FC, ReactNode, useEffect, useState } from 'react';
 
 import { ProfileContext } from './ProfileContext';
+import { storage } from '@/services/storage/asyncStorageService';
 
 interface ProfileContextProviderProps {
   children: ReactNode;
@@ -18,7 +19,17 @@ export const ProfileProvider: FC<ProfileContextProviderProps> = ({
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        // setUser()
+        // ЧТО-ТО ТАКОЕ
+        // const accessToken = storage.get('accessToken');
+        //
+        // if (!accessToken) {
+        //   setUser(null);
+        // } else {
+        //   const response = await api.get('/me', {
+        //     headers: { Authorization: `Bearer ${token}` },
+        //   });
+        //   setUser(response.data);
+        // }
       } catch (err) {
         console.log('Not authorized or error fetching user', err);
         setUser(null);

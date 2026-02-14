@@ -1,8 +1,8 @@
 import { AdRentedType } from '@/types/AdType';
 
 import { Image, View } from 'react-native';
-import { router } from 'expo-router';
 
+import { useHistory } from '@/hooks/useHistory';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTheme } from '@/hooks/useTheme';
 
@@ -25,6 +25,7 @@ export default function RentedAd({ width, ad, isEnded }: RentedAdProps) {
   const { l } = useLanguage();
   const { colors } = useTheme();
   const remainingTime = getRemainingTime(ad.endTime);
+  const { navigate } = useHistory();
 
   return (
     <View
@@ -93,6 +94,7 @@ export default function RentedAd({ width, ad, isEnded }: RentedAdProps) {
             </View>
           )}
         </View>
+        {/* переход сразу в чат? */}
         <CustomButton
           isSmall
           iconSize={15}
@@ -100,7 +102,7 @@ export default function RentedAd({ width, ad, isEnded }: RentedAdProps) {
           textClassName={'text-13'}
           text={l.btnMessage}
           className="self-center"
-          onPress={() => router.push('/(tabs)/chats/myChats')}
+          onPress={() => navigate('/(tabs)/chats/myChats')}
         />
       </View>
     </View>

@@ -20,6 +20,7 @@ import 'react-native-reanimated';
 import '../global.css';
 import LoadingScreen from '@/app/loading';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
+import { HistoryProvider } from '@/context/HistoryProvider';
 
 export default function RootLayout() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -75,20 +76,22 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <QueryClientProvider client={queryClient}>
         <Provider store={store}>
-          <ProfileProvider>
-            <LanguageProvider>
-              <ThemeProvider>
-                {!dbInitialized || !fontsLoaded ? (
-                  <LoadingScreen loading />
-                ) : !isAppReady ? (
-                  <LoadingScreen onPress={() => setIsAppReady(true)} />
-                ) : (
-                  // для корректного взаимодействия с bgColor из Theme
-                  <AppContainer />
-                )}
-              </ThemeProvider>
-            </LanguageProvider>
-          </ProfileProvider>
+            <HistoryProvider>
+            <ProfileProvider>
+              <LanguageProvider>
+                <ThemeProvider>
+                  {!dbInitialized || !fontsLoaded ? (
+                    <LoadingScreen loading />
+                  ) : !isAppReady ? (
+                    <LoadingScreen onPress={() => setIsAppReady(true)} />
+                  ) : (
+                    // для корректного взаимодействия с bgColor из Theme
+                    <AppContainer />
+                  )}
+                </ThemeProvider>
+              </LanguageProvider>
+            </ProfileProvider>
+            </HistoryProvider>
         </Provider>
       </QueryClientProvider>
     </SafeAreaProvider>

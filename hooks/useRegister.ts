@@ -1,9 +1,10 @@
 import { useMutation } from '@tanstack/react-query';
-import { router } from 'expo-router';
 
 import { AuthService } from '@/services/api/services/authService';
+import { useHistory } from '@/hooks/useHistory';
 
 export const useProfileRegister = () => {
+  const { navigate } = useHistory();
   return useMutation({
     mutationKey: ['user'],
     mutationFn: ({
@@ -12,17 +13,17 @@ export const useProfileRegister = () => {
       email,
       language,
     }: {
-      email: string;
       login: string;
       password: string;
+      email: string;
       language: string;
     }) => AuthService.register(login, password, email, language),
     onSuccess: () => {
-      router.push('/(auth)/login');
+      navigate('/(auth)/login');
     },
     onError: error => {
       console.log(error);
-      router.push('/(auth)/registration');
+      navigate('/(auth)/registration');
     },
   });
 };

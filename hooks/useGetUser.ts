@@ -1,11 +1,11 @@
-import { useQuery } from '@tanstack/react-query';
-import { UserService } from '@/services/api/services/userService';
 import { UserType } from '@/types/UserType';
 
-export const useGetUser = (
-  userId: number,
-  options?: { enabled?: boolean },
-) => {
+import { useQuery } from '@tanstack/react-query';
+
+import { UserService } from '@/services/api/services/userService';
+
+// хук для получения пользователя по id
+export const useGetUser = (userId: number, options?: { enabled?: boolean }) => {
   return useQuery<UserType>({
     queryKey: ['user', userId],
     enabled: options?.enabled,

@@ -2,7 +2,8 @@ import { Redirect } from 'expo-router';
 
 import { useProfile } from '@/hooks/useProfile';
 
-// index в (tabs) не находит, нужен явный редирект
+// !!!ЗДЕСЬ НЕ ИСПОЛЬЗУЕТСЯ useHistory.
+// Index в (tabs) не находит, нужен явный редирект
 export default function Index() {
   const { user } = useProfile();
 

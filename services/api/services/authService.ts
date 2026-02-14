@@ -9,6 +9,7 @@ export class AuthService {
   ): Promise<AxiosResponse<{ id: number; message: string }>> {
     console.log('Login attempt:', { login, password });
     // Временно get пока заглушка
+    // post получает токены (access и refresh)
     // return api.post('/login', { email, password });
 
     return api.get('/login/1');

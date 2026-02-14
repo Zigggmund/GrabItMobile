@@ -1,6 +1,5 @@
-import { useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { router, Tabs, usePathname, useSegments } from 'expo-router';
+import { Tabs, usePathname, useSegments } from 'expo-router';
 
 import { useLanguage } from '@/hooks/useLanguage';
 import { useProfile } from '@/hooks/useProfile';

@@ -75,7 +75,7 @@ export default function Search() {
       />
 
       <View className={'gap-2 items-center'}>
-        <View className={'flex-row justify-between w-full'}>
+        <View className={'flex-row justify-between w-full items-center'}>
           <SortingMenu<SortingType>
             items={[
               { label: l.byDate, value: 'date' },

@@ -5,7 +5,7 @@
    ```
 2. Testing with android device
    ```bash
-   npx expo android:run
+   npx expo run:android
    ```
 
 3. Testing fake api

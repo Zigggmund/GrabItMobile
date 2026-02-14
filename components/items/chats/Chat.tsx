@@ -1,8 +1,8 @@
 import { ChatType } from '@/types/ChatType';
 
 import { TouchableOpacity, View } from 'react-native';
-import { router } from 'expo-router';
 
+import { useHistory } from '@/hooks/useHistory';
 import { useTheme } from '@/hooks/useTheme';
 
 import { dateFormat } from '@/utils/dateFormat';
@@ -18,9 +18,10 @@ interface ChatProps {
 
 export function Chat({ index = 1, chat }: ChatProps) {
   const { colors } = useTheme();
+  const { navigate } = useHistory();
 
   return (
-    <TouchableOpacity onPress={() => router.push(`/(tabs)/chats/${chat.id}`)}>
+    <TouchableOpacity onPress={() => navigate(`/(tabs)/chats/${chat.id}`)}>
       <GreyBlock index={index} className={'flex-row gap-4'}>
         <ProfileAvatar
           source={chat.talker.avatar?.url}

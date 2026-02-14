@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import { router } from 'expo-router';
 
 import { useLanguage } from '@/hooks/useLanguage';
 import { useProfileRegister } from '@/hooks/useRegister';
@@ -11,11 +10,13 @@ import { CustomButton } from '@/components/ui/button/CustomButton';
 import CustomInput from '@/components/ui/input/CustomInput';
 import { CustomInputMenu } from '@/components/ui/input/CustomInputMenu';
 import { CustomText } from '@/components/ui/text/CustomText';
+import { useHistory } from '@/hooks/useHistory';
 
 // маска для почты (без доменов, простейшая)
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function RegistrationPage() {
+  const { navigate } = useHistory();
   const { colors } = useTheme();
   const { l } = useLanguage();
   const profileRegister = useProfileRegister();
@@ -149,7 +150,7 @@ export default function RegistrationPage() {
         />
 
         <TouchableOpacity
-          onPress={() => router.push('/(auth)/login')}
+          onPress={() => navigate('/(auth)/login')}
           className="flex-col gap-2 items-center"
         >
           <CustomText
@@ -162,7 +163,7 @@ export default function RegistrationPage() {
           {/*<CustomButton*/}
           {/*  text={l.btnRegister}*/}
           {/*  type="secondary"*/}
-          {/*  onPress={() => router.push('/(auth)/login')}*/}
+          {/*  onPress={() => navigate('/(auth)/login')}*/}
           {/*/>*/}
         </TouchableOpacity>
       </View>

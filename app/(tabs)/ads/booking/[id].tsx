@@ -1,14 +1,16 @@
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 
+import { useHistory } from '@/hooks/useHistory';
 import { useTheme } from '@/hooks/useTheme';
 
 import ScreenContainer from '@/components/layout/ScreenContainer';
-import { CustomText } from '@/components/ui/text/CustomText';
 import { CustomButton } from '@/components/ui/button/CustomButton';
+import { CustomText } from '@/components/ui/text/CustomText';
 
 export default function Booking() {
   const { id } = useLocalSearchParams();
   const { colors } = useTheme();
+  const { navigate } = useHistory();
 
   return (
     <ScreenContainer>
@@ -20,16 +22,18 @@ export default function Booking() {
         Ad-{id} booking
       </CustomText>
 
+      <CustomButton onPress={() => navigate('/(auth)/login')} text={'login'} />
       <CustomButton
-        onPress={() => router.push('/(auth)/login')}
-        text={'login'}
-      />
-      <CustomButton
-        onPress={() => router.push('/(tabs)/ads/booking/123')}
+        onPress={() =>
+          navigate({
+            pathname: '/(tabs)/ads/booking/[id]',
+            params: { id: String(123) },
+          })
+        }
         text={'booking-123'}
       />
       <CustomButton
-        onPress={() => router.push('/(tabs)/users/settings')}
+        onPress={() => navigate('/(tabs)/users/settings')}
         text={'settings'}
       />
     </ScreenContainer>

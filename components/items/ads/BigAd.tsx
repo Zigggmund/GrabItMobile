@@ -1,3 +1,5 @@
+import { AdPreviewType } from '@/types/AdType';
+
 import { Image, View } from 'react-native';
 
 import { useLanguage } from '@/hooks/useLanguage';
@@ -5,7 +7,6 @@ import { useTheme } from '@/hooks/useTheme';
 
 import RatingStars from '@/components/common/RatingStars';
 import { CustomText } from '@/components/ui/text/CustomText';
-import { AdPreviewType } from '@/types/AdType';
 
 interface BigAdProps {
   ad: AdPreviewType;

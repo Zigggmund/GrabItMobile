@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { View } from 'react-native';
-import { router } from 'expo-router';
 
+import { useHistory } from '@/hooks/useHistory';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useProfileLogin } from '@/hooks/useLogin';
 import { useTheme } from '@/hooks/useTheme';
@@ -13,6 +13,7 @@ import { CustomText } from '@/components/ui/text/CustomText';
 
 export default function LoginPage() {
   const profileLogin = useProfileLogin();
+  const { navigate } = useHistory();
   const { colors } = useTheme();
   const { l } = useLanguage();
 
@@ -103,7 +104,7 @@ export default function LoginPage() {
         <CustomButton
           text={l.btnCreateAccount}
           type="secondary"
-          onPress={() => router.push('/(auth)/registration')}
+          onPress={() => navigate('/(auth)/registration')}
           textClassName="text-26"
           className={'w-full'}
         />

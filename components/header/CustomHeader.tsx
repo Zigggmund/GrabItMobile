@@ -1,6 +1,6 @@
 import { View } from 'react-native';
-import { router } from 'expo-router';
 
+import { useHistory } from '@/hooks/useHistory';
 import { useProfile } from '@/hooks/useProfile';
 import { useTheme } from '@/hooks/useTheme';
 
@@ -22,6 +22,8 @@ export default function CustomHeader({
 }: CustomHeaderProps) {
   const { colors } = useTheme();
   const { user } = useProfile();
+  const { goBack, navigate } = useHistory();
+
   // console.log(
   //   'hasback:',
   //   hasBack,
@@ -30,6 +32,8 @@ export default function CustomHeader({
   //   'isSettingsScreen:',
   //   isSettingsScreen,
   // );
+
+  if (!user) return null;
 
   return (
     <>
@@ -48,7 +52,7 @@ export default function CustomHeader({
             }
             source={icons.settings}
             size={40}
-            onPress={() => router.push('/(tabs)/users/settings')}
+            onPress={() => navigate('/(tabs)/users/settings')}
           />
         )}
         {/* СТРЕЛКА */}
@@ -57,10 +61,7 @@ export default function CustomHeader({
             className={'mr-3'}
             color={colors.components.icon.navIcon.bg}
             source={icons.arrowBack}
-            onPress={() => {
-              if (router.canGoBack()) router.back();
-              else router.navigate('/(tabs)/ads/search');
-            }}
+            onPress={goBack}
             size={30}
           />
         )}
@@ -78,7 +79,12 @@ export default function CustomHeader({
             }
             source={icons.profile}
             size={70}
-            onPress={() => router.push(`/(tabs)/users/${user?.id}`)}
+            onPress={() =>
+              navigate({
+                pathname: '/(tabs)/users/[id]',
+                params: { id: user?.id.toString() },
+              })
+            }
           />
         </View>
       </View>
