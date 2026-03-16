@@ -60,6 +60,17 @@ export const componentColors = {
         border: baseColors.neutral.greyBluePrimary,
       },
     },
+    reviewDistribution: {
+      light: {
+        bgFilled: baseColors.neutral.greyDark,
+        // bgFilled: baseColors.grey.primary,
+        bgEmpty: baseColors.grey.bright,
+      },
+      dark: {
+        bgFilled: baseColors.orange.semibright,
+        bgEmpty: baseColors.neutral.whiteBright,
+      },
+    },
   },
   // линии
   line: {

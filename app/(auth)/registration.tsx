@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 
 import { useLanguage } from '@/hooks/useLanguage';
-import { useProfileRegister } from '@/hooks/useRegister';
+import { useProfileRegister } from '@/hooks/auth/useRegister';
 import { useTheme } from '@/hooks/useTheme';
 
 import ScreenContainer from '@/components/layout/ScreenContainer';

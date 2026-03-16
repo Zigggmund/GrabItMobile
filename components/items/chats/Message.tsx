@@ -2,7 +2,7 @@ import { MessageType } from '@/types/ChatType';
 
 import { View } from 'react-native';
 
-import { useProfile } from '@/hooks/useProfile';
+import { useProfile } from '@/hooks/user/useProfile';
 import { useTheme } from '@/hooks/useTheme';
 
 import { timeFormat } from '@/utils/timeFormat';

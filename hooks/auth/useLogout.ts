@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 
 import { useHistory } from '@/hooks/useHistory';
-import { useProfile } from '@/hooks/useProfile';
+import { useProfile } from '@/hooks/user/useProfile';
 
 import { AuthService } from '@/services/api/services/authService';
 

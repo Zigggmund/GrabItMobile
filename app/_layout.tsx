@@ -21,12 +21,13 @@ import '../global.css';
 import LoadingScreen from '@/app/loading';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { HistoryProvider } from '@/context/HistoryProvider';
+import { loadCity } from '@/state/city/citySlice';
 
 export default function RootLayout() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const [dbInitialized, setDbInitialized] = useState(false);
   const [isAppReady, setIsAppReady] = useState(false);
-  const queryClient = new QueryClient();
+  const [queryClient] = useState(() => new QueryClient());
 
   // ДЛЯ РАЗОВОЙ ОЧИСТКИ ПРИ ОШИБОЧНЫХ ДАННЫХ В ХРАНИЛИЩЕ
   // useEffect(() => {
@@ -62,6 +63,9 @@ export default function RootLayout() {
       setFontsLoaded(true);
     };
     loadFonts();
+
+    console.log('Получение города из хранилища...');
+    store.dispatch(loadCity())
 
     console.log('Инициализация бд...');
     const initializeDb = async () => {

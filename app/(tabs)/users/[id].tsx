@@ -1,13 +1,14 @@
 import { ActivityIndicator, ScrollView, View } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 
-import { useGetUser } from '@/hooks/useGetUser';
+import { useProfileLogout } from '@/hooks/auth/useLogout';
 import { useHistory } from '@/hooks/useHistory';
 import { useLanguage } from '@/hooks/useLanguage';
-import { useProfileLogout } from '@/hooks/useLogout';
-import { useProfile } from '@/hooks/useProfile';
+import { useGetUser } from '@/hooks/user/useGetUser';
+import { useProfile } from '@/hooks/user/useProfile';
 import { useTheme } from '@/hooks/useTheme';
 
+import ErrorMessage from '@/components/common/ErrorMessage';
 import GreyBlock from '@/components/common/GreyBlock';
 import { ProfileAvatar } from '@/components/common/ProfileAvatar';
 import ScreenContainer from '@/components/layout/ScreenContainer';
@@ -45,17 +46,17 @@ export default function UserProfile() {
       </ScreenContainer>
     );
   }
-
-  if (!user || isError) {
+  if (!user) {
     return (
       <ScreenContainer>
-        <CustomText
-          style={{ color: colors.base.red.bright }}
-          highlight
-          className={'text-60'}
-        >
-          {l.errorUserNotFound}
-        </CustomText>
+        <ErrorMessage text={l.errorUserNotFound} />
+      </ScreenContainer>
+    );
+  }
+  if (isError) {
+    return (
+      <ScreenContainer>
+        <ErrorMessage text={l.errorAPI} />
       </ScreenContainer>
     );
   }
@@ -114,7 +115,7 @@ export default function UserProfile() {
                   style={{ color: colors.theme.blue.primary }}
                   className={'text-17 font-bold'}
                 >
-                  {user?.stats.rating == 0 ? '-' : user?.stats.rating}
+                  {user?.stats.rating ?? '-'}
                 </CustomText>
               </View>
               <View className={'flex-row gap-2'}>
@@ -194,30 +195,34 @@ export default function UserProfile() {
                 onPress={() => profileLogout.mutate()}
               />
             ) : (
+              user.stats.offers > 0 && (
+                <CustomButton
+                  textClassName={'text-18'}
+                  text={l.btnToOffers}
+                  className={'mb-2'}
+                  onPress={() =>
+                    navigate({
+                      pathname: '/(tabs)/users/landlordAds/[id]',
+                      params: { id: user?.id },
+                    })
+                  }
+                />
+              )
+            )}
+
+            {user.stats.reviews > 0 && (
               <CustomButton
-                textClassName={'text-18'}
-                text={l.btnToOffers}
-                className={'mb-2'}
+                textClassName={'text-18 font-medium'}
+                className={'mb-6'}
+                text={l.btnToReviews}
                 onPress={() =>
                   navigate({
-                    pathname: '/(tabs)/users/landlordAds/[id]',
+                    pathname: '/(tabs)/users/reviews/[id]',
                     params: { id: user?.id },
                   })
                 }
               />
             )}
-
-            <CustomButton
-              textClassName={'text-18 font-medium'}
-              className={'mb-6'}
-              text={l.btnToReviews}
-              onPress={() =>
-                navigate({
-                  pathname: '/(tabs)/users/reviews/[id]',
-                  params: { id: user?.id },
-                })
-              }
-            />
           </View>
         </View>
       </ScrollView>

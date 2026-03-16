@@ -1,0 +1,696 @@
+{
+  "login": [
+    {
+      "id": 1,
+      "message": "Login successful"
+    }
+  ],
+  "register": [
+    {
+      "id": 1,
+      "message": "User registered successfully"
+    }
+  ],
+  "logout": [
+    {
+      "id": 1,
+      "message": "Logged out successfully"
+    }
+  ],
+  "user": [
+    {
+      "id": 1,
+      "email": "test@example.com",
+      "login": "testuser",
+      "password": "testpassword",
+      "isVerified": false,
+      "language": "ru",
+      "avatar": {
+        "id": 1,
+        "url": "https://reqres.in/img/faces/1-image.jpg"
+      },
+      "phoneNumber": "89130000000",
+      "name": "Тестовый Пользователь",
+      "description": "Это тестовый пользователь для демонстрации",
+      "stats": {
+        "reviews": 15,
+        "rating": 4.8,
+        "offers": 7
+      }
+    },
+    {
+      "id": 2,
+      "email": "elMusk@mail.com",
+      "login": "elnMsk",
+      "password": "testpassword",
+      "isVerified": true,
+      "language": "en",
+      "avatar": {
+        "id": 3,
+        "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1-MXUc6ZkxBNNdj3-YW8SSJX-WGgjUXsxWg&s"
+      },
+      "phoneNumber": "80003330033",
+      "name": "Elon Musk",
+      "description": "Make Twitter great again!!!!!",
+      "stats": {
+        "reviews": 165,
+        "rating": 3.9,
+        "offers": 8
+      }
+    },
+    {
+      "id": 3,
+      "email": "thomas@mail.com",
+      "login": "ThomasSelbyLogin",
+      "password": "testpassword",
+      "isVerified": true,
+      "language": "en",
+      "avatar": {
+        "id": 3,
+        "url": "https://i.pinimg.com/736x/ef/72/12/ef72124884b8b7844de311e24d8bbec0.jpg"
+      },
+      "phoneNumber": "81111111111",
+      "name": "Thomas Shelby",
+      "description": "Hello, I\"m a fictional character and the main protagonist of the British period crime drama Peaky Blinders.",
+      "stats": {
+        "reviews": 9,
+        "rating": 4.4,
+        "offers": 1
+      }
+    },
+    {
+      "id": 4,
+      "email": "patrick@mail.com",
+      "login": "Psycho1234",
+      "password": "testpassword",
+      "isVerified": true,
+      "language": "en",
+      "avatar": {
+        "id": 4,
+        "url": "https://opis-cdn.tinkoffjournal.ru/mercury/christian-bale-50-04.a3lndzrhegtq..jpg"
+      },
+      "phoneNumber": "88005553535",
+      "name": "Patrick Bateman",
+      "description": "Haters gonna hate",
+      "stats": {
+        "reviews": 0,
+        "rating": 0,
+        "offers": 0
+      }
+    }
+  ],
+  "ad": [
+    {
+      "id": 1,
+      "title": "Дачный коттедж",
+      "cost": [
+        { "payment": 8000, "priceUnit": "rubPerDay" },
+        { "payment": 20000, "priceUnit": "rubPerWeek" },
+        { "payment": 68000, "priceUnit": "rubPerMonth" }
+      ],
+      "rating": 4.1,
+      "description": "Уютный дом для отдыха на природе. Подходит для семейных поездок и вечеров с друзьями. Терраса, баня, мангал и просторный участок. По дополнительным вопросам звонить по номеру. Возможен торг.",
+      "address": "Р-н Октябрьский",
+      "reviewCount": 13,
+      "productType": "space",
+      "category": { "id": 1, "name": "housing" },
+      "previewImage": {
+        "id": 1,
+        "url": "https://deloteh.ru/wp-content/uploads/2024/04/01-1-scaled-2-1024x635.jpg"
+      },
+      "createdDate": "2026-02-20T16:19:58.143Z"
+    },
+    {
+      "id": 2,
+      "title": "Электродрель",
+      "cost": [
+        { "payment": 200, "priceUnit": "rubPerHour" },
+        { "payment": 800, "priceUnit": "rubPerDay" },
+        { "payment": 2000, "priceUnit": "rubPerWeek" }
+      ],
+      "rating": 2.2,
+      "description": "Мощная дрель для бытового использования. Подходит для ремонта дома и работы с деревом и металлом.",
+      "address": "Р-н Октябрьский",
+      "reviewCount": 4,
+      "productType": "product",
+      "category": { "id": 2, "name": "tools" },
+      "previewImage": {
+        "id": 1,
+        "url": "https://ir.ozone.ru/s3/multimedia-i/c1000/6818037174.jpg"
+      },
+      "createdDate": "2026-02-18T13:19:58.143Z"
+    },
+    {
+      "id": 3,
+      "title": "Художественная мастерская",
+      "cost": [
+        { "payment": 5000, "priceUnit": "rubPerDay" },
+        { "payment": 112000, "priceUnit": "rubPerMonth" }
+      ],
+      "rating": 4.3,
+      "description": "Творческое пространство для проведения мастер-классов",
+      "address": "Р-н Октябрьский",
+      "reviewCount": 81,
+      "productType": "space",
+      "category": { "id": 3, "name": "public" },
+      "previewImage": {
+        "id": 3,
+        "url": "https://m-c-m-c.ru/sites/default/files/styles/1024x768/public/%D0%B2%D0%B4%D0%BE%D1%85%D0%BD%D0%BE%D0%B2%D0%B5%D0%BD%D0%B8%D0%B5.jpeg?itok=iwCcMlO4"
+      },
+      "createdDate": "2026-02-20T13:19:58.143Z"
+    },
+    {
+      "id": 4,
+      "title": "Ремонт холодильников",
+      "cost": [
+        { "payment": 600, "priceUnit": "rubPerDay" }
+      ],
+      "rating": 4.4,
+      "description": "Оперативный ремонт холодильников на дому. Гарантия, оригинальные запчасти, диагностика в подарок.",
+      "address": "Р-н Ленинский",
+      "reviewCount": 1,
+      "productType": "service",
+      "category": { "id": 4, "name": "private" },
+      "previewImage": {
+        "id": 4,
+        "url": "https://umex-service.ru/images/2024/12/01/refrigerator-repair.webp"
+      },
+      "createdDate": "2026-02-20T08:19:58.143Z"
+    },
+    {
+      "id": 5,
+      "title": "Ветеринар",
+      "cost": [
+        { "payment": 900, "priceUnit": "rubPerDay" }
+      ],
+      "rating": null,
+      "description": "Профессиональный ветеринар с выездом на дом. Помощь при травмах, вакцинация, чипирование и консультации.",
+      "address": "Р-н Октябрьский",
+      "reviewCount": 0,
+      "productType": "service",
+      "category": { "id": 5, "name": "private" },
+      "previewImage": {
+        "id": 5,
+        "url": "https://dpogti.ru/wp-content/uploads/2023/10/veterinarian-taking-care-of-pet-dog.jpg"
+      },
+      "createdDate": "2026-02-19T22:19:58.143Z"
+    }
+  ],
+  "adDetails": [
+    {
+      "id": 1,
+      "title": "Дачный коттедж",
+      "cost": [
+        { "payment": 8000, "priceUnit": "rubPerDay" },
+        { "payment": 20000, "priceUnit": "rubPerWeek" },
+        { "payment": 68000, "priceUnit": "rubPerMonth" }
+      ],
+      "rating": 4.1,
+      "description": "Уютный дом для отдыха на природе. Подходит для семейных поездок и вечеров с друзьями. Терраса, баня, мангал и просторный участок. По дополнительным вопросам звонить по номеру. Возможен торг.",
+      "address": "Р-н Октябрьский",
+      "reviewCount": 13,
+      "productType": "space",
+      "category": { "id": 1, "name": "housing" },
+      "previewImage": {
+        "id": 1,
+        "url": "https://deloteh.ru/wp-content/uploads/2024/04/01-1-scaled-2-1024x635.jpg"
+      },
+      "createdDate": "2026-02-20T16:19:58.143Z",
+      "media": [
+        {
+        "id": 1,
+        "url": "https://m.terem-pro.ru/upload/iblock/ef0/ef0f2b095e0a7f6bb7ecf5171031938c.jpg"
+        }
+      ],
+      "landlord": {
+        "id": 2,
+        "name": "Elon Musk",
+        "avatar": {
+          "id": 3,
+          "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1-MXUc6ZkxBNNdj3-YW8SSJX-WGgjUXsxWg&s"
+        },
+        "rating": 3.9,
+        "reviewCount": 165,
+        "phoneNumber": "80003330033"
+      },
+      "myBooking": {
+        "endTime": "2026-03-20T16:19:58.143Z"
+      }
+    },
+    {
+      "id": 2,
+      "title": "Электродрель",
+      "cost": [
+        { "payment": 200, "priceUnit": "rubPerHour" },
+        { "payment": 800, "priceUnit": "rubPerDay" },
+        { "payment": 2000, "priceUnit": "rubPerWeek" }
+      ],
+      "rating": 2.2,
+      "description": "Мощная дрель для бытового использования. Подходит для ремонта дома и работы с деревом и металлом.",
+      "address": "Р-н Октябрьский",
+      "reviewCount": 4,
+      "productType": "product",
+      "specifications": [
+        "Мощность 200 Вт",
+        "Частота вращения 1200 об/мин",
+        "Вес 2.2 кг",
+        "Возможность регулировки скорости"
+      ],
+      "category": { "id": 2, "name": "tools" },
+      "previewImage": {
+        "id": 1,
+        "url": "https://ir.ozone.ru/s3/multimedia-i/c1000/6818037174.jpg"
+      },
+      "createdDate": "2026-02-18T13:19:58.143Z",
+      "myBooking": {
+        "endTime": "2025-03-20T16:19:58.143Z"
+      },
+      "landlord": {
+        "id": 4,
+        "name": "Patrick Bateman",
+        "avatar": {
+          "id": 4,
+          "url": "https://opis-cdn.tinkoffjournal.ru/mercury/christian-bale-50-04.a3lndzrhegtq..jpg"
+        },
+        "rating": 0,
+        "reviewCount": 0,
+        "phoneNumber": "88005553535"
+      }
+    },
+    {
+      "id": 3,
+      "title": "Художественная мастерская",
+      "cost": [
+        { "payment": 5000, "priceUnit": "rubPerDay" },
+        { "payment": 112000, "priceUnit": "rubPerMonth" }
+      ],
+      "rating": 4.3,
+      "description": "Творческое пространство для проведения мастер-классов",
+      "address": "Р-н Октябрьский",
+      "reviewCount": 81,
+      "productType": "space",
+      "category": { "id": 3, "name": "public" },
+      "previewImage": {
+        "id": 3,
+        "url": "https://m-c-m-c.ru/sites/default/files/styles/1024x768/public/%D0%B2%D0%B4%D0%BE%D1%85%D0%BD%D0%BE%D0%B2%D0%B5%D0%BD%D0%B8%D0%B5.jpeg?itok=iwCcMlO4"
+      },
+      "createdDate": "2026-02-20T13:19:58.143Z",
+      "landlord": {
+        "id": 3,
+        "name": "Thomas Shelby",
+        "avatar": {
+          "id": 3,
+          "url": "https://i.pinimg.com/736x/ef/72/12/ef72124884b8b7844de311e24d8bbec0.jpg"
+        },
+        "rating": 4.4,
+        "reviewCount": 9,
+        "phoneNumber": "81111111111"
+      }
+    },
+    {
+      "id": 4,
+      "title": "Ремонт холодильников",
+      "cost": [
+        { "payment": 600, "priceUnit": "rubPerDay" }
+      ],
+      "rating": 4.4,
+      "description": "Оперативный ремонт холодильников на дому. Гарантия, оригинальные запчасти, диагностика в подарок.",
+      "address": "Р-н Ленинский",
+      "reviewCount": 1,
+      "productType": "service",
+      "category": { "id": 4, "name": "private" },
+      "previewImage": {
+        "id": 4,
+        "url": "https://umex-service.ru/images/2024/12/01/refrigerator-repair.webp"
+      },
+      "createdDate": "2026-02-20T08:19:58.143Z",
+      "landlord": {
+        "id": 2,
+        "name": "Elon Musk",
+        "avatar": {
+          "id": 3,
+          "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1-MXUc6ZkxBNNdj3-YW8SSJX-WGgjUXsxWg&s"
+        },
+        "rating": 3.9,
+        "reviewCount": 165,
+        "phoneNumber": "80003330033"
+      }
+    },
+    {
+      "id": 5,
+      "title": "Ветеринар",
+      "cost": [
+        { "payment": 900, "priceUnit": "rubPerDay" }
+      ],
+      "rating": null,
+      "description": "Профессиональный ветеринар с выездом на дом. Помощь при травмах, вакцинация, чипирование и консультации.",
+      "address": "Р-н Октябрьский",
+      "reviewCount": 0,
+      "productType": "service",
+      "category": { "id": 5, "name": "private" },
+      "previewImage": {
+        "id": 5,
+        "url": "https://dpogti.ru/wp-content/uploads/2023/10/veterinarian-taking-care-of-pet-dog.jpg"
+      },
+      "createdDate": "2026-02-19T22:19:58.143Z",
+      "myBooking": {
+        "endTime": "2026-02-24T16:19:58.143Z"
+      },
+      "landlord": {
+        "id": 2,
+        "name": "Elon Musk",
+        "avatar": {
+          "id": 3,
+          "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1-MXUc6ZkxBNNdj3-YW8SSJX-WGgjUXsxWg&s"
+        },
+        "rating": 3.9,
+        "reviewCount": 165,
+        "phoneNumber": "80003330033"
+      }
+    }
+  ],
+  "chat": [
+    {
+      "id": 1,
+      "talker": {
+        "id": 2,
+        "avatar": {
+          "id": 3,
+          "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1-MXUc6ZkxBNNdj3-YW8SSJX-WGgjUXsxWg&s"
+        },
+        "name": "Elon Musk",
+        "rating": 3.9,
+        "reviewCount": 165,
+        "phoneNumber": "80003330033"
+      },
+      "adName": "Ремонт квартир",
+      "lastMessageDate": "2026-01-04T18:19:58.143Z",
+      "messages": [
+        {
+          "id": 1,
+          "text": "How is the property condition?",
+          "userId": 3,
+          "date": "2026-01-04T18:19:58.143Z",
+          "isRead": true,
+          "isReceive": true
+        },
+        {
+          "id": 2,
+          "text": "I see, thanks for informing!",
+          "userId": 3,
+          "date": "2026-01-04T18:19:58.143Z",
+          "isRead": true,
+          "isReceive": true
+        },
+        {
+          "id": 3,
+          "text": "It’s nice myan for sure. You will love it",
+          "userId": 1,
+          "date": "2026-01-04T18:19:58.143Z",
+          "isRead": false,
+          "isReceive": true
+        },
+        {
+          "id": 4,
+          "text": "Thanks for contacting me!",
+          "userId": 1,
+          "date": "2026-01-04T18:19:58.143Z",
+          "isRead": false,
+          "isReceive": false
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "talker": {
+        "id": 2,
+        "avatar": {
+          "id": 3,
+          "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1-MXUc6ZkxBNNdj3-YW8SSJX-WGgjUXsxWg&s"
+        },
+        "name": "Elon Musk",
+        "rating": 3.9,
+        "reviewCount": 165,
+        "phoneNumber": "80003330033"
+      },
+      "adName": "Ремонт гаража",
+      "lastMessageDate": "2026-01-04T18:19:58.143Z",
+      "messages": [
+        {
+          "id": 1,
+          "text": "Здравствуйте, объявление актуально?",
+          "userId": 1,
+          "date": "2026-01-04T18:19:58.143Z",
+          "isRead": false,
+          "isReceive": false
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "talker": {
+        "id": 3,
+        "avatar": {
+          "id": 3,
+          "url": "https://i.pinimg.com/736x/ef/72/12/ef72124884b8b7844de311e24d8bbec0.jpg"
+        },
+        "name": "Thomas Shelby",
+        "rating": 4.4,
+        "reviewCount": 9,
+        "phoneNumber": "81111111111"
+      },
+      "adName": "Электродрель",
+      "lastMessageDate": "2026-01-04T18:19:58.143Z",
+      "messages": [
+        {
+          "id": 1,
+          "text": "Здравствуйте, хочу арендовать дрель, завтра можно заехать?",
+          "userId": 1,
+          "date": "2026-01-04T18:19:58.143Z",
+          "isRead": false,
+          "isReceive": true
+        },
+        {
+          "id": 2,
+          "text": "Ау...",
+          "userId": 1,
+          "date": "2026-01-04T18:19:58.143Z",
+          "isRead": false,
+          "isReceive": true
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "talker": {
+        "id": 4,
+        "avatar": {
+          "id": 4,
+          "url": "https://opis-cdn.tinkoffjournal.ru/mercury/christian-bale-50-04.a3lndzrhegtq..jpg"
+        },
+        "name": "Patrick Bateman",
+        "rating": 0,
+        "reviewCount": 0,
+        "phoneNumber": "88005553535"
+      },
+      "adName": "Vr-очки",
+      "lastMessageDate": "2026-01-04T18:19:58.143Z",
+      "messages": [
+        {
+          "id": 1,
+          "text": "Не успеваю вернуть брат богом клянусь потом верну",
+          "userId": 4,
+          "date": "2026-01-04T18:19:58.143Z",
+          "isRead": true,
+          "isReceive": true
+        },
+        {
+          "id": 2,
+          "text": "Время вышло. За просрок штраф будет",
+          "userId": 1,
+          "date": "2026-01-04T18:19:58.143Z",
+          "isRead": true,
+          "isReceive": true
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "talker": {
+        "id": 4,
+        "avatar": {
+          "id": 4,
+          "url": "https://opis-cdn.tinkoffjournal.ru/mercury/christian-bale-50-04.a3lndzrhegtq..jpg"
+        },
+        "name": "Patrick Bateman",
+        "rating": 0,
+        "reviewCount": 0,
+        "phoneNumber": "88005553535"
+      },
+      "adName": "Продажа Lada Vesta",
+      "lastMessageDate": "2026-01-04T18:19:58.143Z",
+      "messages": [
+      ]
+    }
+  ],
+  "rentedAd": [
+    {
+      "id": 1,
+      "chatId": 1,
+      "title": "Дачный коттедж",
+      "landlord": {
+        "id": 2,
+        "name": "Elon Musk",
+        "avatar": {
+          "id": 3,
+          "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1-MXUc6ZkxBNNdj3-YW8SSJX-WGgjUXsxWg&s"
+        },
+        "rating": 3.9,
+        "reviewCount": 165,
+        "phoneNumber": "80003330033"
+      },
+      "endTime": "2026-01-04T19:19:58.143Z",
+      "previewImage": {
+        "id": 1,
+        "url": "https://deloteh.ru/wp-content/uploads/2024/04/01-1-scaled-2-1024x635.jpg"
+      },
+      "createdDate": "2026-01-04T16:19:58.143Z"
+    },
+    {
+      "id": 2,
+      "chatId": 1,
+      "title": "Электродрель",
+      "landlord": {
+        "id": 4,
+        "name": "Patrick Bateman",
+        "avatar": {
+          "id": 4,
+          "url": "https://opis-cdn.tinkoffjournal.ru/mercury/christian-bale-50-04.a3lndzrhegtq..jpg"
+        },
+        "rating": 0,
+        "reviewCount": 0,
+        "phoneNumber": "88005553535"
+      },
+      "endTime": "2026-01-04T17:19:58.143Z",
+      "previewImage": {
+        "id": 2,
+        "url": "https://ir.ozone.ru/s3/multimedia-i/c1000/6818037174.jpg"
+      },
+      "createdDate": "2026-01-02T03:19:58.143Z"
+    },
+    {
+      "id": 5,
+      "chatId": 1,
+      "title": "Ветеринар",
+      "landlord": {
+        "id": 3,
+        "name": "Thomas Shelby",
+        "avatar": {
+          "id": 3,
+          "url": "https://i.pinimg.com/736x/ef/72/12/ef72124884b8b7844de311e24d8bbec0.jpg"
+        },
+        "rating": 4.4,
+        "reviewCount": 9,
+        "phoneNumber": "81111111111"
+      },
+      "endTime": "2026-01-04T18:19:58.143Z",
+      "previewImage": {
+        "id": 5,
+        "url": "https://dpogti.ru/wp-content/uploads/2023/10/veterinarian-taking-care-of-pet-dog.jpg"
+      },
+      "createdDate": "2026-01-03T20:19:58.143Z"
+    }
+  ],
+  "review": [
+    {
+      "id": 1,
+      "adName": "Ремонт квартир",
+      "text": "Решил сделать капитальный ремонт в двухкомнатной квартире и выбрал эту компанию по совету знакомых. В целом остался очень доволен, хотя не обошлось без мелких шероховатостей.\nНачну с главного — качество работы отличное. Стены идеально выровнены, плитка в ванной и на кухне лежит ровно, швы аккуратные и одинаковые, ничего не отходит и не трескается. Рабочие приходили вовремя, мусор выносили регулярно, в квартире всегда был порядок, насколько это вообще возможно во время ремонта.",
+      "author": {
+        "id": 2,
+        "name": "Elon Musk",
+        "avatar": {
+          "id": 3,
+          "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1-MXUc6ZkxBNNdj3-YW8SSJX-WGgjUXsxWg&s"
+        },
+        "rating": 3.9,
+        "reviewCount": 165,
+        "phoneNumber": "80003330033"
+      },
+      "createdAt": "2026-02-14T18:19:58.143Z",
+      "rating": 4.5
+    },
+    {
+      "id": 2,
+      "adName": "Ремонт гаража",
+      "text": "Хуже сервиса не встречал. Обещали одно, сделали совсем другое. Плинтусы отваливаются, углы кривые. Деньги заплачены, а нервов потратил море.",
+      "author": {
+        "id": 2,
+        "name": "Elon Musk",
+        "avatar": {
+          "id": 3,
+          "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1-MXUc6ZkxBNNdj3-YW8SSJX-WGgjUXsxWg&s"
+        },
+        "rating": 3.9,
+        "reviewCount": 165,
+        "phoneNumber": "80003330033"
+      },
+      "createdAt": "2026-02-20T18:19:58.143Z",
+      "rating": 1.2
+    },
+    {
+      "id": 3,
+      "adName": "Ремонт гаража",
+      "text": "Средненько. Обещали закончить за три недели — вышло почти месяц. Покраска стен местами неравномерная, исправили только после претензии. Цены нормальные, но контроль нужен.",
+      "author": {
+        "id": 3,
+        "name": "Thomas Shelby",
+        "avatar": {
+          "id": 3,
+          "url": "https://i.pinimg.com/736x/ef/72/12/ef72124884b8b7844de311e24d8bbec0.jpg"
+        },
+        "rating": 4.4,
+        "reviewCount": 9,
+        "phoneNumber": "81111111111"
+      },
+      "createdAt": "2026-02-20T18:19:58.143Z",
+      "rating": 3.5
+    },
+    {
+      "id": 4,
+      "adName": "Ремонт гаража",
+      "text": "Средненько. Обещали закончить за три недели — вышло почти месяц. Покраска стен местами неравномерная, исправили только после претензии. Цены нормальные, но контроль нужен.",
+      "author": {
+        "id": 3,
+        "name": "Thomas Shelby",
+        "avatar": {
+          "id": 3,
+          "url": "https://i.pinimg.com/736x/ef/72/12/ef72124884b8b7844de311e24d8bbec0.jpg"
+        },
+        "rating": 4.4,
+        "reviewCount": 9,
+        "phoneNumber": "81111111111"
+      },
+      "createdAt": "2026-02-20T18:19:58.143Z",
+      "rating": 3.5
+    },
+    {
+      "id": 5,
+      "adName": "Ремонт гаража",
+      "text": "Средненько. Обещали закончить за три недели — вышло почти месяц. Покраска стен местами неравномерная, исправили только после претензии. Цены нормальные, но контроль нужен.",
+      "author": {
+        "id": 3,
+        "name": "Thomas Shelby",
+        "avatar": {
+          "id": 3,
+          "url": "https://i.pinimg.com/736x/ef/72/12/ef72124884b8b7844de311e24d8bbec0.jpg"
+        },
+        "rating": 4.4,
+        "reviewCount": 9,
+        "phoneNumber": "81111111111"
+      },
+      "createdAt": "2026-02-20T18:19:58.143Z",
+      "rating": 3.5
+    }
+  ]
+}

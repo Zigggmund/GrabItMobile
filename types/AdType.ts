@@ -15,24 +15,29 @@ export interface AdPreviewType {
   reviewCount: number;
   address: string;
   productType: ProductType;
-  category: CategoryType;
+  categoryId: number;
   previewImage: MediaType;
   createdDate: string; // no
 }
 
 export interface AdRentedType {
   id: number;
-  chatId: number;
-  renter: UserCardType;
+  chatId: number; // из bookingType
+  landlord: UserCardType;
   title: string;
-  endTime: string;
+  endTime: string; // из bookingType
   previewImage: MediaType;
-  createdDate: string; // no
+  // createdDate: string; // no
 }
 
 export interface AdDetailsType extends AdPreviewType {
-  media: MediaType[];
-  renter: UserCardType;
+  media: MediaType[] | null;
+  specifications: string[] | null;
+  landlord: UserCardType;
   bookingCalendar: string; // В ДАЛЬНЕЙШЕМ ИЗМЕНИТСЯ
   reviews: ReviewType[];
+  myBooking?: {
+    // id: number;
+    endTime: string;
+  } | null;
 }

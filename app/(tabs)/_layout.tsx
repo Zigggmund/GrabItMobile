@@ -1,8 +1,9 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Tabs, usePathname, useSegments } from 'expo-router';
+import { Redirect, Tabs, usePathname, useSegments } from 'expo-router';
 
+import { useGetAllCategories } from '@/hooks/category/useGetAllCategories';
 import { useLanguage } from '@/hooks/useLanguage';
-import { useProfile } from '@/hooks/useProfile';
+import { useProfile } from '@/hooks/user/useProfile';
 import { useTheme } from '@/hooks/useTheme';
 
 import CustomHeader from '@/components/header/CustomHeader';
@@ -20,6 +21,10 @@ export default function TabsLayout() {
   const { colors } = useTheme();
   const segments = useSegments() as string[];
   const pathname = usePathname();
+  const profile = useProfile();
+
+  // загрузка категорий (1 запрос при старте)
+  useGetAllCategories();
 
   // Скрывать header и tabs?
   const isAuthFlow = segments[0] === '(auth)' || segments[0] === 'loading';
@@ -40,6 +45,11 @@ export default function TabsLayout() {
   );
   const isRootTabScreen = ROOT_TAB_SCREENS.includes(current);
   const hasBack = !isRootTabScreen && !isUserProfile;
+
+  // редирект для неавторизованного пользователя, гарантия user!=undefined
+  if (!profile.user) {
+    return <Redirect href="/login" />;
+  }
 
   return (
     // SafeAreaView для предотвращения наложения системных панелей на footer/header
@@ -89,12 +99,13 @@ export default function TabsLayout() {
         <Tabs.Screen name={'users/settings'} options={{ href: null }} />
         <Tabs.Screen name={'users/landlordAds/[id]'} options={{ href: null }} />
         <Tabs.Screen name={'users/[id]'} options={{ href: null }} />
+        <Tabs.Screen name={'users/reviews/[id]'} options={{ href: null }} />
         <Tabs.Screen name={'chats/[id]'} options={{ href: null }} />
         <Tabs.Screen name={'ads/[id]'} options={{ href: null }} />
         <Tabs.Screen name={'ads/createAd'} options={{ href: null }} />
         <Tabs.Screen name={'ads/booking/[id]'} options={{ href: null }} />
         <Tabs.Screen name={'ads/reviews/[id]'} options={{ href: null }} />
-        <Tabs.Screen name={'users/reviews/[id]'} options={{ href: null }} />
+        <Tabs.Screen name={'ads/map/[id]'} options={{ href: null }} />
       </Tabs>
 
       {/*<Stack screenOptions={{ headerShown: false }} />*/}

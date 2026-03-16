@@ -4,11 +4,13 @@ import { useLanguage } from '@/hooks/useLanguage';
 
 import { CustomText } from '@/components/ui/text/CustomText';
 
+import { CityKey } from '@/constants/cities';
+
 interface Props {
   visible: boolean;
   onClose: () => void;
   cities: string[];
-  currentCity: string;
+  currentCity: CityKey;
   onSelect: (value: string) => void;
 }
 

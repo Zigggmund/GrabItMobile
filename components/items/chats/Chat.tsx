@@ -22,7 +22,7 @@ export function Chat({ index = 1, chat }: ChatProps) {
 
   return (
     <TouchableOpacity onPress={() => navigate(`/(tabs)/chats/${chat.id}`)}>
-      <GreyBlock index={index} className={'flex-row gap-4'}>
+      <GreyBlock index={index} className={'flex-row gap-4 items-center'}>
         <ProfileAvatar
           source={chat.talker.avatar?.url}
           id={chat.talker.id}

@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 
 import { useHistory } from '@/hooks/useHistory';
-import { useProfile } from '@/hooks/useProfile';
+import { useProfile } from '@/hooks/user/useProfile';
 import { useTheme } from '@/hooks/useTheme';
 
 import CitySelector from '@/components/header/CitySelector';

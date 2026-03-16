@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { router, Slot, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 
-import { useProfile } from '@/hooks/useProfile';
+import { useProfile } from '@/hooks/user/useProfile';
 import { useTheme } from '@/hooks/useTheme';
 
 // !!!ЗДЕСЬ НЕ ИСПОЛЬЗУЕТСЯ useHistory.

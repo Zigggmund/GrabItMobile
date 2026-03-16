@@ -12,7 +12,7 @@ export interface UserType {
   description: string;
   stats: {
     reviews: number;
-    rating: number;
+    rating: number | null;
     offers: number;
   };
 }

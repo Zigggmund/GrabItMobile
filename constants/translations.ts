@@ -32,10 +32,11 @@ export const translations = {
 
     // Поиск
     searchFor: 'Поиск вещи/помещения/услуги',
-    byCheap: 'Сначала дешевле',
-    byExpensive: 'Сначала дороже',
-    byPopular: 'По популярности',
-    byDate: 'По дате',
+    byCheap: 'Сначала недорогие',
+    byExpensive: 'Сначала дорогие',
+    byPopular: 'Сначала популярные',
+    byNew: 'Сначала новые',
+    byOld: 'Сначала старые',
     services: 'Услуги',
     products: 'Вещи',
     spaces: 'Помещения',
@@ -73,6 +74,16 @@ export const translations = {
     // Объявление
     name: 'Название',
     description: 'Описание',
+    rentWillEnd: 'До конца аренды',
+    price: 'Цена',
+    address: 'Адрес',
+    specifications: 'Характеристики',
+    bookingCalendar: 'Календарь бронирования',
+    landlord: 'Арендодатель',
+
+    // Reviews
+    byHigh: 'Сначала положительные',
+    byLow: 'Сначала отрицательные',
 
     // Другое
     success: 'Успех',
@@ -135,18 +146,18 @@ export const translations = {
     cheboksary: 'Чебоксары',
 
     // Категории
-    categoryTransport: 'Транспорт',
-    categoryRealEstate: 'Недвижимость',
-    categoryElectronics: 'Электроника',
-    categoryTools: 'Инструменты и техника',
-    categoryHomeAndLife: 'Дом и быт',
-    categoryEvents: 'Мероприятия',
-    categorySportsAndLeisure: 'Спорт и отдых',
-    categoryHealthAndBeauty: 'Здоровье и красота',
-    categoryKids: 'Детские товары',
-    categoryClothing: 'Одежда и аксессуары',
-    categoryBusiness: 'Бизнес и офис',
-    categoryOther: 'Другое',
+    transport: 'Транспорт',
+    realEstate: 'Недвижимость',
+    electronics: 'Электроника',
+    tools: 'Инструменты и техника',
+    homeAndLife: 'Дом и быт',
+    events: 'Мероприятия',
+    sportsAndLeisure: 'Спорт и отдых',
+    healthAndBeauty: 'Здоровье и красота',
+    kids: 'Детские товары',
+    clothing: 'Одежда и аксессуары',
+    business: 'Бизнес и офис',
+    other: 'Другое',
     noCategory: 'Без категории',
 
     // Кнопки
@@ -163,13 +174,23 @@ export const translations = {
     btnEdit: 'Изменить',
     btnLogout: 'Выйти из аккаунта',
     btnToReviews: 'Посмотреть отзывы',
+    btnAllReviews: 'Все отзывы',
+    btnSelectTime: 'Выбрать время',
     btnToOffers: 'Посмотреть предложения',
+    btnFinish: 'Завершить',
+    btnExtend: 'Продлить',
+    btnReadMore: 'Читать далее',
+    btnHide: 'Скрыть',
 
     // Ошибки
     error: 'Ошибка',
     errorAPI: 'Ошибка получения данных api',
-    errorUserNotFound: 'Пользователь не найден',
-    errorChatNotFound: 'Чат не найден',
+
+    // Пустые элементы
+    emptyReviewList: 'Пока нет отзывов',
+    emptyChatList: 'Пока нет чатов',
+    emptyMessageList: 'Пока нет сообщений',
+    emptyAdList: 'Пока нет объявлений',
 
     // Валидация
     validationLogin: 'Логин должен содержать из не менее 6 символов',
@@ -211,10 +232,11 @@ export const translations = {
 
     // Search page
     searchFor: 'Search for a product/space/service',
-    byCheap: 'Cheapest first',
-    byExpensive: 'Most expensive first',
+    byCheap: 'Price: Low to high',
+    byExpensive: 'Price: high to high',
     byPopular: 'Most popular',
-    byDate: 'Newest first',
+    byOld: 'Oldest first',
+    byNew: 'Newest first',
     services: 'Services',
     products: 'Products',
     spaces: 'Spaces',
@@ -252,6 +274,16 @@ export const translations = {
     // Ad
     name: 'Name',
     description: 'Description',
+    rentWillEnd: 'Until the end of the lease',
+    price: 'Price',
+    address: 'Address',
+    bookingCalendar: 'Booking calendar',
+    specifications: 'Specifications',
+    landlord: 'Landlord',
+
+    // Reviews
+    byHigh: 'Positive first',
+    byLow: 'Negative first',
 
     // Other
     success: 'Success',
@@ -314,18 +346,18 @@ export const translations = {
     cheboksary: 'Cheboksary',
 
     // Categories
-    categoryTransport: 'Transport',
-    categoryRealEstate: 'Real Estate',
-    categoryElectronics: 'Electronics',
-    categoryTools: 'Tools and Equipment',
-    categoryHomeAndLife: 'Home and Living',
-    categoryEvents: 'Events',
-    categorySportsAndLeisure: 'Sports and Leisure',
-    categoryHealthAndBeauty: 'Health and Beauty',
-    categoryKids: 'Kids',
-    categoryClothing: 'Clothing and Accessories',
-    categoryBusiness: 'Business and Office',
-    categoryOther: 'Other',
+    transport: 'Transport',
+    realEstate: 'Real Estate',
+    electronics: 'Electronics',
+    tools: 'Tools and Equipment',
+    homeAndLife: 'Home and Living',
+    events: 'Events',
+    sportsAndLeisure: 'Sports and Leisure',
+    healthAndBeauty: 'Health and Beauty',
+    kids: 'Kids',
+    clothing: 'Clothing and Accessories',
+    business: 'Business and Office',
+    other: 'Other',
     noCategory: 'No Category',
 
     // Buttons
@@ -342,13 +374,26 @@ export const translations = {
     btnEdit: 'Edit',
     btnLogout: 'Log out',
     btnToReviews: 'View reviews',
+    btnAllReviews: 'All reviews',
+    btnSelectTime: 'Select time',
     btnToOffers: 'View offers',
+    btnFinish: 'Finish',
+    btnExtend: 'Extend',
+    btnReadMore: 'Read more',
+    btnHide: 'Hide',
 
     // Errors
     error: 'Error',
     errorAPI: 'Error receiving api data.',
     errorUserNotFound: 'The user was not found',
     errorChatNotFound: 'The chat was not found',
+    errorAdNotFound: 'The ad was not found',
+
+    // Empty
+    emptyReviewList: 'No reviews yet',
+    emptyChatList: 'No chats yet',
+    emptyMessageList: 'No messages yet',
+    emptyAdList: 'No ads yet',
 
     // Validation
     validationLogin: 'Login must be at least 5 symbols long',

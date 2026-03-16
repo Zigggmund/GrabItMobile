@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Animated, FlatList, View } from 'react-native';
+import { ActivityIndicator, Animated, FlatList, View } from 'react-native';
 
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTheme } from '@/hooks/useTheme';
@@ -12,25 +12,50 @@ import { CustomIcon } from '@/components/ui/icon/CustomIcon';
 import { CustomText } from '@/components/ui/text/CustomText';
 
 import { icons } from '@/constants/icons';
-import { mockRentedAds } from '@/constants/mocks/mockRentedAds';
 import ScrollView = Animated.ScrollView;
+import { useGetUserRentedAds } from '@/hooks/ad/useGetUserRentedAds';
+import { useProfile } from '@/hooks/user/useProfile';
+
+import ErrorMessage from '@/components/common/ErrorMessage';
+
+import { BIG_AD_WIDTH } from '@/constants/sizes';
 
 export default function RentPage() {
   const { colors } = useTheme();
   const { l } = useLanguage();
+  const profile = useProfile();
   const [isOpenCurrent, setIsOpenCurrent] = useState(true);
-  const [isOpenEnded, setIsOpenEnded] = useState(true);
-  const itemWidth = 340; // ширина RentedAd
+  const [isOpenEnded, setIsOpenEnded] = useState(false);
+
+  const {
+    data: rentedAds = [],
+    isLoading: isLoading,
+    isError: isError,
+  } = useGetUserRentedAds(profile.user!.id);
+
+  if (isLoading)
+    return (
+      <ScreenContainer>
+        <ActivityIndicator />
+      </ScreenContainer>
+    );
+
+  if (isError)
+    return (
+      <ScreenContainer>
+        <ErrorMessage text={l.errorAPI} />
+      </ScreenContainer>
+    );
 
   return (
     <ScreenContainer>
       <ScrollView>
         <View
-          style={{ width: itemWidth }}
+          style={{ width: BIG_AD_WIDTH }}
           className={'pb-2 flex-row items-center justify-between'}
         >
           <CustomText
-            style={{ color: colors.base.orange.primary,  }}
+            style={{ color: colors.base.orange.primary }}
             className={'text-33 font-medium flex-1 text-center'}
             highlight
           >
@@ -47,15 +72,25 @@ export default function RentPage() {
           <FlatList
             scrollEnabled={false}
             ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
-            data={mockRentedAds.filter(
-              item => getRemainingTime(item.endTime) > 0,
-            )}
+            data={rentedAds.filter(item => getRemainingTime(item.endTime) > 0)}
             renderItem={({ item }) => (
-              <RentedAd width={itemWidth} ad={item} isEnded={false} />
+              <RentedAd width={BIG_AD_WIDTH} ad={item} isEnded={false} />
+            )}
+            ListEmptyComponent={() => (
+              <CustomText
+                highlight
+                className={'text-28 text-center'}
+                style={{ color: colors.theme.blue.primary }}
+              >
+                {l.emptyAdList}
+              </CustomText>
             )}
           />
         )}
-        <View style={{ width: itemWidth }} className={'pt-4 pb-2 flex-row justify-between items-center'}>
+        <View
+          style={{ width: BIG_AD_WIDTH }}
+          className={'pt-4 pb-2 flex-row justify-between items-center'}
+        >
           <CustomText
             style={{ color: colors.base.orange.primary }}
             className={'text-33 font-medium flex-1 text-center'}
@@ -74,13 +109,20 @@ export default function RentPage() {
           <FlatList
             scrollEnabled={false}
             ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
-            data={mockRentedAds.filter(
-              item => getRemainingTime(item.endTime) == 0,
-            )}
+            data={rentedAds.filter(item => getRemainingTime(item.endTime) == 0)}
             renderItem={({ item }) => (
-              <RentedAd width={itemWidth} ad={item} isEnded={true} />
+              <RentedAd width={BIG_AD_WIDTH} ad={item} isEnded={true} />
             )}
             contentContainerStyle={{ paddingBottom: 20 }}
+            ListEmptyComponent={() => (
+              <CustomText
+                highlight
+                className={'text-28 text-center'}
+                style={{ color: colors.theme.blue.primary }}
+              >
+                {l.emptyAdList}
+              </CustomText>
+            )}
           />
         )}
       </ScrollView>

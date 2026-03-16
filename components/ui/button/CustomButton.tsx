@@ -1,4 +1,9 @@
-import { Image, ImageSourcePropType, TouchableOpacity, TouchableOpacityProps } from 'react-native';
+import {
+  Image,
+  ImageSourcePropType,
+  TouchableOpacity,
+  TouchableOpacityProps,
+} from 'react-native';
 
 import { useTheme } from '@/hooks/useTheme';
 
@@ -35,8 +40,8 @@ export const CustomButton = ({
   const buttonColorMap = {
     primary: colors.components.button.primary,
     secondary: colors.components.button.secondary,
-    red: { bg: colors.base.orange.bright },
-    green: { bg: colors.base.orange.bright },
+    red: { bg: colors.base.red.bright },
+    green: { bg: colors.base.green.bright },
   } as const;
   const colorRef = buttonColorMap[type];
   const borderWidth = type == 'primary' ? (isSmall ? 1 : 2) : 0;
@@ -44,10 +49,10 @@ export const CustomButton = ({
 
   return (
     <TouchableOpacity
-      activeOpacity={disabled ? 0.6 : 1}
+      activeOpacity={0.5}
       onPress={!disabled ? onPress : undefined}
       disabled={disabled}
-      style={{ backgroundColor: colorRef.bg, borderWidth: borderWidth }}
+      style={{ backgroundColor: colorRef.bg, borderWidth: borderWidth, opacity: disabled ? 0.7 : 1 }}
       className={`rounded-2xl items-center justify-center flex-row ${sizeClass} ${className}`}
       {...props}
     >

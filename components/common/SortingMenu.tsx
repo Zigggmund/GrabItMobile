@@ -19,6 +19,7 @@ interface SortingMenuProps<T> {
   value: T | null;
   onSelect: (value: T | null) => void;
   width?: number;
+  maxWidth?: number;
 }
 
 export function SortingMenu<T>({
@@ -27,6 +28,7 @@ export function SortingMenu<T>({
   value,
   onSelect,
   width = 200,
+  maxWidth = width,
 }: SortingMenuProps<T>) {
   const [open, setOpen] = useState(false);
   const { colors } = useTheme();
@@ -43,6 +45,7 @@ export function SortingMenu<T>({
           borderWidth: 1,
           borderColor: colors.base.neutral.blackPrimary,
           width: width,
+          maxWidth: maxWidth,
         }}
         className={`gap-2 flex-row items-center rounded-xl py-2 px-2 ${containerClassName}`}
         onPress={() => {

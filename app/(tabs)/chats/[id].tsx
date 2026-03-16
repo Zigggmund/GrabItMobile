@@ -1,20 +1,21 @@
 import { useEffect, useRef, useState } from 'react';
-import { FlatList, View } from 'react-native';
+import { ActivityIndicator, FlatList, View } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 
+import { useGetChat } from '@/hooks/chat/useGetChat';
 import { useKeyboard } from '@/hooks/useKeyboard';
 import { useLanguage } from '@/hooks/useLanguage';
-import { useProfile } from '@/hooks/useProfile';
+import { useProfile } from '@/hooks/user/useProfile';
 import { useTheme } from '@/hooks/useTheme';
 
 import TypingBar from '@/components/common/bars/TypingBar';
+import ErrorMessage from '@/components/common/ErrorMessage';
 import ChatHeader from '@/components/header/onePage/ChatHeader';
 import { Message } from '@/components/items/chats/Message';
 import ScreenContainer from '@/components/layout/ScreenContainer';
 import { CustomText } from '@/components/ui/text/CustomText';
 
-import { mockChats } from '@/constants/mocks/mockChats';
-import { FOOTER_HEIGHT } from '@/constants/ui';
+import { FOOTER_HEIGHT } from '@/constants/sizes';
 
 export default function Chat() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -24,18 +25,13 @@ export default function Chat() {
   const listRef = useRef<FlatList>(null);
   const { isKeyboardOpen, keyboardHeight } = useKeyboard();
   const messageWidth = 220;
+  const { data: chat, isLoading: isLoading, isError: isError } = useGetChat(id);
 
-  // const {
-  //   data: chat,
-  //   isLoading,
-  //   isError,
-  // } = useGetChat(userId);
-  const isError = false;
-  const chat = mockChats.find(chat => chat.id.toString() === id);
   // для мгновенной отрисовки без getЗапроса. После успешного post isReceive становится true
   const [messages, setMessages] = useState(chat?.messages);
   const [message, setMessage] = useState('');
 
+  // отправка сообщения
   const handleSendMessage = () => {
     if (!message.trim() || !user) return;
 
@@ -59,32 +55,42 @@ export default function Chat() {
     setMessage('');
   };
 
+  // добавление медиа
   const handleAddMedia = () => {
     console.log('Media was added');
   };
 
+  // изменение сообщений при переходе в другой чат
   useEffect(() => {
     setMessages(chat?.messages);
-  }, [id]);
+  }, [chat]);
 
+  // автоскролл вниз при отправке
   useEffect(() => {
     if (!messages || messages.length == 0) return;
-    // автоскролл вниз при отправке
     requestAnimationFrame(() => {
       listRef.current?.scrollToEnd({ animated: true });
     });
-  }, [messages?.length])
+  }, [messages?.length]);
 
-  if (!chat || isError) {
+  if (isLoading)
     return (
       <ScreenContainer>
-        <CustomText
-          style={{ color: colors.base.red.bright }}
-          highlight
-          className={'text-60'}
-        >
-          {l.chatUserNotFound}
-        </CustomText>
+        <ActivityIndicator />
+      </ScreenContainer>
+    );
+
+  if (isError)
+    return (
+      <ScreenContainer>
+        <ErrorMessage text={l.errorAPI} />
+      </ScreenContainer>
+    );
+
+  if (!chat) {
+    return (
+      <ScreenContainer>
+        <ErrorMessage text={l.chatChatNotFound} />
       </ScreenContainer>
     );
   }
@@ -93,17 +99,29 @@ export default function Chat() {
     <ScreenContainer>
       <View className={'px-4 flex-1 w-full'}>
         <View className={'mb-10'}>
+          {/* isOnline изменить */}
           <ChatHeader isOnline={false} userCard={chat.talker} />
         </View>
         <FlatList
           ref={listRef}
           data={messages}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={(_, index) => index.toString()}
           ItemSeparatorComponent={() => <View style={{ height: 30 }} />}
-          renderItem={({ item }) => <Message width={messageWidth} message={item} />}
+          renderItem={({ item }) => (
+            <Message width={messageWidth} message={item} />
+          )}
           contentContainerStyle={{
             paddingBottom: 12,
           }}
+          ListEmptyComponent={() => (
+            <CustomText
+              highlight
+              className={'text-22 text-center'}
+              style={{ color: colors.theme.blue.primary }}
+            >
+              {l.emptyMessageList}
+            </CustomText>
+          )}
         />
         <View
           style={{

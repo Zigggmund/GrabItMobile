@@ -3,7 +3,7 @@ import { View } from 'react-native';
 
 import { useHistory } from '@/hooks/useHistory';
 import { useLanguage } from '@/hooks/useLanguage';
-import { useProfileLogin } from '@/hooks/useLogin';
+import { useProfileLogin } from '@/hooks/auth/useLogin';
 import { useTheme } from '@/hooks/useTheme';
 
 import ScreenContainer from '@/components/layout/ScreenContainer';

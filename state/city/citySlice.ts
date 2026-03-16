@@ -17,8 +17,9 @@ export const loadCity = createAsyncThunk('city/loadCity', async () => {
 
 export const saveCity = createAsyncThunk(
   'city/saveCity',
-  async (city: string) => {
+  async (city: CityKey) => {
     await storage.set(CITY_KEY, city);
+    console.log('City was changed, new city:', city);
     return city;
   },
 );
@@ -47,12 +48,12 @@ const citySlice = createSlice({
         state.isLoading = true;
       })
       // при pending ui блокируется - еще не загрузилось
-      .addCase(loadCity.fulfilled, (state, action: PayloadAction<string>) => {
+      .addCase(loadCity.fulfilled, (state, action: PayloadAction<CityKey>) => {
         state.currentCity = action.payload;
         state.isLoading = false;
       })
       // для save pending не нужно - операция выбора и так быстрая
-      .addCase(saveCity.fulfilled, (state, action: PayloadAction<string>) => {
+      .addCase(saveCity.fulfilled, (state, action: PayloadAction<CityKey>) => {
         state.currentCity = action.payload;
       });
   },

@@ -5,7 +5,7 @@ import { translations } from '@/constants/translations';
 import { storage } from '@/services/storage/asyncStorageService';
 
 import { defaultLang, LanguageType, LanguageContext } from './LanguageContext';
-import { useProfile } from '@/hooks/useProfile';
+import { useProfile } from '@/hooks/user/useProfile';
 
 // РАБОТА С БД
 // import { useProfile } from '@/context/ProfileContext';

@@ -9,6 +9,7 @@ interface ProfileAvatarProps {
   isProfilePage?: boolean;
   id?: number;
   source: string | undefined;
+  className?: string;
 }
 
 export function ProfileAvatar({
@@ -16,11 +17,13 @@ export function ProfileAvatar({
   isProfilePage = false,
   source,
   id = 0,
+  className = '',
 }: ProfileAvatarProps) {
   const { navigate } = useHistory();
   const borderRadius = isProfilePage ? size / 3 : size / 2;
   const avatar = (
     <Image
+      className={className}
       source={{ uri: source ?? icons.profile }}
       style={{
         resizeMode: 'cover',
