@@ -1,9 +1,10 @@
 import { ReviewType } from '@/types/ReviewType';
 
-import { FlatList, View } from 'react-native';
+import { FlatList, Pressable, View } from 'react-native';
 
 import { useTheme } from '@/hooks/useTheme';
 
+import { ProgressBar } from '@/components/common/bars/ProgressBar';
 import { CustomIcon } from '@/components/ui/icon/CustomIcon';
 import { CustomText } from '@/components/ui/text/CustomText';
 
@@ -11,10 +12,14 @@ import { icons } from '@/constants/icons';
 
 interface ReviewDistributionProps {
   reviews: ReviewType[];
+  value: number | null;
+  onSelect: (value: number | null) => void;
 }
 
 export default function ReviewDistribution({
   reviews,
+  value,
+  onSelect,
 }: ReviewDistributionProps) {
   const { colors } = useTheme();
 
@@ -24,13 +29,21 @@ export default function ReviewDistribution({
   });
 
   return (
-    <View className={'w-full px-4 py-2'} style={{ maxWidth: 400 }}>
+    <View className={'w-full px-2 py-2'} style={{ maxWidth: 400 }}>
       <FlatList
         data={ratings.reverse()}
         keyExtractor={(_, index) => index.toString()}
         ItemSeparatorComponent={() => <View className={'h-4'} />}
         renderItem={({ item, index }) => (
-          <View className={'flex-row gap-2'}>
+          <Pressable
+            onPress={() => onSelect(value == 5 - index ? null : 5 - index)}
+            className={'flex-row gap-1 px-2 py-1'}
+            style={{
+              borderWidth: 5 - index == value ? 4 : 0,
+              borderColor: colors.components.bar.reviewDistribution.border,
+              borderRadius: 10,
+            }}
+          >
             <CustomText
               className={'text-16 w-3 font-medium'}
               style={{ color: colors.theme.black.primary }}
@@ -39,34 +52,22 @@ export default function ReviewDistribution({
             </CustomText>
             <CustomIcon source={icons.starFilled} />
 
-            <View className={'relative flex-1 justify-center '}>
-              <View
-                className={'absolute'}
-                style={{
-                  height: 12,
-                  width: `${(item / reviews.length) * 100}%`,
-                  backgroundColor: colors.components.bar.reviewDistribution.bgFilled,
-                  zIndex: 10,
-                  borderRadius: 10,
-                }}
-              />
-              <View
-                className={'absolute'}
-                style={{
-                  height: 12,
-                  width: `100%`,
-                  backgroundColor: colors.components.bar.reviewDistribution.bgEmpty,
-                  borderRadius: 10,
-                }}
-              />
-            </View>
+            {/*<View className={'flex-1'}>*/}
+            <ProgressBar
+              length={reviews.length}
+              customStyle={'reviews'}
+              progress={item}
+              isNamed={false}
+            />
+            {/*</View>*/}
+
             <CustomText
               className={'text-16 w-8'}
               style={{ color: colors.theme.blue.primary, textAlign: 'right' }}
             >
               {item}
             </CustomText>
-          </View>
+          </Pressable>
         )}
       />
     </View>

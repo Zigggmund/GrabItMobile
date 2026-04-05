@@ -79,7 +79,7 @@ export default function RegistrationPage() {
 
   return (
     <ScreenContainer className={'pt-6 px-10 justify-between'}>
-      <View className="gap-1 items-center w-full">
+      <View className="gap-6 items-center w-full">
         <CustomText
           style={{ color: colors.base.orange.primary }}
           className="mb-2 text-46 font-bold text-center"

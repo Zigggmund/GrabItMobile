@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { TextInput, View } from 'react-native';
+import { KeyboardType, TextInput, View } from 'react-native';
 
 import { useTheme } from '@/hooks/useTheme';
 
@@ -9,11 +9,12 @@ import { CustomText } from '@/components/ui/text/CustomText';
 import { icons } from '@/constants/icons';
 
 interface CompositeInputProps {
-  label: string;
+  label?: string;
   value?: string;
   placeholder?: string;
   isPassword?: boolean;
   onChangeText?: (value: string) => void;
+  onBlur?: () => void;
   onClearError?: () => void;
   disable?: boolean;
   multiline?: boolean;
@@ -21,12 +22,14 @@ interface CompositeInputProps {
   inputClassName?: string;
   containerClassName?: string;
   labelClassName?: string;
+  keyboardType?: KeyboardType;
 }
 
 export default function CustomInput({
   label,
   value,
   onChangeText,
+  onBlur = () => {},
   onClearError,
   placeholder = '',
   isPassword = false,
@@ -36,6 +39,7 @@ export default function CustomInput({
   labelClassName = '',
   containerClassName = '',
   inputClassName = '',
+  keyboardType = 'default',
 }: CompositeInputProps) {
   const { colors } = useTheme();
   const [showPassword, setShowPassword] = useState(false);
@@ -51,13 +55,16 @@ export default function CustomInput({
 
   return (
     <View className={`flex-col gap-2 w-full ${containerClassName}`}>
-      <CustomText
-        style={{ color: colors.theme.blue.dark }}
-        highlight
-        className={`pl-1 text-15 ${labelClassName}`}
-      >
-        {label.toUpperCase()}
-      </CustomText>
+      {label && (
+        <CustomText
+          style={{ color: colors.theme.blue.dark }}
+          highlight
+          className={`pl-1 text-15 ${labelClassName}`}
+        >
+          {label.toUpperCase()}
+        </CustomText>
+      )}
+
       <View
         style={{
           backgroundColor: colors.base.grey.bright,
@@ -68,12 +75,14 @@ export default function CustomInput({
       >
         <TextInput
           style={{ color: colors.base.neutral.blackPrimary }}
+          keyboardType={keyboardType}
           className={`flex-1 text-18`}
           placeholder={placeholder}
           placeholderTextColor={colors.base.neutral.greyDark}
           secureTextEntry={isPassword && !showPassword}
           value={value}
           onChangeText={handleTextChange}
+          onBlur={onBlur}
           editable={!disable}
           multiline={multiline}
         />
@@ -96,11 +105,11 @@ export default function CustomInput({
           ))}
       </View>
 
-      <View style={{ minHeight: 18 }}>
+      <View>
         {errorMessage && (
           <CustomText
             style={{ color: colors.base.red.primary }}
-            className="text-red-500 text-12"
+            className="text-12"
           >
             {errorMessage}
           </CustomText>

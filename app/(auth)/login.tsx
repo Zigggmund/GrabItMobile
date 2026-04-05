@@ -56,7 +56,7 @@ export default function LoginPage() {
 
   return (
     <ScreenContainer className={'pt-6 px-10 justify-between'}>
-      <View className="gap-4 items-center w-full">
+      <View className="gap-8 items-center w-full">
         <CustomText
           style={{ color: colors.base.orange.primary }}
           className="text-46 text-center pb-10 font-bold"

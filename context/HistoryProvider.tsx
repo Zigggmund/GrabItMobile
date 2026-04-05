@@ -1,4 +1,10 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import {
+  AttemptLeaveCallbackType,
+  AttemptLeaveResultType,
+  ActionType,
+} from '@/types/SubscriptionType';
+
+import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import { BackHandler } from 'react-native';
 import { Href, router, usePathname } from 'expo-router';
 
@@ -16,7 +22,30 @@ export const HistoryProvider = ({ children }: { children: ReactNode }) => {
   const [historyStack, setHistoryStack] = useState<Href[]>([]);
   const pathname = usePathname();
 
-  // системное перемещение == goBack
+  // Множество(set) всех подписчиков
+  const attemptLeaveSubscribers = useRef<Set<AttemptLeaveCallbackType>>(
+    new Set(),
+  );
+  const subscribeAttemptLeave = (cb: AttemptLeaveCallbackType) => {
+    attemptLeaveSubscribers.current.add(cb);
+  };
+  const unsubscribeAttemptLeave = (cb: AttemptLeaveCallbackType) => {
+    attemptLeaveSubscribers.current.delete(cb);
+  };
+  // !Паттерн Mediator (HistoryProvider - Посредник, передает управление FormProvider)
+  // !Паттерн Observer (FormProvider подписывается на History и реагирует на GoBack события)
+  // Попытка покинуть текущую страницу
+  const tryLeave = async (action: ActionType): Promise<AttemptLeaveResultType> => {
+    // если хоть один подписчик вернул false - переход отменяется
+    for (const cb of attemptLeaveSubscribers.current) {
+      const canLeave = await cb(action);
+      // если хоть один колллбэк не allow - прерываем goBack
+      if (canLeave != 'allow') return canLeave;
+    }
+    return 'allow';
+  };
+
+  // системное перемещение
   useEffect(() => {
     console.log('STACK: stack was updated:', historyStack);
     const onBackPress = () => {
@@ -44,8 +73,7 @@ export const HistoryProvider = ({ children }: { children: ReactNode }) => {
         // if
         return prev;
       } else {
-        const updated = [...prev, pathname as Href];
-        return updated;
+        return [...prev, pathname as Href];
       }
     });
   }, [pathname]);
@@ -68,11 +96,20 @@ export const HistoryProvider = ({ children }: { children: ReactNode }) => {
 
   // ОСНОВНЫЕ функции
   // переход на страницу и пуш в стек
-  const navigate = (item: Href) => {
+  const navigate = async (item: Href, needConfirm = true) => {
+    // if (needConfirm && formContext) {
+    //   const shouldContinue = await formContext.shouldNavigateFromForm();
+    //   if (!shouldContinue) return;
+    // }
+    if (needConfirm) {
+      const canLeave = await tryLeave('navigate');
+      if (canLeave == 'block' || canLeave == 'handled') return;
+    }
     router.push(item);
   };
-  // возврат на последнюю и откат стека
-  const goBack = () => {
+
+  // Тупой goBack возврат на последнюю и откат стека
+  const internalGoBack = () => {
     const newStack = [...historyStack];
     if (newStack.length > 0) newStack.pop();
     // скип страниц-форм
@@ -93,13 +130,36 @@ export const HistoryProvider = ({ children }: { children: ReactNode }) => {
     router.replace(lastItem);
   };
 
+  // Умный goBack, перенаправляет
+  const goBack = async () => {
+    // if (formContext) {
+    //   formContext.formGoBack();
+    //   return;
+    // }
+    const canLeave = await tryLeave('goBack');
+    // useCallback для предотвращения повторного создания функции
+    if (canLeave === 'block') return;
+    if (canLeave === 'handled') return;
+    internalGoBack();
+  };
+
   const clear = () => {
     setHistoryStack([]);
     console.log('HistoryStack was cleared');
   };
 
   return (
-    <HistoryContext.Provider value={{ historyStack, navigate, goBack, clear }}>
+    <HistoryContext.Provider
+      value={{
+        historyStack,
+        navigate,
+        goBack,
+        clear,
+        subscribeAttemptLeave,
+        unsubscribeAttemptLeave,
+        tryLeave,
+      }}
+    >
       {children}
     </HistoryContext.Provider>
   );

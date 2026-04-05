@@ -1,8 +1,8 @@
-export const priceUnitsKeys = [
-  'rubPerHour',
-  'rubPerDay',
-  'rubPerWeek',
-  'rubPerMonth',
-];
+export const priceUnits = {
+  rubPerHour: 'rubPerHour',
+  rubPerDay: 'rubPerDay',
+  rubPerWeek: 'rubPerWeek',
+  rubPerMonth: 'rubPerMonth',
+} as const;
 
-export type priceUnitKeyType = (typeof priceUnitsKeys)[number];
+export type priceUnitKeyType = keyof typeof priceUnits;

@@ -52,7 +52,11 @@ export const CustomButton = ({
       activeOpacity={0.5}
       onPress={!disabled ? onPress : undefined}
       disabled={disabled}
-      style={{ backgroundColor: colorRef.bg, borderWidth: borderWidth, opacity: disabled ? 0.7 : 1 }}
+      style={{
+        backgroundColor: colorRef.bg,
+        borderWidth: borderWidth,
+        opacity: disabled ? 0.7 : 1,
+      }}
       className={`rounded-2xl items-center justify-center flex-row ${sizeClass} ${className}`}
       {...props}
     >

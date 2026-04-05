@@ -1,4 +1,4 @@
-// срез счетчика
+// срез города
 
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 

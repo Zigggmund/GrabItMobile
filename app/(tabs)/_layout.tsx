@@ -11,12 +11,14 @@ import { CustomIcon } from '@/components/ui/icon/CustomIcon';
 
 import { icons } from '@/constants/icons';
 import { pages } from '@/constants/pages';
+import { useHistory } from '@/hooks/useHistory';
 
 // Установка здесь backgroundColor: colors.theme.white.bright не сработает по той причине, что экраны рисуются поверх навигации
 // В appContainer это работает, так как там указан Slot, куда он подставляет экраны. Но Slot может быть объявлен лишь в одном месте
 // По этим причинам за цвет экрана отвечает отдельный компонент ScreenContainer
 export default function TabsLayout() {
   const { l } = useLanguage();
+  const { tryLeave } = useHistory();
   const { user } = useProfile();
   const { colors } = useTheme();
   const segments = useSegments() as string[];
@@ -93,6 +95,17 @@ export default function TabsLayout() {
                 <CustomIcon source={icons[page.icon]} color={color} size={35} />
               ),
             }}
+            listeners={({ navigation }) => ({
+              tabPress: async e => {
+                e.preventDefault();
+
+                const result = await tryLeave('navigate');
+
+                if (result === 'block' || result === 'handled') return;
+
+                navigation.navigate(page.link);
+              },
+            })}
           />
         ))}
         {/* Второстепенные страницы */}

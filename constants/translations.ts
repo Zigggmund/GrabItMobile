@@ -37,9 +37,14 @@ export const translations = {
     byPopular: 'Сначала популярные',
     byNew: 'Сначала новые',
     byOld: 'Сначала старые',
+    byHighRating: 'Высокий рейтинг',
+    byLowRating: 'Низкий рейтинг',
     services: 'Услуги',
+    service: 'Услуга',
     products: 'Вещи',
+    product: 'Вещь',
     spaces: 'Помещения',
+    space: 'Помещение',
 
     // Мои объявления
     revs: 'отз.',
@@ -78,8 +83,25 @@ export const translations = {
     price: 'Цена',
     address: 'Адрес',
     specifications: 'Характеристики',
+    specification: 'Характеристика',
     bookingCalendar: 'Календарь бронирования',
     landlord: 'Арендодатель',
+    preview: 'Превью-изображение',
+
+    // Создание объявления
+    step: 'Шаг',
+    requiredToFillIn: 'Обязательно для заполнения',
+    optional: 'Необязательно',
+    coordinates: 'Координаты',
+    adTypeStep: 'Выбор типа объявления',
+    adDetailsStep: 'Детали объявления',
+    adMediaStep: 'Выбор медиафайлов',
+    adMapStep: 'Выбор адреса на карте',
+    adAllDatesStep: 'Выбор периода бронирования',
+    adWeekDaysStep: 'Выбор дней недели',
+    adDayTimeStep: 'Выбор временных промежутков',
+    adExceptionsStep: 'Настройка исключений',
+    addressWillAppearHere: 'Здесь появится адрес',
 
     // Reviews
     byHigh: 'Сначала положительные',
@@ -88,6 +110,11 @@ export const translations = {
     // Другое
     success: 'Успех',
     loading: 'Загрузка',
+    symbols: 'Символы',
+    size: 'Размер',
+    category: 'Категория',
+    start: 'Начало',
+    end: 'Конец',
 
     // ОплатаПоПериоду
     rubPerHour: '₽/час',
@@ -158,11 +185,12 @@ export const translations = {
     clothing: 'Одежда и аксессуары',
     business: 'Бизнес и офис',
     other: 'Другое',
-    noCategory: 'Без категории',
+    allCategories: 'Все категории',
+    selectCategory: 'Выберите категорию',
 
     // Кнопки
     btnStart: 'Начать',
-    btnCancel: 'Отмена',
+    btnCancel: 'Отменить',
     btnSave: 'Сохранить',
     btnDelete: 'Удалить',
     btnConfirm: 'Подтвердить',
@@ -181,16 +209,52 @@ export const translations = {
     btnExtend: 'Продлить',
     btnReadMore: 'Читать далее',
     btnHide: 'Скрыть',
+    btnBack: 'Назад',
+    btnNext: 'Далее',
 
     // Ошибки
     error: 'Ошибка',
     errorAPI: 'Ошибка получения данных api',
+    errorUserNotFound: 'Пользователь не найден',
+    errorChatNotFound: 'Чат не найден',
+    errorAdNotFound: 'Объявление не найдено',
+    // Формы
+    errorAdTypeNull: 'Не выбран тип объявления',
+    errorTitleNull: 'Не заполнено название объявления',
+    errorTitleTooShort:
+      'Слишком короткое название объявления; не менее 5 символов',
+    errorTitleTooLong:
+      'Слишком длинное название объявления; не более 40 символов',
+    errorDescriptionTooShort: 'Слишком короткое описание; не менее 10 символов',
+    errorDescriptionTooLong: 'Слишком длинное описание; не более 500 символов',
+    errorSpecificationTooLong:
+      'Слишком длинные характеристики; не более 100 символов',
+    errorSpecificationTooShort:
+      'Слишком короткие характеристики; не менее 5 символов',
+    errorPreviewImageNull: 'Не выбрано превью-изображение',
+    errorImageTooBig: 'Изображение слишком большого размера (>200Кб)',
+    errorBigImageTooBig: 'Изображение слишком большого размера (>1000Кб)',
+    errorCategoryIdNull: 'Не выбрана категория',
+    errorCostNull: 'Не указана стоимость',
+    errorCostZeroOrLess: 'Стоимость должна быть больше 0',
+    errorMediaArrayTooLong: 'Слишком много медиа файлов: не более 10',
+    errorAddressNull: 'Не указан адрес',
+    errorDatePeriodNull: 'Не указаны даты начала/конца периода',
+    errorEndDateStartDateComparison:
+      'Некорректная дата: дата окончания раньше даты начала',
+    errorWeekDaysNull: 'Не выбрано ни одного дня недели',
+    errorDayTimeNull:
+      'Не выбрано ни одного промежутка для одного из указанных дней',
 
     // Пустые элементы
     emptyReviewList: 'Пока нет отзывов',
     emptyChatList: 'Пока нет чатов',
     emptyMessageList: 'Пока нет сообщений',
     emptyAdList: 'Пока нет объявлений',
+
+    confirmation: 'Подтверждение',
+    warningFormExit: 'Есть несохраненные изменения. Выйти без сохранения?',
+    warningFormFinish: 'Подтвердите создание объявления.',
 
     // Валидация
     validationLogin: 'Логин должен содержать из не менее 6 символов',
@@ -233,13 +297,18 @@ export const translations = {
     // Search page
     searchFor: 'Search for a product/space/service',
     byCheap: 'Price: Low to high',
-    byExpensive: 'Price: high to high',
+    byExpensive: 'Price: High to low',
     byPopular: 'Most popular',
     byOld: 'Oldest first',
     byNew: 'Newest first',
+    byHighRating: 'Rating: High to low',
+    byLowRating: 'Rating: Low to high',
     services: 'Services',
+    service: 'Service',
     products: 'Products',
+    product: 'Product',
     spaces: 'Spaces',
+    space: 'Space',
 
     // MyAdsPage
     revs: 'revs',
@@ -279,7 +348,24 @@ export const translations = {
     address: 'Address',
     bookingCalendar: 'Booking calendar',
     specifications: 'Specifications',
+    specification: 'Specification',
     landlord: 'Landlord',
+    preview: 'Preview image',
+
+    // AdCreation
+    step: 'Step',
+    requiredToFillIn: 'Required to fill in',
+    optional: 'Optional',
+    coordinates: 'Coordinates',
+    adTypeStep: 'Select ad type',
+    adDetailsStep: 'Ad details',
+    adMediaStep: 'Select media files',
+    adMapStep: 'Select ad address',
+    adAllDatesStep: 'Select booking period',
+    adWeekDaysStep: 'Select weekdays',
+    adDayTimeStep: 'Select time slots',
+    adExceptionsStep: 'Configure exceptions',
+    addressWillAppearHere: 'The address will appear here',
 
     // Reviews
     byHigh: 'Positive first',
@@ -288,6 +374,11 @@ export const translations = {
     // Other
     success: 'Success',
     loading: 'Loading',
+    symbols: 'Symbols',
+    size: 'Size',
+    category: 'Category',
+    start: 'Start',
+    end: 'End',
 
     // priceUnits
     rubPerHour: '₽/hour',
@@ -358,7 +449,8 @@ export const translations = {
     clothing: 'Clothing and Accessories',
     business: 'Business and Office',
     other: 'Other',
-    noCategory: 'No Category',
+    allCategories: 'All categories',
+    selectCategory: 'Select a category',
 
     // Buttons
     btnStart: 'Start',
@@ -381,6 +473,8 @@ export const translations = {
     btnExtend: 'Extend',
     btnReadMore: 'Read more',
     btnHide: 'Hide',
+    btnBack: 'Back',
+    btnNext: 'Next',
 
     // Errors
     error: 'Error',
@@ -388,6 +482,32 @@ export const translations = {
     errorUserNotFound: 'The user was not found',
     errorChatNotFound: 'The chat was not found',
     errorAdNotFound: 'The ad was not found',
+    // Forms
+    errorAdTypeNull: 'Ad type not selected',
+    errorTitleNull: 'Ad name is not filled in',
+    errorTitleTooShort: 'Ad name too short; at least 5 characters required',
+    errorTitleTooLong: 'Ad name too long; no more than 40 characters allowed',
+    errorDescriptionTooShort:
+      'Description too short; at least 10 characters required',
+    errorDescriptionTooLong:
+      'Description too long; no more than 500 characters allowed',
+    errorSpecificationTooLong:
+      'Specifications too long; no more than 100 characters allowed',
+    errorSpecificationTooShort:
+      'Specifications too short; no less than 5 characters allowed',
+    errorPreviewImageNull: 'Preview image not selected',
+    errorCategoryIdNull: 'Category not selected',
+    errorCostNull: 'Cost not specified',
+    errorCostZeroOrLess: 'Cost must be greater than 0',
+    errorMediaArrayTooLong: 'Too many media files; no more than 10 allowed',
+    errorImageTooBig: 'The image is too large (>200Kb)',
+    errorBigImageTooBig: 'The image is too large (>1000Kb)',
+    errorAddressNull: 'Address not specified',
+    errorDatePeriodNull: 'Start/end dates of the period not specified',
+    errorEndDateStartDateComparison:
+      'Invalid date: end date is earlier than start date',
+    errorWeekDaysNull: 'No weekdays selected',
+    errorDayTimeNull: 'No time slot selected for one of the specified days',
 
     // Empty
     emptyReviewList: 'No reviews yet',
@@ -395,12 +515,16 @@ export const translations = {
     emptyMessageList: 'No messages yet',
     emptyAdList: 'No ads yet',
 
+    // Warnings
+    confirmation: 'Confirmation',
+    warningFormExit: 'You have unsaved changes. Leave without saving?',
+    warningFormFinish: 'Confirm the creation of the ad.',
+
     // Validation
-    validationLogin: 'Login must be at least 5 symbols long',
+    validationLogin: 'Login must be at least 6 symbols long',
     validationEmail: 'Incorrect email',
     validationPassword: 'The password must be at least 8 characters long.',
     validationConfirmPassword: "Passwords aren't equal",
     validationLanguage: 'Language selection is required',
   },
-} as const;
-// as const satisfies Record - гарантия совпадения ключей
+};

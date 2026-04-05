@@ -4,8 +4,7 @@ import { translations } from '@/constants/translations';
 
 import { storage } from '@/services/storage/asyncStorageService';
 
-import { defaultLang, LanguageType, LanguageContext } from './LanguageContext';
-import { useProfile } from '@/hooks/user/useProfile';
+import { defaultLang, LanguageType, LanguageContext, LType } from './LanguageContext';
 
 // РАБОТА С БД
 // import { useProfile } from '@/context/ProfileContext';
@@ -73,7 +72,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
 
   // Оптимизация производительности. Без useMemo, при каждом любом рендере пересоздает l
   // useMemo - пересчет объекта l лишь тогда, когда меняется language
-  const l = useMemo(
+  const l: LType = useMemo(
     () => translations[language] || translations[defaultLang],
     [language],
   );

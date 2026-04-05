@@ -63,11 +63,12 @@ export const componentColors = {
     reviewDistribution: {
       light: {
         bgFilled: baseColors.neutral.greyDark,
-        // bgFilled: baseColors.grey.primary,
+        border: baseColors.orange.primary,
         bgEmpty: baseColors.grey.bright,
       },
       dark: {
         bgFilled: baseColors.orange.semibright,
+        border: baseColors.grey.primary,
         bgEmpty: baseColors.neutral.whiteBright,
       },
     },

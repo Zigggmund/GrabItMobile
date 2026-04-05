@@ -23,6 +23,10 @@ import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { HistoryProvider } from '@/context/HistoryProvider';
 import { loadCity } from '@/state/city/citySlice';
 
+// import YaMap from 'react-native-yamap';
+
+// YaMap.init('API_KEY');
+
 export default function RootLayout() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const [dbInitialized, setDbInitialized] = useState(false);
@@ -80,10 +84,10 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <QueryClientProvider client={queryClient}>
         <Provider store={store}>
-            <HistoryProvider>
-            <ProfileProvider>
-              <LanguageProvider>
-                <ThemeProvider>
+          <ProfileProvider>
+            <LanguageProvider>
+              <ThemeProvider>
+                <HistoryProvider>
                   {!dbInitialized || !fontsLoaded ? (
                     <LoadingScreen loading />
                   ) : !isAppReady ? (
@@ -92,10 +96,10 @@ export default function RootLayout() {
                     // для корректного взаимодействия с bgColor из Theme
                     <AppContainer />
                   )}
-                </ThemeProvider>
-              </LanguageProvider>
-            </ProfileProvider>
-            </HistoryProvider>
+                </HistoryProvider>
+              </ThemeProvider>
+            </LanguageProvider>
+          </ProfileProvider>
         </Provider>
       </QueryClientProvider>
     </SafeAreaProvider>

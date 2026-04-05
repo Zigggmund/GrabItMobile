@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, FlatList, View } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 
@@ -6,14 +7,15 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { useGetUser } from '@/hooks/user/useGetUser';
 import { useTheme } from '@/hooks/useTheme';
 
+import ReviewDistribution from '@/components/common/bars/ReviewDistribution';
 import ErrorMessage from '@/components/common/ErrorMessage';
+import { SortingMenu } from '@/components/common/SortingMenu';
 import ReviewsHeader from '@/components/header/onePage/ReviewsHeader';
 import { Review } from '@/components/items/reviews/Review';
 import ScreenContainer from '@/components/layout/ScreenContainer';
 import { CustomText } from '@/components/ui/text/CustomText';
-import { SortingMenu } from '@/components/common/SortingMenu';
-import { useState } from 'react';
-import ReviewDistribution from '@/components/common/bars/ReviewDistribution';
+
+import { PAGE_SIZE } from '@/constants/sizes';
 
 type SortingType = 'new' | 'old' | 'high' | 'low';
 
@@ -34,9 +36,51 @@ export default function UserReviews() {
   } = useGetUser(Number(id));
 
   const [sortBy, setSortBy] = useState<SortingType>('new');
+  const [ratingFilterBy, setRatingFilterBy] = useState<number | null>(null);
+  const [page, setPage] = useState(1);
+
+  // Sorting + data filters
+  const processedReviews = useMemo(() => {
+    let result = [...reviews];
+
+    if (ratingFilterBy != null)
+      result = result.filter(v => v.rating == ratingFilterBy);
+    switch (sortBy) {
+      case 'new':
+        result.sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt));
+        break;
+      case 'old':
+        result.sort((a, b) => +new Date(a.createdAt) - +new Date(b.createdAt));
+        break;
+      case 'high':
+        result.sort((a, b) => b.rating - a.rating);
+        break;
+      case 'low':
+        result.sort((a, b) => a.rating - b.rating);
+        break;
+    }
+
+    return result;
+  }, [reviews, ratingFilterBy, sortBy]);
+
+  // Pagination
+  const paginatedReviews = useMemo(() => {
+    return processedReviews.slice(0, page * PAGE_SIZE);
+  }, [processedReviews, page]);
+
+  // Сброс при изменении фильтров/режима сортировки
+  useEffect(() => {
+    setPage(1);
+  }, [ratingFilterBy, sortBy]);
+
   const handleSorting = (value: SortingType) => {
     setSortBy(value);
-    console.log(`Сортировка по критерию ${value} выполнена`);
+    if (value) console.log(`Сортировка по критерию ${value} выполнена`);
+  };
+
+  const handleRatingFilter = (value: number | null) => {
+    setRatingFilterBy(value);
+    if (value) console.log(`Фильтрация по рейтингу ${value} выполнена`);
   };
 
   if (isLoadingUser || isLoadingReviews)
@@ -71,16 +115,28 @@ export default function UserReviews() {
         />
 
         <FlatList
-          data={reviews}
+          keyExtractor={item => item.id.toString()}
+          data={paginatedReviews}
           renderItem={({ item, index }) => (
             <Review isUserReview review={item} index={index} />
           )}
           ItemSeparatorComponent={() => <View className={'h-4'} />}
           contentContainerStyle={{ paddingBottom: 20 }}
+          // infinite scroll
+          onEndReached={() => {
+            if (paginatedReviews.length < processedReviews.length) {
+              setPage(prev => prev + 1);
+            }
+          }}
+          onEndReachedThreshold={0.5}
           ListHeaderComponentStyle={{ paddingBottom: 14, zIndex: 10 }}
           ListHeaderComponent={() => (
             <View className={'items-center gap-4'}>
-              <ReviewDistribution reviews={reviews} />
+              <ReviewDistribution
+                reviews={reviews}
+                value={ratingFilterBy}
+                onSelect={v => handleRatingFilter(v)}
+              />
               <SortingMenu<SortingType>
                 items={[
                   { label: l.byNew, value: 'new' },

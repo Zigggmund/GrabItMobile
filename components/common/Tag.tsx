@@ -1,4 +1,4 @@
-import { TouchableOpacity, ViewStyle } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 
 import { useTheme } from '@/hooks/useTheme';
 
@@ -10,6 +10,7 @@ interface TagProps {
   onPress: () => void;
   className?: string;
   textClassName?: string;
+  width?: number | null;
 }
 
 export function Tag({
@@ -18,6 +19,7 @@ export function Tag({
   onPress,
   className = '',
   textClassName = '',
+  width = null,
 }: TagProps) {
   const { colors } = useTheme();
 
@@ -26,6 +28,7 @@ export function Tag({
       onPress={onPress}
       className={`px-4 py-2 rounded-full items-center justify-center ${className}`}
       style={{
+        width: width ?? 'auto',
         borderWidth: 1,
         borderColor: colors.base.neutral.blackPrimary,
         backgroundColor: !selected

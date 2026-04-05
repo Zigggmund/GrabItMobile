@@ -3,6 +3,7 @@ import location from '@/assets/icons/location.png';
 import logo from '@/assets/icons/logo.png';
 import logout from '@/assets/icons/logout.png';
 import add from '@/assets/icons/minor/add.png';
+import cross from '@/assets/icons/minor/delete.webp';
 import arrowBack from '@/assets/icons/minor/arrowBack.png';
 import arrowDown from '@/assets/icons/minor/arrowDown.png';
 import check from '@/assets/icons/minor/check.png';
@@ -39,6 +40,7 @@ export const icons = {
   // minor
   check,
   add,
+  cross,
   message,
   pointerDownFilled,
   arrowBack,

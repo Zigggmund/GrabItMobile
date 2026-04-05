@@ -1,10 +1,9 @@
-import { CategoryType } from '@/types/CategoryType';
 import { CostType } from '@/types/CostType';
 import { MediaType } from '@/types/MediaType';
 import { ReviewType } from '@/types/ReviewType';
 import { UserCardType } from '@/types/UserType';
 
-type ProductType = 'product' | 'space' | 'service';
+export type ProductType = 'product' | 'space' | 'service';
 
 export interface AdPreviewType {
   id: number;

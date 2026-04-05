@@ -1,6 +1,6 @@
 import { CategoryType } from '@/types/CategoryType';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -25,7 +25,14 @@ import { SMALL_AD_WIDTH } from '@/constants/sizes';
 
 // import { mockAds } from '@/constants/mocks/mockAds';
 
-type SortingType = 'new' | 'old' | 'cheap' | 'expensive' | 'popular';
+type SortingType =
+  | 'new'
+  | 'old'
+  | 'cheap'
+  | 'expensive'
+  | 'popular'
+  | 'highRating'
+  | 'lowRating';
 
 export default function Search() {
   const { l } = useLanguage();
@@ -34,17 +41,18 @@ export default function Search() {
   const { width: screenWidth } = useWindowDimensions();
   const numColumns = Math.floor(screenWidth / SMALL_AD_WIDTH);
 
-  const [search, setSearch] = useState('');
-  const [sortBy, setSortBy] = useState<SortingType>('new');
-  const [category, setCategory] = useState<CategoryType | null>(null);
-  const categories = useGetAllCategories().data;
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-
   const {
     data: ads = [],
     isLoading: isLoading,
     isError: isError,
   } = useGetAllAds();
+
+  const [search, setSearch] = useState('');
+  const [category, setCategory] = useState<CategoryType | null>(null);
+  const categories = useGetAllCategories().data;
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [sortBy, setSortBy] = useState<SortingType>('new');
+  // const [page, setPage] = useState(1);
 
   const handleSearch = (value: string) => {
     setSearch(value);
@@ -54,20 +62,82 @@ export default function Search() {
     }
   };
 
+  // Sorting + data filters +
+  const processedAds = useMemo(() => {
+    let result = [...ads];
+
+    const stringWithoutSpaces = search.replace(/\s/g, '');
+    if (stringWithoutSpaces) {
+      result = result.filter(item => item.title.includes(search));
+    }
+
+    console.log(selectedTags);
+    if (selectedTags.length > 0) {
+      result = result.filter(item => selectedTags.includes(item.productType));
+    }
+
+    if (category) {
+      console.log(category, result[0].categoryId);
+      result = result.filter(item => item.categoryId == category.id);
+    }
+
+    switch (sortBy) {
+      case 'new':
+        result.sort(
+          (a, b) => +new Date(b.createdDate) - +new Date(a.createdDate),
+        );
+        break;
+      case 'old':
+        result.sort(
+          (a, b) => +new Date(a.createdDate) - +new Date(b.createdDate),
+        );
+        break;
+      case 'popular':
+        result.sort((a, b) => b.reviewCount - a.reviewCount);
+        break;
+      case 'cheap':
+        // !!! некорректно будет работать с разными priceUnit
+        result.sort((a, b) => a.cost[0].payment - b.cost[0].payment);
+        break;
+      case 'expensive':
+        result.sort((a, b) => b.cost[0].payment - a.cost[0].payment);
+        break;
+      case 'highRating':
+        result.sort((a, b) => {
+          if (a.rating == null && b.rating == null) return 0;
+          if (a.rating == null) return 1; // a без рейтинга → в конец
+          if (b.rating == null) return -1; // b без рейтинга → в конец
+          return b.rating - a.rating;
+        });
+        break;
+      case 'lowRating':
+        result.sort((a, b) => {
+          if (a.rating == null && b.rating == null) return 0;
+          if (a.rating == null) return 1; // a без рейтинга → в конец
+          if (b.rating == null) return -1; // b без рейтинга → в конец
+          return a.rating - b.rating;
+        });
+        break;
+    }
+
+    return result;
+  }, [ads, category, sortBy, selectedTags, search]);
+
   const handleSorting = (value: SortingType) => {
     setSortBy(value);
-    console.log(`Сортировка по критерию ${value} выполнена`);
+    if (value) console.log(`Сортировка по критерию ${value} выполнена`);
   };
 
   const handleCategory = (value: CategoryType | null) => {
     setCategory(value);
-    console.log(`Категория ${value?.name} выбрана`);
+    if (value) console.log(`Категория ${value?.name} выбрана`);
   };
 
   const toggleTag = (tag: string) => {
     setSelectedTags(prev =>
       prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag],
     );
+    console.log(`Текущие выбранные теги: ${selectedTags}`);
   };
 
   useEffect(() => {
@@ -99,7 +169,8 @@ export default function Search() {
       />
 
       <FlatList
-        data={ads}
+        keyExtractor={item => item.categoryId.toString()}
+        data={processedAds}
         renderItem={({ item }) => <SmallAd width={SMALL_AD_WIDTH} ad={item} />}
         numColumns={numColumns}
         columnWrapperStyle={{ columnGap: 20 }}
@@ -116,20 +187,18 @@ export default function Search() {
                   { label: l.byCheap, value: 'cheap' },
                   { label: l.byExpensive, value: 'expensive' },
                   { label: l.byPopular, value: 'popular' },
+                  { label: l.byHighRating, value: 'highRating' },
+                  { label: l.byLowRating, value: 'lowRating' },
                 ]}
                 value={sortBy}
                 width={screenWidth * 0.45}
                 maxWidth={220}
-                onSelect={v => {
-                  if (v !== null) {
-                    handleSorting(v);
-                  }
-                }}
+                onSelect={v => handleSorting(v)}
               />
               {categories && (
-                <SortingMenu<CategoryType>
+                <SortingMenu<CategoryType | null>
                   items={[
-                    { label: l.noCategory, value: null },
+                    { label: l.allCategories, value: null },
                     { label: l.transport, value: categories[0] },
                     { label: l.realEstate, value: categories[1] },
                     { label: l.electronics, value: categories[2] },
@@ -153,18 +222,18 @@ export default function Search() {
             <View className={'flex-row gap-4'}>
               <Tag
                 label={l.products}
-                selected={selectedTags.includes('products')}
-                onPress={() => toggleTag('products')}
+                selected={selectedTags.includes('product')}
+                onPress={() => toggleTag('product')}
               />
               <Tag
                 label={l.services}
-                selected={selectedTags.includes('services')}
-                onPress={() => toggleTag('services')}
+                selected={selectedTags.includes('service')}
+                onPress={() => toggleTag('service')}
               />
               <Tag
                 label={l.spaces}
-                selected={selectedTags.includes('spaces')}
-                onPress={() => toggleTag('spaces')}
+                selected={selectedTags.includes('space')}
+                onPress={() => toggleTag('space')}
               />
             </View>
           </View>
