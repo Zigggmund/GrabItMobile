@@ -1,3 +1,4 @@
+import { ProductType } from '@/types/AdType';
 import { CategoryType } from '@/types/CategoryType';
 
 import { useEffect, useMemo, useState } from 'react';
@@ -12,6 +13,8 @@ import { useGetAllAds } from '@/hooks/ad/useGetAllAds';
 import { useGetAllCategories } from '@/hooks/category/useGetAllCategories';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTheme } from '@/hooks/useTheme';
+
+import { getProductTypeCategoryItems } from '@/utils/getProductTypeCategoryItems';
 
 import SearchBar from '@/components/common/bars/SearchBar';
 import ErrorMessage from '@/components/common/ErrorMessage';
@@ -48,9 +51,12 @@ export default function Search() {
   } = useGetAllAds();
 
   const [search, setSearch] = useState('');
-  const [category, setCategory] = useState<CategoryType | null>(null);
   const categories = useGetAllCategories().data;
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [category, setCategory] = useState<CategoryType | null>(null);
+  const [productTypeCategoryItems, setProductTypeCategoryItems] = useState<
+    { label: string; value: null | CategoryType }[]
+  >([{ label: l.allCategories, value: null }]);
+  const [selectedTag, setSelectedTag] = useState<ProductType | null>(null);
   const [sortBy, setSortBy] = useState<SortingType>('new');
   // const [page, setPage] = useState(1);
 
@@ -71,9 +77,8 @@ export default function Search() {
       result = result.filter(item => item.title.includes(search));
     }
 
-    console.log(selectedTags);
-    if (selectedTags.length > 0) {
-      result = result.filter(item => selectedTags.includes(item.productType));
+    if (selectedTag) {
+      result = result.filter(item => selectedTag == item.productType);
     }
 
     if (category) {
@@ -121,7 +126,7 @@ export default function Search() {
     }
 
     return result;
-  }, [ads, category, sortBy, selectedTags, search]);
+  }, [ads, category, sortBy, selectedTag, search]);
 
   const handleSorting = (value: SortingType) => {
     setSortBy(value);
@@ -133,17 +138,22 @@ export default function Search() {
     if (value) console.log(`Категория ${value?.name} выбрана`);
   };
 
-  const toggleTag = (tag: string) => {
-    setSelectedTags(prev =>
-      prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag],
-    );
-    console.log(`Текущие выбранные теги: ${selectedTags}`);
+  const handleTag = (value: ProductType | null) => {
+    setSelectedTag(prev => (prev == value ? null : value));
+    if (selectedTag) console.log(`Тег выбран ${value}`);
   };
 
   useEffect(() => {
-    console.log('Выбранные теги:', selectedTags);
-    // Фильтрация
-  }, [selectedTags]);
+    setCategory(null);
+    if (!selectedTag || !categories) return;
+
+    const categoryItems = getProductTypeCategoryItems({
+      l,
+      productType: selectedTag,
+      allCategories: categories,
+    });
+    setProductTypeCategoryItems(categoryItems);
+  }, [selectedTag]);
 
   if (isLoading)
     return (
@@ -197,21 +207,8 @@ export default function Search() {
               />
               {categories && (
                 <SortingMenu<CategoryType | null>
-                  items={[
-                    { label: l.allCategories, value: null },
-                    { label: l.transport, value: categories[0] },
-                    { label: l.realEstate, value: categories[1] },
-                    { label: l.electronics, value: categories[2] },
-                    { label: l.tools, value: categories[3] },
-                    { label: l.homeAndLife, value: categories[4] },
-                    { label: l.events, value: categories[5] },
-                    { label: l.sportsAndLeisure, value: categories[6] },
-                    { label: l.healthAndBeauty, value: categories[7] },
-                    { label: l.kids, value: categories[8] },
-                    { label: l.clothing, value: categories[9] },
-                    { label: l.business, value: categories[10] },
-                    { label: l.other, value: categories[11] },
-                  ]}
+                  items={productTypeCategoryItems}
+                  disable={selectedTag == null}
                   value={category}
                   onSelect={v => handleCategory(v)}
                   width={screenWidth * 0.45}
@@ -222,18 +219,18 @@ export default function Search() {
             <View className={'flex-row gap-4'}>
               <Tag
                 label={l.products}
-                selected={selectedTags.includes('product')}
-                onPress={() => toggleTag('product')}
+                selected={selectedTag == 'product'}
+                onPress={() => handleTag('product')}
               />
               <Tag
                 label={l.services}
-                selected={selectedTags.includes('service')}
-                onPress={() => toggleTag('service')}
+                selected={selectedTag == 'service'}
+                onPress={() => handleTag('service')}
               />
               <Tag
                 label={l.spaces}
-                selected={selectedTags.includes('space')}
-                onPress={() => toggleTag('space')}
+                selected={selectedTag == 'space'}
+                onPress={() => handleTag('space')}
               />
             </View>
           </View>

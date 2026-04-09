@@ -42,7 +42,7 @@ export const CreateAdForm = () => {
       { key: 'adTypeStep', component: AdTypeStep },
       { key: 'adDetailsStep', component: AdDetailsStep },
       { key: 'adMediaStep', component: AdMediaStep },
-      // { key: 'adMapStep', component: AdMapStep },
+      { key: 'adMapStep', component: AdMapStep },
       { key: 'adAllDatesStep', component: AdAllDatesStep },
     ] as const;
 

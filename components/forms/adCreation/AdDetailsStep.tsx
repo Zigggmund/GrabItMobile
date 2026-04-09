@@ -8,6 +8,8 @@ import { useForm } from '@/hooks/useForm';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTheme } from '@/hooks/useTheme';
 
+import { getProductTypeCategoryItems } from '@/utils/getProductTypeCategoryItems';
+
 import { SortingMenu } from '@/components/common/SortingMenu';
 import { CustomIcon } from '@/components/ui/icon/CustomIcon';
 import CustomInput from '@/components/ui/input/CustomInput';
@@ -126,27 +128,20 @@ export const AdDetailsStep = ({
             >
               {l.category.toUpperCase()}
             </CustomText>
-            <SortingMenu<CategoryType | null>
-              items={[
-                { label: l.selectCategory, value: null },
-                { label: l.transport, value: categories[0] },
-                { label: l.realEstate, value: categories[1] },
-                { label: l.electronics, value: categories[2] },
-                { label: l.tools, value: categories[3] },
-                { label: l.homeAndLife, value: categories[4] },
-                { label: l.events, value: categories[5] },
-                { label: l.sportsAndLeisure, value: categories[6] },
-                { label: l.healthAndBeauty, value: categories[7] },
-                { label: l.kids, value: categories[8] },
-                { label: l.clothing, value: categories[9] },
-                { label: l.business, value: categories[10] },
-                { label: l.other, value: categories[11] },
-              ]}
-              value={category}
-              onSelect={v => handleCategory(v)}
-              width={screenWidth * 0.6}
-              maxWidth={240}
-            />
+            {form.adCreationFormData.adType && (
+              <SortingMenu<CategoryType | null>
+                items={getProductTypeCategoryItems({
+                  l,
+                  productType: form.adCreationFormData.adType,
+                  allCategories: categories,
+                })}
+                value={category}
+                onSelect={v => handleCategory(v)}
+                width={screenWidth * 0.6}
+                maxWidth={240}
+              />
+            )}
+
             {errors.categoryId && (
               <CustomText
                 style={{ color: colors.base.red.primary }}
@@ -190,12 +185,6 @@ export const AdDetailsStep = ({
             {specs.length < 10 && (
               <CustomIcon source={icons.add} onPress={addSpec} size={40} />
             )}
-            {/*<CustomText*/}
-            {/*  style={{ color: colors.base.red.primary }}*/}
-            {/*  className={'text-14'}*/}
-            {/*>*/}
-            {/*  {errors.specifications}*/}
-            {/*</CustomText>*/}
           </View>
         </View>
       </View>

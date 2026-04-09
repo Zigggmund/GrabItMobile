@@ -1,10 +1,5 @@
 import React, { useRef, useState } from 'react';
-import {
-  Modal,
-  ScrollView,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Modal, ScrollView, TouchableOpacity, View } from 'react-native';
 
 import { useTheme } from '@/hooks/useTheme';
 
@@ -25,6 +20,7 @@ interface SortingMenuProps<T> {
   containerClassName?: string;
   width?: number;
   maxWidth?: number;
+  disable?: boolean;
 }
 
 export function SortingMenu<T>({
@@ -34,6 +30,7 @@ export function SortingMenu<T>({
   onSelect,
   width = 200,
   maxWidth = width,
+  disable = false,
 }: SortingMenuProps<T>) {
   const [open, setOpen] = useState(false);
   const { colors } = useTheme();
@@ -54,12 +51,15 @@ export function SortingMenu<T>({
     <View className={`flex-col gap-2 ${containerClassName}`}>
       <TouchableOpacity
         style={{
-          backgroundColor: colors.base.orange.primary,
+          backgroundColor: disable
+            ? colors.base.orange.dark
+            : colors.base.orange.primary,
           borderWidth: 1,
           borderColor: colors.base.neutral.blackPrimary,
           width: width,
           maxWidth: maxWidth,
         }}
+        disabled={disable}
         className={`gap-2 flex-row items-center rounded-xl py-2 px-2 ${containerClassName}`}
         ref={buttonRef}
         onPress={() => {

@@ -172,6 +172,16 @@ export const translations = {
     ulyanovsk: 'Ульяновск',
     cheboksary: 'Чебоксары',
 
+    // Дни недели
+    monday: 'Понедельник',
+    tuesday: 'Вторник',
+    wednesday: 'Среда',
+    thursday: 'Четверг',
+    friday: 'Пятница',
+    saturday: 'Суббота',
+    sunday: 'Воскресенье',
+
+
     // Категории
     transport: 'Транспорт',
     realEstate: 'Недвижимость',
@@ -435,6 +445,16 @@ export const translations = {
     chita: 'Chita',
     ulyanovsk: 'Ulyanovsk',
     cheboksary: 'Cheboksary',
+
+
+    // Weekdays
+    monday: 'Monday',
+    tuesday: 'Tuesday',
+    wednesday: 'Wednesday',
+    thursday: 'Thursday',
+    friday: 'Friday',
+    saturday: 'Saturday',
+    sunday: 'Sunday',
 
     // Categories
     transport: 'Transport',
