@@ -17,6 +17,7 @@ export type AdCreationFormDataType = {
   previewImage?: MediaType | null;
   categoryId?: number | null;
   cost?: number | null;
+  minInterval?: number | null;
   // cost: CostType[];
   uriMedias: MediaType[];
 

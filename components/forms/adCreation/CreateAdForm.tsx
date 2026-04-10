@@ -119,6 +119,14 @@ export const CreateAdForm = () => {
         } else if (form.adCreationFormData.cost <= 0) {
           stepErrors.cost = l.errorCostZeroOrLess;
         }
+
+        if (!form.adCreationFormData.minInterval) {
+          stepErrors.minInterval = l.errorMinIntervalNull;
+        } else if (form.adCreationFormData.minInterval <= 0) {
+          stepErrors.minInterval = l.errorMinIntervalZeroOrLess;
+        } else if (form.adCreationFormData.minInterval > 24) {
+          stepErrors.minInterval = l.errorMinIntervalTooBig;
+        }
         // if (
         //   !form.adCreationFormData.cost ||
         //   form.adCreationFormData.cost.length === 0
@@ -163,7 +171,7 @@ export const CreateAdForm = () => {
       case 'adDayTimeStep':
         form.adCreationFormData.weekDaysTime.forEach((weekDay, index) => {
           if (weekDay.length === 0 && form.adCreationFormData.weekDays[index]) {
-            stepErrors.weekDays = l.errorDayTimeNull;
+            stepErrors.weekDaysTime = l.errorDayTimeNull;
           }
         });
         break;

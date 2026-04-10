@@ -173,7 +173,12 @@ export const AdMediaStep = ({ errors }: { errors: Record<string, string> }) => {
         )}
 
         {/* Multiple Media */}
-        <CustomText style={{ color: colors.theme.blue.dark }}>Media</CustomText>
+        <CustomText
+          style={{ color: colors.theme.blue.dark }}
+          className={'text-18'}
+        >
+          {l.additionalMediaFiles}
+        </CustomText>
         <View className="flex-row flex-wrap gap-2">
           {media.map(m => (
             <View

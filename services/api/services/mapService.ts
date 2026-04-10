@@ -1,17 +1,19 @@
-import { YANDEX_API_KEY } from '@/constants/config';
-
 export class MapService {
-  // Получение строки адреса по координатам
   static async getAddress(lat: number, lon: number): Promise<string> {
     try {
-      const url = `https://geocode-maps.yandex.ru/1.x/?apikey=${YANDEX_API_KEY}&format=json&geocode=${lon},${lat}&lang=ru_RU`;
-      const res = await fetch(url);
+      const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&accept-language=ru`;
+
+      const res = await fetch(url, {
+        headers: {
+          'User-Agent': 'GrabItApp/1.0', // ОБЯЗАТЕЛЬНО
+        },
+      });
+
       const data = await res.json();
 
-      const feature = data.response.GeoObjectCollection.featureMember[0];
-      return feature?.GeoObject?.metaDataProperty?.GeocoderMetaData?.text || '';
+      return data.display_name || '';
     } catch (error) {
-      console.error('Ошибка геокодинга Яндекс:', error);
+      console.error('Ошибка геокодинга OSM:', error);
       return '';
     }
   }

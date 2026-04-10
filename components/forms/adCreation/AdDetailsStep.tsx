@@ -28,9 +28,9 @@ export const AdDetailsStep = ({
   // АДАПТИВНОСТЬ
   const { width: screenWidth } = useWindowDimensions();
 
-  const [cost, setCost] = useState(
-    (form.adCreationFormData.cost || '').toString(),
-  );
+  // const [cost, setCost] = useState(
+  //   (form.adCreationFormData.cost || '').toString(),
+  // );
 
   const categories = useGetAllCategories().data;
   const [category, setCategory] = useState<CategoryType | null>(null);
@@ -85,7 +85,7 @@ export const AdDetailsStep = ({
 
   return (
     <ScrollView>
-      <View className="gap-4 flex-1 w-full">
+      <View className="gap-4 flex-1 w-full mb-24">
         <CustomInput
           value={form.adCreationFormData.title}
           label={l.name}
@@ -104,19 +104,37 @@ export const AdDetailsStep = ({
           placeholder={l.optional}
         />
         <CustomInput
-          value={cost}
+          value={form.adCreationFormData.cost?.toString()}
           label={`${l.price} (${l.rubPerHour})`}
           keyboardType="numeric"
-          onChangeText={text => setCost(text)}
-          onBlur={() => {
-            // Конвертация в число только когда пользователь ушёл с поля
-            const numericValue = parseFloat(cost || '');
+          onChangeText={text => {
+            const numericValue = parseInt(text || '');
             form.changeAdCreationFormData(
               'cost',
               isNaN(numericValue) ? null : numericValue,
             );
           }}
           errorMessage={errors.cost}
+          placeholder={l.requiredToFillIn}
+          // onBlur={() => {
+          //   // Конвертация в число только когда пользователь ушёл с поля
+          //   const numericValue = parseFloat(cost || '');
+          //   form.changeAdCreationFormData(
+          //     'cost',
+          //     isNaN(numericValue) ? null : numericValue,
+          //   );
+          // }}
+        />
+
+        <CustomInput
+          value={form.adCreationFormData.minInterval?.toString()}
+          label={`${l.minInterval} (${l.hours})`}
+          keyboardType="numeric"
+          onChangeText={text => {
+            const numericValue = parseInt(text || '');
+            form.changeAdCreationFormData('minInterval', isNaN(numericValue) ? null : numericValue,);
+          }}
+          errorMessage={errors.minInterval}
           placeholder={l.requiredToFillIn}
         />
         {categories && (

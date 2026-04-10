@@ -2,6 +2,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Redirect, Tabs, usePathname, useSegments } from 'expo-router';
 
 import { useGetAllCategories } from '@/hooks/category/useGetAllCategories';
+import { useHistory } from '@/hooks/useHistory';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useProfile } from '@/hooks/user/useProfile';
 import { useTheme } from '@/hooks/useTheme';
@@ -11,7 +12,6 @@ import { CustomIcon } from '@/components/ui/icon/CustomIcon';
 
 import { icons } from '@/constants/icons';
 import { pages } from '@/constants/pages';
-import { useHistory } from '@/hooks/useHistory';
 
 // Установка здесь backgroundColor: colors.theme.white.bright не сработает по той причине, что экраны рисуются поверх навигации
 // В appContainer это работает, так как там указан Slot, куда он подставляет экраны. Но Slot может быть объявлен лишь в одном месте

@@ -101,7 +101,7 @@ export default function AdDetails() {
                   style={{ color: colors.theme.blue.bright }}
                   className={'text-14 font-bold'}
                 >
-                  {getRemainingTime(ad.myBooking.endTime)} {l.hours}
+                  {getRemainingTime(ad.myBooking.endTime)} {l.hour}
                 </CustomText>
               </View>
 

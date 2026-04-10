@@ -1,1 +1,0 @@
-export const YANDEX_API_KEY = 'b51441d6-abc4-4dc9-9713-9f354ba9f905'

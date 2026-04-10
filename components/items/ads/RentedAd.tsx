@@ -97,7 +97,7 @@ export default function RentedAd({ width, ad, isEnded }: RentedAdProps) {
                   style={{ color: colors.base.green.primary, lineHeight: 15 }}
                   className={'text-12 font-bold'}
                 >
-                  {remainingTime} {l.hours}
+                  {remainingTime} {l.hour}
                 </CustomText>
               </View>
             )}

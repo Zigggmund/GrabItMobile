@@ -9,7 +9,7 @@ import { TranslationKey } from '@/context/LanguageContext';
 import { Tag } from '@/components/common/Tag';
 import { CustomText } from '@/components/ui/text/CustomText';
 
-import { WEEKDAYS } from '@/constants/weekDays';
+import { WEEKDAYS } from '@/constants/time';
 
 export const AdWeekDaysStep = ({
   errors,
@@ -40,12 +40,12 @@ export const AdWeekDaysStep = ({
           />
         )}
       />
-      {errors.categoryId && (
+      {errors.weekDays && (
         <CustomText
           style={{ color: colors.base.red.primary }}
           className={'text-12'}
         >
-          {errors.categoryId}
+          {errors.weekDays}
         </CustomText>
       )}
     </View>

@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
-import { PermissionsAndroid, Platform, View } from 'react-native';
-import { Marker, YaMap } from 'react-native-yamap';
+import { PermissionsAndroid, Platform, ScrollView, View } from 'react-native';
+import Geolocation from 'react-native-geolocation-service';
+import MapLibreGL from '@maplibre/maplibre-react-native';
+import { Feature, Point } from 'geojson';
 
 import { useForm } from '@/hooks/useForm';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -8,8 +10,6 @@ import { useTheme } from '@/hooks/useTheme';
 
 import CustomInput from '@/components/ui/input/CustomInput';
 import { CustomText } from '@/components/ui/text/CustomText';
-
-import { icons } from '@/constants/icons';
 
 import { MapService } from '@/services/api/services/mapService';
 
@@ -46,18 +46,18 @@ export const AdMapStep = ({ errors }: { errors: Record<string, string> }) => {
     if (!coords) {
       const getPosition = async () => {
         const permission = await requestLocationPermission();
-        if (permission) {
-          navigator.geolocation.getCurrentPosition(
-            pos => {
-              const { latitude, longitude } = pos.coords;
-              setCoords([latitude, longitude]);
-              form.changeAdCreationFormData('latitude', latitude);
-              form.changeAdCreationFormData('longitude', longitude);
-            },
-            err => console.error(err),
-            { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
-          );
-        }
+        if (!permission) return;
+
+        Geolocation.getCurrentPosition(
+          pos => {
+            const { latitude, longitude } = pos.coords;
+            setCoords([latitude, longitude]);
+            form.changeAdCreationFormData('latitude', latitude);
+            form.changeAdCreationFormData('longitude', longitude);
+          },
+          err => console.error(err),
+          { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+        );
       };
       getPosition();
     }
@@ -89,48 +89,167 @@ export const AdMapStep = ({ errors }: { errors: Record<string, string> }) => {
   // };
 
   return (
-    <View className="gap-2">
-      <View className="flex-1" style={{ height: 400 }}>
-        <YaMap
-          style={{ width: '100%', flex: 1 }}
-          initialRegion={{
-            lat: coords?.[0] || 55.751244,
-            lon: coords?.[1] || 37.618423,
-            zoom: 10,
-          }}
-          onMapPress={e => {
-            // e.nativeEvent.lat / e.nativeEvent.lon
-            const { lat, lon } = e.nativeEvent;
-            setCoords([lat, lon]);
-            form.changeAdCreationFormData('latitude', lat);
-            form.changeAdCreationFormData('longitude', lon);
+    <ScrollView>
+      <View className="gap-2">
+        <MapLibreGL.MapView
+          style={{ height: 300, width: '100%' }}
+          onPress={(e: Feature) => {
+            const geom = e.geometry;
+
+            // Проверяем, что это Point
+            if (geom && geom.type === 'Point') {
+              const point = geom as Point; // явно говорим TS, что это Point
+              const coordsArr = point.coordinates; // теперь coordinates доступны
+              if (coordsArr.length >= 2) {
+                const [lon, lat] = coordsArr;
+                if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+                  setCoords([lat, lon]);
+                  form.changeAdCreationFormData('latitude', lat);
+                  form.changeAdCreationFormData('longitude', lon);
+                } else {
+                  console.warn('Invalid coordinates:', lat, lon);
+                }
+              }
+            }
           }}
         >
+          <MapLibreGL.Camera
+            zoomLevel={12}
+            centerCoordinate={
+              coords ? [coords[1], coords[0]] : [37.618423, 55.751244]
+            }
+          />
+
+          <MapLibreGL.RasterSource
+            id="osmSource"
+            tileUrlTemplates={[
+              'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            ]}
+            tileSize={256}
+            // id="osmSource"
+            // tileUrlTemplates={[
+            //   'https://demotiles.maplibre.org/tiles/bright/{z}/{x}/{y}.png',
+            // ]}
+            // tileSize={256}
+          >
+            <MapLibreGL.RasterLayer id="osmLayer" />
+          </MapLibreGL.RasterSource>
+
           {coords && (
-            <Marker
-              point={{ lat: coords[0], lon: coords[1] }}
-              source={icons.mapMarker} // кастомный маркер
-            />
+            // Иконка не подгружается
+            // <MapLibreGL.Images
+            //   images={{
+            //     marker: icons.mapMarker, // важно!
+            //   }}
+            // >
+            //   <MapLibreGL.ShapeSource
+            //     id="markerSource"
+            //     shape={{
+            //       type: 'Feature',
+            //       properties: {},
+            //       geometry: {
+            //         type: 'Point',
+            //         coordinates: [coords[1], coords[0]],
+            //       },
+            //     }}
+            //   >
+            //     <MapLibreGL.SymbolLayer
+            //       id="markerLayer"
+            //       style={{
+            //         iconImage: 'marker',
+            //         iconSize: 0.5,
+            //         iconAllowOverlap: true,
+            //         iconIgnorePlacement: true,
+            //       }}
+            //     />
+            //   </MapLibreGL.ShapeSource>
+            // </MapLibreGL.Images>
+
+            <MapLibreGL.PointAnnotation
+              id="marker"
+              coordinate={coords ? [coords[1], coords[0]] : [0, 0]}
+            >
+              {/*<MapLibreGL.SymbolLayer*/}
+              {/*  id="markerLayer"*/}
+              {/*  style={{*/}
+              {/*    iconImage: 'marker',*/}
+              {/*    iconSize: 0.5,*/}
+              {/*  }}*/}
+              {/*/>*/}
+              <View
+                style={{
+                  width: 20,
+                  height: 20,
+                  backgroundColor: 'red',
+                  borderRadius: 10,
+                }}
+              />
+              {/*<CustomIcon source={icons.mapMarker} size={60} />*/}
+            </MapLibreGL.PointAnnotation>
           )}
-        </YaMap>
+        </MapLibreGL.MapView>
+
+        {/*<MapLibreGL.MapView*/}
+        {/*  style={{ height: 300, width: '100%' }}*/}
+        {/*  // style={{ flex: 1 }}*/}
+        {/*  onPress={(feature: Feature<Geometry, GeoJsonProperties>) => {*/}
+        {/*    if (feature.geometry?.type === 'Point') {*/}
+        {/*      const coordsArr = feature.geometry.coordinates; // coordsArr: Position = number[]*/}
+
+        {/*      // Безопасно извлекаем первые два числа*/}
+        {/*      if (coordsArr.length >= 2) {*/}
+        {/*        const [lon, lat] = coordsArr;*/}
+        {/*        setCoords([lat, lon]);*/}
+        {/*        form.changeAdCreationFormData('latitude', lat);*/}
+        {/*        form.changeAdCreationFormData('longitude', lon);*/}
+        {/*      }*/}
+        {/*    }*/}
+        {/*  }}*/}
+        {/*>*/}
+        {/*  <MapLibreGL.Camera*/}
+        {/*    zoomLevel={12}*/}
+        {/*    centerCoordinate={*/}
+        {/*      coords ? [coords[1], coords[0]] : [37.618423, 55.751244]*/}
+        {/*    }*/}
+        {/*  />*/}
+
+        {/*  <MapLibreGL.RasterSource*/}
+        {/*    id="osm"*/}
+        {/*    tileUrlTemplates={[*/}
+        {/*      'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png',*/}
+        {/*    ]}*/}
+        {/*    tileSize={256}*/}
+        {/*  >*/}
+        {/*    <MapLibreGL.RasterLayer id="osmLayer" />*/}
+        {/*  </MapLibreGL.RasterSource>*/}
+
+        {/*  {coords && (*/}
+        {/*    <MapLibreGL.PointAnnotation id="marker" coordinate={coords}>*/}
+        {/*      <CustomIcon source={icons.mapMarker} size={60} />*/}
+        {/*    </MapLibreGL.PointAnnotation>*/}
+        {/*  )}*/}
+        {/*</MapLibreGL.MapView>*/}
       </View>
 
-      <CustomInput
-        label={l.address}
-        placeholder={l.addressWillAppearHere}
-        value={form.adCreationFormData.address || ''}
-        errorMessage={errors.address}
-        disable
-      />
+      <View className="gap-2 justify-center items-center">
+        <CustomInput
+          multiline
+          label={l.address}
+          placeholder={l.addressWillAppearHere}
+          value={form.adCreationFormData.address || ''}
+          errorMessage={errors.address}
+          disable
+        />
 
-      {coords && (
-        <CustomText
-          className="text-14"
-          style={{ color: colors.theme.blue.bright }}
-        >
-          {l.coordinates}: {coords[0]}, {coords[1]}
-        </CustomText>
-      )}
-    </View>
+        {coords && (
+          <CustomText
+            className="text-14"
+            style={{ color: colors.theme.blue.bright }}
+          >
+            {l.coordinates}: {coords[0]}, {coords[1]}
+          </CustomText>
+        )}
+      </View>
+    </ScrollView>
   );
 };

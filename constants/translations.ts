@@ -51,7 +51,8 @@ export const translations = {
 
     // Арендованное
     rentEndSoon: 'До конца аренды',
-    hours: 'час(а)',
+    hour: 'час(а)',
+    hours: 'часы',
     rentEnded: 'Аренда завершена',
     current: 'Текущие',
     ended: 'Завершенные',
@@ -93,6 +94,8 @@ export const translations = {
     requiredToFillIn: 'Обязательно для заполнения',
     optional: 'Необязательно',
     coordinates: 'Координаты',
+    additionalMediaFiles: 'Дополнительные медиа-файлы',
+    minInterval: 'Минимальный период бронирования',
     adTypeStep: 'Выбор типа объявления',
     adDetailsStep: 'Детали объявления',
     adMediaStep: 'Выбор медиафайлов',
@@ -181,7 +184,6 @@ export const translations = {
     saturday: 'Суббота',
     sunday: 'Воскресенье',
 
-
     // Категории
     transport: 'Транспорт',
     realEstate: 'Недвижимость',
@@ -245,8 +247,14 @@ export const translations = {
     errorImageTooBig: 'Изображение слишком большого размера (>200Кб)',
     errorBigImageTooBig: 'Изображение слишком большого размера (>1000Кб)',
     errorCategoryIdNull: 'Не выбрана категория',
-    errorCostNull: 'Не указана стоимость',
+    errorCostNull: 'Не указана стоимость/некорректное число',
     errorCostZeroOrLess: 'Стоимость должна быть больше 0',
+    errorMinIntervalNull:
+      'Не указан минимальный интервал бронирования/некорректное число',
+    errorMinIntervalZeroOrLess:
+      'Минимальный интервал бронирования должен быть больше 0',
+    errorMinIntervalTooBig:
+      'Минимальный интервал бронирования должен быть не более 24 часов',
     errorMediaArrayTooLong: 'Слишком много медиа файлов: не более 10',
     errorAddressNull: 'Не указан адрес',
     errorDatePeriodNull: 'Не указаны даты начала/конца периода',
@@ -325,7 +333,8 @@ export const translations = {
 
     // Rented
     rentEndSoon: 'Until the end of the lease',
-    hours: 'hour(s)',
+    hour: 'hour(s)',
+    hours: 'hours',
     rentEnded: 'The lease has ended',
     current: 'Current',
     ended: 'Completed',
@@ -367,6 +376,8 @@ export const translations = {
     requiredToFillIn: 'Required to fill in',
     optional: 'Optional',
     coordinates: 'Coordinates',
+    additionalMediaFiles: 'Additional media files',
+    minInterval: 'Minimum booking period',
     adTypeStep: 'Select ad type',
     adDetailsStep: 'Ad details',
     adMediaStep: 'Select media files',
@@ -446,7 +457,6 @@ export const translations = {
     ulyanovsk: 'Ulyanovsk',
     cheboksary: 'Cheboksary',
 
-
     // Weekdays
     monday: 'Monday',
     tuesday: 'Tuesday',
@@ -503,31 +513,37 @@ export const translations = {
     errorChatNotFound: 'The chat was not found',
     errorAdNotFound: 'The ad was not found',
     // Forms
-    errorAdTypeNull: 'Ad type not selected',
+    errorAdTypeNull: 'Ad type is not selected',
     errorTitleNull: 'Ad name is not filled in',
-    errorTitleTooShort: 'Ad name too short; at least 5 characters required',
-    errorTitleTooLong: 'Ad name too long; no more than 40 characters allowed',
+    errorTitleTooShort: 'Ad name is too short; at least 5 characters required',
+    errorTitleTooLong: 'Ad name is too long; no more than 40 characters allowed',
     errorDescriptionTooShort:
-      'Description too short; at least 10 characters required',
+      'Description is too short; at least 10 characters required',
     errorDescriptionTooLong:
-      'Description too long; no more than 500 characters allowed',
+      'Description is too long; no more than 500 characters allowed',
     errorSpecificationTooLong:
-      'Specifications too long; no more than 100 characters allowed',
+      'Specifications is too long; no more than 100 characters allowed',
     errorSpecificationTooShort:
-      'Specifications too short; no less than 5 characters allowed',
-    errorPreviewImageNull: 'Preview image not selected',
-    errorCategoryIdNull: 'Category not selected',
-    errorCostNull: 'Cost not specified',
+      'Specifications are too short; no less than 5 characters allowed',
+    errorPreviewImageNull: 'Preview image is not selected',
+    errorCategoryIdNull: 'Category is not selected',
+    errorCostNull: 'Cost is not specified/incorrect number',
     errorCostZeroOrLess: 'Cost must be greater than 0',
+    errorMinIntervalNull:
+      'Minimum booking interval is not specified/incorrect number',
+    errorMinIntervalZeroOrLess:
+      'Minimum booking interval must be greater than 0',
+    errorMinIntervalTooBig:
+      'The minimum booking interval must be no more than 24 hours',
     errorMediaArrayTooLong: 'Too many media files; no more than 10 allowed',
     errorImageTooBig: 'The image is too large (>200Kb)',
     errorBigImageTooBig: 'The image is too large (>1000Kb)',
-    errorAddressNull: 'Address not specified',
-    errorDatePeriodNull: 'Start/end dates of the period not specified',
+    errorAddressNull: 'Address is not specified',
+    errorDatePeriodNull: 'Start/end dates of the period is not specified',
     errorEndDateStartDateComparison:
       'Invalid date: end date is earlier than start date',
     errorWeekDaysNull: 'No weekdays selected',
-    errorDayTimeNull: 'No time slot selected for one of the specified days',
+    errorDayTimeNull: 'No time slot selected for one of the chosen days',
 
     // Empty
     emptyReviewList: 'No reviews yet',
