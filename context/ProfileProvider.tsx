@@ -1,9 +1,10 @@
 import { UserType } from '@/types/UserType';
 
-import { FC, ReactNode, useEffect, useState } from 'react';
+import { FC, ReactNode, useEffect } from 'react';
+
+import { useMe } from '@/hooks/user/useMe';
 
 import { ProfileContext } from './ProfileContext';
-import { storage } from '@/services/storage/asyncStorageService';
 
 interface ProfileContextProviderProps {
   children: ReactNode;
@@ -12,40 +13,36 @@ interface ProfileContextProviderProps {
 export const ProfileProvider: FC<ProfileContextProviderProps> = ({
   children,
 }) => {
-  const [user, setUser] = useState<UserType | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const isAuth = !!user;
+  const { data: user, isLoading: isLoading } = useMe();
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        // ЧТО-ТО ТАКОЕ
-        // const accessToken = storage.get('accessToken');
-        //
-        // if (!accessToken) {
-        //   setUser(null);
-        // } else {
-        //   const response = await api.get('/me', {
-        //     headers: { Authorization: `Bearer ${token}` },
-        //   });
-        //   setUser(response.data);
-        // }
-      } catch (err) {
-        console.log('Not authorized or error fetching user', err);
-        setUser(null);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchUser();
-  }, []);
-
-  useEffect(() => {
-    console.log('User was changed:', user);
-  }, [user]);
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     try {
+  //       const accessToken = await SecureStore.getItemAsync('accessToken');
+  //       if (!accessToken) {
+  //         setUser(null);
+  //       } else {
+  //         const response = await UserService.infoUser();
+  //         setUser(response.data);
+  //       }
+  //     } catch (err) {
+  //       console.log('Not authorized or error fetching user', err);
+  //       setUser(null);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+  //   fetchUser();
+  // }, []);
+  //
+  // useEffect(() => {
+  //   console.log('User was changed:', user);
+  // }, [user]);
 
   return (
-    <ProfileContext.Provider value={{ user, setUser, isLoading, isAuth }}>
+    <ProfileContext.Provider
+      value={{ user: user ? user.data : null, isLoading, isAuth: !!user }}
+    >
       {children}
     </ProfileContext.Provider>
   );

@@ -97,6 +97,12 @@ export const CreateAdForm = () => {
           stepErrors.title = l.errorTitleTooLong;
         }
 
+        if (!form.adCreationFormData.quantity) {
+          stepErrors.quantity = l.errorQuantityNull;
+        } else if (form.adCreationFormData.quantity <= 0) {
+          stepErrors.quantity = l.errorQuantityZeroOrLess;
+        }
+
         if (description && description.length < 10) {
           stepErrors.description = l.errorDescriptionTooShort;
         } else if (description.length > 500) {

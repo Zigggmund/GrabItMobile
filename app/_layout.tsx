@@ -6,12 +6,16 @@
 import { useEffect, useState } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider } from 'react-redux';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { loadAsync } from 'expo-font'; // tailwind
+import * as WebBrowser from 'expo-web-browser';
 
+import { HistoryProvider } from '@/context/HistoryProvider';
 import { LanguageProvider } from '@/context/LanguageProvider';
 import { ProfileProvider } from '@/context/ProfileProvider';
 import { ThemeProvider } from '@/context/ThemeProvider';
 
+import { loadCity } from '@/state/city/citySlice';
 import { store } from '@/state/store';
 
 import AppContainer from '@/components/layout/AppContainer';
@@ -19,9 +23,8 @@ import AppContainer from '@/components/layout/AppContainer';
 import 'react-native-reanimated';
 import '../global.css';
 import LoadingScreen from '@/app/loading';
-import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
-import { HistoryProvider } from '@/context/HistoryProvider';
-import { loadCity } from '@/state/city/citySlice';
+
+WebBrowser.maybeCompleteAuthSession();
 
 // import YaMap from 'react-native-yamap';
 

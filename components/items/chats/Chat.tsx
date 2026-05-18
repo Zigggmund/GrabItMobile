@@ -24,7 +24,7 @@ export function Chat({ index = 1, chat }: ChatProps) {
     <TouchableOpacity onPress={() => navigate(`/(tabs)/chats/${chat.id}`)}>
       <GreyBlock index={index} className={'flex-row gap-4 items-center'}>
         <ProfileAvatar
-          source={chat.talker.avatar?.url}
+          source={chat.talker.avatar}
           id={chat.talker.id}
           size={50}
         />
@@ -35,7 +35,7 @@ export function Chat({ index = 1, chat }: ChatProps) {
               highlight
               className={'font-bold text-18'}
             >
-              {chat.talker.name}
+              {chat.talker.username}
             </CustomText>
             <CustomText
               style={{ color: colors.theme.grey.dark }}

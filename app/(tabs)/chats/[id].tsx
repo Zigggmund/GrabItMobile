@@ -27,11 +27,9 @@ export default function Chat() {
   const messageWidth = 220;
   const { data: chat, isLoading: isLoading, isError: isError } = useGetChat(id);
 
-  // для мгновенной отрисовки без getЗапроса. После успешного post isReceive становится true
   const [messages, setMessages] = useState(chat?.messages);
   const [message, setMessage] = useState('');
 
-  // отправка сообщения
   const handleSendMessage = () => {
     if (!message.trim() || !user) return;
 
@@ -90,7 +88,7 @@ export default function Chat() {
   if (!chat) {
     return (
       <ScreenContainer>
-        <ErrorMessage text={l.chatChatNotFound} />
+        <ErrorMessage text={l.errorChatNotFound} />
       </ScreenContainer>
     );
   }

@@ -7,7 +7,7 @@
     "icon": "./assets/icons/logo.png",
     "scheme": "grabitmobile",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
+    "newArchEnabled": false,
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.zigmund.GrabIt",
@@ -22,7 +22,9 @@
         "foregroundImage": "./assets/icons/logo.png"
       },
       "package": "com.zigmund.GrabIt",
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "networkSecurityConfig":
+      "./android/app/src/main/res/xml/network_security_config.xml"
     },
     "web": {
       "bundler": "metro",

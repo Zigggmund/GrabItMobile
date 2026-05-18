@@ -205,14 +205,14 @@ export default function AdDetails() {
                   style={{ color: colors.theme.black.primary }}
                   numberOfLines={1}
                 >
-                  {ad.landlord.name}
+                  {ad.landlord.username}
                 </CustomText>
                 <View className={'gap-1 flex-row'}>
                   <CustomText
                     style={{ color: colors.theme.blue.primary }}
                     className="font-bold text-14"
                   >
-                    {ad.landlord.rating ?? '-'}
+                    {ad.landlord.landlordRating ?? '-'}
                   </CustomText>
                   <CustomText
                     style={{ color: colors.theme.blue.primary }}
@@ -226,7 +226,7 @@ export default function AdDetails() {
 
             <ProfileAvatar
               id={ad.landlord.id}
-              source={ad.landlord.avatar?.url}
+              source={ad.landlord.avatar}
               size={60}
             />
           </View>
@@ -256,8 +256,9 @@ export default function AdDetails() {
             </View>
           </GreyBlock>
 
-          <View className={'mr-16 ml-16'}>
+          <View className={'mr-20 ml-20'}>
             <CustomButton
+              isSmall
               iconSize={20}
               textClassName={'text-18'}
               iconSource={icons.chat}
@@ -349,8 +350,9 @@ export default function AdDetails() {
           >
             {l.bookingCalendar}
           </CustomText>
-          <View className={'mr-16 ml-16'}>
+          <View className={'mr-20 ml-20'}>
             <CustomButton
+              isSmall
               textClassName="text-19"
               onPress={() =>
                 navigate({

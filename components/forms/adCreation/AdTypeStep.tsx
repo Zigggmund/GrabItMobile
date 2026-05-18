@@ -1,6 +1,5 @@
 import { ProductType } from '@/types/AdType';
 
-import { useState } from 'react';
 import { View } from 'react-native';
 
 import { useForm } from '@/hooks/useForm';

@@ -65,7 +65,7 @@ export default function RentedAd({ width, ad, isEnded }: RentedAdProps) {
               </CustomText>
               <ProfileAvatar
                 size={30}
-                source={ad.landlord.avatar?.url}
+                source={ad.landlord.avatar}
                 id={ad.landlord.id}
               />
             </View>

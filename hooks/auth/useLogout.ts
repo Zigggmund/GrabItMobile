@@ -1,19 +1,21 @@
 import { useMutation } from '@tanstack/react-query';
 
 import { useHistory } from '@/hooks/useHistory';
-import { useProfile } from '@/hooks/user/useProfile';
 
 import { AuthService } from '@/services/api/services/authService';
+import * as SecureStore from 'expo-secure-store';
 
 export const useProfileLogout = () => {
-  const { setUser } = useProfile();
   const { navigate } = useHistory();
 
   return useMutation({
     mutationFn: () => AuthService.logout(),
-    onSuccess: () => {
-      setUser(null);
+    onSuccess: async () => {
+      await SecureStore.deleteItemAsync('accessToken');
       navigate('/(auth)/login');
+    },
+    onError: error => {
+      console.log(error);
     },
   });
 };

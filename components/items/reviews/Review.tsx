@@ -198,7 +198,7 @@ export function Review({
       {/* ЗАГОЛОВОК */}
       <View className={'flex-row gap-3'}>
         <ProfileAvatar
-          source={review.author.avatar?.url}
+          source={review.author.avatar}
           size={60}
           id={review.author.id}
         />
@@ -209,7 +209,7 @@ export function Review({
                 className={'text-14 font-bold'}
                 style={{ color: colors.theme.blue.primary }}
               >
-                {review.author.rating}
+                {review.author.landlordRating}
               </CustomText>
               <CustomText
                 className={'text-14'}
@@ -230,7 +230,7 @@ export function Review({
             style={{ color: colors.theme.black.primary }}
             numberOfLines={1}
           >
-            {review.author.name}
+            {review.author.username}
           </CustomText>
         </View>
       </View>

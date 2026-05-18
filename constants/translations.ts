@@ -13,16 +13,33 @@ export const translations = {
     slogan: 'Арендуйте вещи и услуги быстро и легко!',
 
     // логин/регистрация
-    login: 'Логин',
+    username: 'Имя пользователя',
     email: 'Почта',
     password: 'Пароль',
+    gender: 'Пол',
+    genderOptional: 'Пол (необязательно)',
+    male: 'Мужской',
+    female: 'Женский',
+    otherGender: 'Другой',
+    phoneNumber: 'Телефонный номер',
+    firstName: 'Имя',
+    lastName: 'Фамилия',
+    firstAndLastName: 'Имя и фамилия',
+    birthDate: 'Дата рождения',
     confirmPassword: 'Подтвердите пароль',
     noAccountYet: 'Еще нет аккаунта?',
+    loginIsImportant:
+      'Вам необходимо войти в систему, чтобы пользоваться приложением',
     alreadyHaveAccount: 'Уже есть аккаунт?',
     enterPassword: 'Введите пароль',
-    enterLogin: 'Введите логин',
+    enterUsername: 'Введите имя пользователя',
     enterEmail: 'Введите почту',
+    enterFirstName: 'Введите имя',
+    enterLastName: 'Введите фамилию',
+    enterPhoneNumber: 'Введите номер телефона (необязательно)',
+    enterBirthDate: 'Введите дату рождения (дд.мм.гггг)',
     selectLanguage: 'Выберите язык',
+    registrationDate: 'Дата регистрации',
 
     // Основные страницы
     search: 'Поиск',
@@ -65,12 +82,16 @@ export const translations = {
     // Профили
     personalInfo: 'Персональная информация',
     offers: 'Предложения',
+    activeOffers: 'Активные предложения',
     rating: 'Рейтинг',
+    renterRating: 'Рейтинг владельца',
+    landlordRating: 'Рейтинг арендатора',
 
     // Дополнительные страницы
     booking: 'Бронирование',
     reviews: 'Отзывы',
     authorization: 'Авторизация',
+    registrationFinish: 'Завершение регистрации',
     registration: 'Регистрация',
     profile: 'Профиль',
     landlordAds: 'Предложения арендодателя',
@@ -88,6 +109,7 @@ export const translations = {
     bookingCalendar: 'Календарь бронирования',
     landlord: 'Арендодатель',
     preview: 'Превью-изображение',
+    quantity: 'Количество',
 
     // Создание объявления
     step: 'Шаг',
@@ -209,6 +231,7 @@ export const translations = {
     btnCreateAccount: 'Создать аккаунт',
     btnSignUp: 'Зарегистрироваться',
     btnLogin: 'Войти',
+    btnLoginViaSSO: 'Войти через SSO',
     btnNewAd: 'Новое объявление',
     btnMessage: 'Написать',
     btnEdit: 'Изменить',
@@ -237,6 +260,8 @@ export const translations = {
       'Слишком короткое название объявления; не менее 5 символов',
     errorTitleTooLong:
       'Слишком длинное название объявления; не более 40 символов',
+    errorQuantityNull: 'Количество не указано/некорректное целое число',
+    errorQuantityZeroOrLess: 'Количество должно быть больше 0',
     errorDescriptionTooShort: 'Слишком короткое описание; не менее 10 символов',
     errorDescriptionTooLong: 'Слишком длинное описание; не более 500 символов',
     errorSpecificationTooLong:
@@ -273,13 +298,22 @@ export const translations = {
     confirmation: 'Подтверждение',
     warningFormExit: 'Есть несохраненные изменения. Выйти без сохранения?',
     warningFormFinish: 'Подтвердите создание объявления.',
+    warningFillProfile:
+      'Данный профиль необходимо заполнить, иначе он будет удален через ... дней',
 
     // Валидация
-    validationLogin: 'Логин должен содержать из не менее 6 символов',
     validationEmail: 'Некорректная почта',
-    validationPassword: 'Пароль должен состоять из не менее 8 символов',
+    validationPassword:
+      'Пароль должен состоять из не менее 8 символов и не более 20 символов',
     validationConfirmPassword: 'Пароли не совпадают',
-    validationLanguage: 'Необходимо выбрать язык',
+    validationBirthDate: 'Некорректная дата рождения (пример: 01.01.2000)',
+    validationFirstName:
+      'Имя должно быть не менее 2 символов и не более 20 символов',
+    validationLastName:
+      'Фамилия должна быть не менее 2 символов и не более 20 символов',
+    validationPhone: 'Некорректный телефонный номер',
+    validationUsername:
+      'Имя пользователя должно быть не менее 3 символов и не более 20 символов',
   },
   en: {
     // Settings
@@ -295,16 +329,32 @@ export const translations = {
     slogan: 'Rent things and services quickly and easily!',
 
     // Login/registration
-    login: 'Login',
     email: 'Email',
+    username: 'Username',
     password: 'Password',
+    genderOptional: 'Gender (optional)',
+    gender: 'Gender',
+    male: 'Male',
+    female: 'Female',
+    otherGender: 'Other',
+    phoneNumber: 'Phone number',
+    firstName: 'First Name',
+    lastName: 'Last Name',
+    firstAndLastName: 'First and last name',
+    birthDate: 'Birth Date',
     confirmPassword: 'Confirm the password',
     noAccountYet: 'Not registered yet?',
+    loginIsImportant: 'You need to log in to use the app.',
     alreadyHaveAccount: 'Already have an account?',
-    enterPassword: 'Enter the password',
-    enterLogin: 'Enter your login',
+    enterPassword: 'Enter your password',
+    enterFirstName: 'Enter your first name',
+    enterLastName: 'Enter your last name',
+    enterUsername: 'Enter your username',
+    enterPhoneNumber: 'Enter your phone (optional)',
+    enterBirthDate: 'Enter your birth date (dd.mm.yyyy)',
     enterEmail: 'Enter your email',
     selectLanguage: 'Select a language',
+    registrationDate: 'Registration date',
 
     // Main Pages
     search: 'Search',
@@ -347,12 +397,16 @@ export const translations = {
     // Profiles
     personalInfo: 'Personal information',
     offers: 'Offers',
+    activeOffers: 'Active offers',
     rating: 'Rating',
+    renterRating: 'Renter rating',
+    landlordRating: 'Owner rating',
 
     // Additional pages
     booking: 'Booking',
     reviews: 'Reviews',
     authorization: 'Authorization',
+    registrationFinish: 'Completion of registration',
     registration: 'Registration',
     profile: 'Profile',
     landlordAds: 'Landlord ads',
@@ -370,6 +424,7 @@ export const translations = {
     specification: 'Specification',
     landlord: 'Landlord',
     preview: 'Preview image',
+    quantity: 'Quantity',
 
     // AdCreation
     step: 'Step',
@@ -491,6 +546,7 @@ export const translations = {
     btnCreateAccount: 'Create an account',
     btnSignUp: 'Sign up',
     btnLogin: 'Log in',
+    btnLoginViaSSO: 'Log in via SSO',
     btnNewAd: 'New ad',
     btnMessage: 'Message',
     btnEdit: 'Edit',
@@ -516,7 +572,10 @@ export const translations = {
     errorAdTypeNull: 'Ad type is not selected',
     errorTitleNull: 'Ad name is not filled in',
     errorTitleTooShort: 'Ad name is too short; at least 5 characters required',
-    errorTitleTooLong: 'Ad name is too long; no more than 40 characters allowed',
+    errorTitleTooLong:
+      'Ad name is too long; no more than 40 characters allowed',
+    errorQuantityNull: 'Quantity is not filled in/an incorrect integer',
+    errorQuantityZeroOrLess: 'Quantity must be greater than 0',
     errorDescriptionTooShort:
       'Description is too short; at least 10 characters required',
     errorDescriptionTooLong:
@@ -527,10 +586,10 @@ export const translations = {
       'Specifications are too short; no less than 5 characters allowed',
     errorPreviewImageNull: 'Preview image is not selected',
     errorCategoryIdNull: 'Category is not selected',
-    errorCostNull: 'Cost is not specified/incorrect number',
+    errorCostNull: 'Cost is not specified/an incorrect number',
     errorCostZeroOrLess: 'Cost must be greater than 0',
     errorMinIntervalNull:
-      'Minimum booking interval is not specified/incorrect number',
+      'Minimum booking interval is not specified/an incorrect number',
     errorMinIntervalZeroOrLess:
       'Minimum booking interval must be greater than 0',
     errorMinIntervalTooBig:
@@ -555,12 +614,21 @@ export const translations = {
     confirmation: 'Confirmation',
     warningFormExit: 'You have unsaved changes. Leave without saving?',
     warningFormFinish: 'Confirm the creation of the ad.',
+    warningFillProfile:
+      'This profile must be filled in, otherwise it will be deleted after ... days',
 
     // Validation
-    validationLogin: 'Login must be at least 6 symbols long',
     validationEmail: 'Incorrect email',
-    validationPassword: 'The password must be at least 8 characters long.',
+    validationPassword:
+      'The password must be at least 8 characters and no more than 20 characters long',
     validationConfirmPassword: "Passwords aren't equal",
-    validationLanguage: 'Language selection is required',
+    validationBirthDate: 'Incorrect date of birth (example: 01.01.2000)',
+    validationFirstName:
+      'First name must be at least 2 characters and no more than 20 characters long',
+    validationLastName:
+      'Last name must be at least 2 characters and no more than 20 characters long',
+    validationPhone: 'Incorrect phone number',
+    validationUsername:
+      'Username must be at least 3 characters and no more than 20 characters long',
   },
 };

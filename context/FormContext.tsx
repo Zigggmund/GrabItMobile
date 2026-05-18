@@ -1,17 +1,23 @@
-import { ProductType } from '@/types/AdType'
+import { ProductType } from '@/types/AdType';
 import { MediaType } from '@/types/MediaType';
 
 import { createContext } from 'react';
 
+type timePeriod = {
+  startTime: string;
+  endTime: string;
+};
+
 type exceptionTime = {
   date: Date;
-  time: number[];
+  time: timePeriod[];
 }[];
 
 export type AdCreationFormDataType = {
   adType?: ProductType;
 
   title: string;
+  quantity?: number | null;
   description: string;
   specifications: string[];
   previewImage?: MediaType | null;

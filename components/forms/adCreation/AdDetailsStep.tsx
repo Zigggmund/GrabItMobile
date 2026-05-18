@@ -94,6 +94,28 @@ export const AdDetailsStep = ({
           placeholder={l.requiredToFillIn}
         />
         <CustomInput
+          value={form.adCreationFormData.quantity?.toString()}
+          label={l.quantity}
+          keyboardType="numeric"
+          onChangeText={text => {
+            const numericValue = parseInt(text || '');
+            form.changeAdCreationFormData(
+              'quantity',
+              isNaN(numericValue) ? null : numericValue,
+            );
+          }}
+          errorMessage={errors.cost}
+          placeholder={l.requiredToFillIn}
+          // onBlur={() => {
+          //   // Конвертация в число только когда пользователь ушёл с поля
+          //   const numericValue = parseFloat(cost || '');
+          //   form.changeAdCreationFormData(
+          //     'cost',
+          //     isNaN(numericValue) ? null : numericValue,
+          //   );
+          // }}
+        />
+        <CustomInput
           value={form.adCreationFormData.description}
           label={l.description}
           multiline

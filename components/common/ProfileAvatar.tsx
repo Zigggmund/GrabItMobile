@@ -7,8 +7,8 @@ import { icons } from '@/constants/icons';
 interface ProfileAvatarProps {
   size?: number;
   isProfilePage?: boolean;
-  id?: number;
-  source: string | undefined;
+  id?: string;
+  source: string | null;
   className?: string;
 }
 
@@ -16,7 +16,7 @@ export function ProfileAvatar({
   size = 30,
   isProfilePage = false,
   source,
-  id = 0,
+  id = '',
   className = '',
 }: ProfileAvatarProps) {
   const { navigate } = useHistory();
@@ -34,7 +34,7 @@ export function ProfileAvatar({
     />
   );
 
-  if (id <= 0 || isProfilePage) {
+  if (id == '' || isProfilePage) {
     return avatar;
   }
 

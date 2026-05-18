@@ -8,13 +8,13 @@ import RatingStars from '@/components/common/RatingStars';
 import { CustomText } from '@/components/ui/text/CustomText';
 
 interface ReviewsProps {
-  adRating: number | null;
+  itemRating: number | null;
   itemName: string;
   reviewCount: number;
 }
 
 export default function ReviewsHeader({
-  adRating,
+  itemRating,
   reviewCount,
   itemName,
 }: ReviewsProps) {
@@ -39,10 +39,10 @@ export default function ReviewsHeader({
                 className={'text-18 font-bold'}
                 style={{ color: colors.theme.blue.dark }}
               >
-                {adRating}
+                {itemRating}
               </CustomText>
             )}
-            <RatingStars rating={adRating} />
+            <RatingStars rating={itemRating} />
           </View>
         </View>
 

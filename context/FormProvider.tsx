@@ -14,6 +14,7 @@ import { ActionType } from '@/types/SubscriptionType';
 
 const initialAdCreationData: AdCreationFormDataType = {
   title: '',
+  quantity: 1,
   description: '',
   specifications: [],
   uriMedias: [],

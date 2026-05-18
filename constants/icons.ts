@@ -3,26 +3,27 @@ import location from '@/assets/icons/location.png';
 import logo from '@/assets/icons/logo.png';
 import logout from '@/assets/icons/logout.png';
 import add from '@/assets/icons/minor/add.png';
-import cross from '@/assets/icons/minor/delete.webp';
 import arrowBack from '@/assets/icons/minor/arrowBack.png';
 import arrowDown from '@/assets/icons/minor/arrowDown.png';
 import check from '@/assets/icons/minor/check.png';
 import dark from '@/assets/icons/minor/dark.png';
+import cross from '@/assets/icons/minor/delete.webp';
 import eye from '@/assets/icons/minor/eye.png';
 import eyeCrossedOut from '@/assets/icons/minor/eyeCrossedOut.png';
 import light from '@/assets/icons/minor/light.png';
+import mapMarker from '@/assets/icons/minor/mapMarker.png';
 import message from '@/assets/icons/minor/message.png';
 import pointerDown from '@/assets/icons/minor/pointerDown.png';
 import pointerDownFilled from '@/assets/icons/minor/pointerDownFilled.png';
 import pointerLeft from '@/assets/icons/minor/pointerLeft.png';
 import starEmpty from '@/assets/icons/minor/starEmpty.png';
 import starFilled from '@/assets/icons/minor/starFilled.png';
+import warning from '@/assets/icons/minor/warning.png';
 import myAds from '@/assets/icons/myAds.png';
 import profile from '@/assets/icons/profile.png';
 import rent from '@/assets/icons/rent.png';
 import search from '@/assets/icons/search.png';
 import settings from '@/assets/icons/settings.png';
-import mapMarker from '@/assets/icons/minor/mapMarker.png';
 
 export const icons = {
   // pages
@@ -55,4 +56,5 @@ export const icons = {
   starEmpty,
   starFilled,
   mapMarker,
+  warning,
 };

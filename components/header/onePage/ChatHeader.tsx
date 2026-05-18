@@ -27,13 +27,13 @@ export default function ChatHeader({
         className={`flex-row justify-between px-2 items-center`}
       >
         <View className={'gap-4 flex-row items-center'}>
-          <ProfileAvatar size={54} source={userCard.avatar?.url} id={userCard.id} />
+          <ProfileAvatar size={54} source={userCard.avatar} id={userCard.id} />
           <CustomText
             highlight
             style={{ color: colors.theme.blue.dark }}
             className={'font-bold text-20'}
           >
-            {userCard.name}
+            {userCard.username}
           </CustomText>
         </View>
         <CustomText

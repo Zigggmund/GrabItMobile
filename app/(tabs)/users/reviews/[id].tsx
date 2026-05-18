@@ -4,7 +4,6 @@ import { useLocalSearchParams } from 'expo-router';
 
 import { useGetUserReviews } from '@/hooks/review/useGetUserReviews';
 import { useLanguage } from '@/hooks/useLanguage';
-import { useGetUser } from '@/hooks/user/useGetUser';
 import { useTheme } from '@/hooks/useTheme';
 
 import ReviewDistribution from '@/components/common/bars/ReviewDistribution';
@@ -20,7 +19,12 @@ import { PAGE_SIZE } from '@/constants/sizes';
 type SortingType = 'new' | 'old' | 'high' | 'low';
 
 export default function UserReviews() {
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id, username, reviewCount, userRating } = useLocalSearchParams<{
+    id: string;
+    username: string;
+    reviewCount: string;
+    userRating: string;
+  }>();
   const { colors } = useTheme();
   const { l } = useLanguage();
 
@@ -29,11 +33,6 @@ export default function UserReviews() {
     isLoading: isLoadingReviews,
     isError: isErrorReviews,
   } = useGetUserReviews(id);
-  const {
-    data: user,
-    isLoading: isLoadingUser,
-    isError: isErrorUser,
-  } = useGetUser(Number(id));
 
   const [sortBy, setSortBy] = useState<SortingType>('new');
   const [ratingFilterBy, setRatingFilterBy] = useState<number | null>(null);
@@ -83,24 +82,16 @@ export default function UserReviews() {
     if (value) console.log(`Фильтрация по рейтингу ${value} выполнена`);
   };
 
-  if (isLoadingUser || isLoadingReviews)
+  if (isLoadingReviews)
     return (
       <ScreenContainer>
         <ActivityIndicator />
       </ScreenContainer>
     );
-  if (isErrorUser || isErrorReviews) {
+  if (isErrorReviews) {
     return (
       <ScreenContainer>
         <ErrorMessage text={l.errorAPI} />
-      </ScreenContainer>
-    );
-  }
-
-  if (!user) {
-    return (
-      <ScreenContainer>
-        <ErrorMessage text={l.errorUserNotFound} />
       </ScreenContainer>
     );
   }
@@ -109,9 +100,9 @@ export default function UserReviews() {
     <ScreenContainer>
       <View className={'px-4 gap-4'}>
         <ReviewsHeader
-          adRating={user.stats.rating}
-          reviewCount={user.stats.reviews}
-          itemName={user.name}
+          itemRating={Number(userRating)}
+          reviewCount={Number(reviewCount)}
+          itemName={username}
         />
 
         <FlatList

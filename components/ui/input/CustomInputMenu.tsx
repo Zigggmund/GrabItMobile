@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  FlatList,
   ImageSourcePropType,
   Text,
   TouchableOpacity,
@@ -108,6 +107,45 @@ export function CustomInputMenu<T extends string>({
         />
       </TouchableOpacity>
 
+      {/*{open && (*/}
+      {/*  <View*/}
+      {/*    style={{*/}
+      {/*      backgroundColor: colors.base.grey.bright,*/}
+      {/*      borderWidth: 1,*/}
+      {/*      borderColor: colors.theme.grey.dark,*/}
+      {/*    }}*/}
+      {/*    className="absolute top-full left-0 w-full z-50 rounded-xl shadow-xl mt-2 py-2"*/}
+      {/*  >*/}
+      {/*    <FlatList*/}
+      {/*      data={filteredItems}*/}
+      {/*      keyExtractor={item => item.value}*/}
+      {/*      renderItem={({ item }) => (*/}
+      {/*        <TouchableOpacity*/}
+      {/*          className={`gap-2 flex-row items-center py-3 px-6 rounded-lg ${inputClassName}`}*/}
+      {/*          onPress={() => {*/}
+      {/*            onSelect(item.value);*/}
+      {/*            setOpen(false);*/}
+      {/*          }}*/}
+      {/*        >*/}
+      {/*          {item.icon && (*/}
+      {/*            <CustomIcon*/}
+      {/*              source={item.icon}*/}
+      {/*              color={colors.base.neutral.blackPrimary}*/}
+      {/*              size={25}*/}
+      {/*            />*/}
+      {/*          )}*/}
+      {/*          <CustomText*/}
+      {/*            className={'text-20'}*/}
+      {/*            style={{ color: colors.base.neutral.blackPrimary }}*/}
+      {/*          >*/}
+      {/*            {item.label}*/}
+      {/*          </CustomText>*/}
+      {/*        </TouchableOpacity>*/}
+      {/*      )}*/}
+      {/*    />*/}
+      {/*  </View>*/}
+      {/*)}*/}
+
       {open && (
         <View
           style={{
@@ -117,33 +155,31 @@ export function CustomInputMenu<T extends string>({
           }}
           className="absolute top-full left-0 w-full z-50 rounded-xl shadow-xl mt-2 py-2"
         >
-          <FlatList
-            data={filteredItems}
-            keyExtractor={item => item.value}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                className={`gap-2 flex-row items-center py-3 px-6 rounded-lg ${inputClassName}`}
-                onPress={() => {
-                  onSelect(item.value);
-                  setOpen(false);
-                }}
+          {filteredItems.map(item => (
+            <TouchableOpacity
+              key={item.value}
+              className={`gap-2 flex-row items-center py-3 px-6 rounded-lg ${inputClassName}`}
+              onPress={() => {
+                onSelect(item.value);
+                setOpen(false);
+              }}
+            >
+              {item.icon && (
+                <CustomIcon
+                  source={item.icon}
+                  color={colors.base.neutral.blackPrimary}
+                  size={25}
+                />
+              )}
+
+              <CustomText
+                className={'text-20'}
+                style={{ color: colors.base.neutral.blackPrimary }}
               >
-                {item.icon && (
-                  <CustomIcon
-                    source={item.icon}
-                    color={colors.base.neutral.blackPrimary}
-                    size={25}
-                  />
-                )}
-                <CustomText
-                  className={'text-20'}
-                  style={{ color: colors.base.neutral.blackPrimary }}
-                >
-                  {item.label}
-                </CustomText>
-              </TouchableOpacity>
-            )}
-          />
+                {item.label}
+              </CustomText>
+            </TouchableOpacity>
+          ))}
         </View>
       )}
 
@@ -153,78 +189,3 @@ export function CustomInputMenu<T extends string>({
     </View>
   );
 }
-
-// import React, { useState } from 'react';
-// import {
-//   FlatList,
-//   Pressable,
-//   Text,
-//   TouchableOpacity,
-//   View,
-// } from 'react-native';
-//
-// interface MenuItem<T> {
-//   label: string;
-//   value: T;
-// }
-//
-// interface InputMenuProps<T> {
-//   items: MenuItem<T>[];
-//   selectedValue: T;
-//   onSelect: (value: T) => void;
-//   title?: string;
-// }
-//
-// export function CustomInputMenu<T extends string>({
-//   items,
-//   selectedValue,
-//   onSelect,
-//   title,
-// }: InputMenuProps<T>) {
-//   const [open, setOpen] = useState(false);
-//
-//   return (
-//     <View style={{ flex: 1 }} className="">
-//       {/* Кнопка */}
-//       <TouchableOpacity
-//         className="p-4 rounded-xl bg-gray-300"
-//         onPress={() => setOpen(prev => !prev)}
-//       >
-//         <Text className="text-base">
-//           {items.find(i => i.value === selectedValue)?.label}
-//         </Text>
-//       </TouchableOpacity>
-//
-//       {/* Выпадающий список */}
-//       {open && (
-//         <Pressable
-//           onPress={() => setOpen(false)}
-//           className="absolute top-16 left-0 w-full"
-//         >
-//           <View className="bg-white rounded-xl shadow-lg p-2">
-//             {title && (
-//               <Text className="text-lg font-semibold mb-2">{title}</Text>
-//             )}
-//
-//             <FlatList
-//               data={items}
-//               renderItem={({ item }) => (
-//                 <TouchableOpacity
-//                   className={`py-3 px-2 rounded-lg ${
-//                     item.value === selectedValue ? 'bg-gray-200' : ''
-//                   }`}
-//                   onPress={() => {
-//                     onSelect(item.value);
-//                     setOpen(false);
-//                   }}
-//                 >
-//                   <Text className="text-base">{item.label}</Text>
-//                 </TouchableOpacity>
-//               )}
-//             />
-//           </View>
-//         </Pressable>
-//       )}
-//     </View>
-//   );
-// }

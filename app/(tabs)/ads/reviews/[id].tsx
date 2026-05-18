@@ -110,7 +110,7 @@ export default function AdReviews() {
     <ScreenContainer>
       <View className={'px-4 gap-4'}>
         <ReviewsHeader
-          adRating={ad.rating}
+          itemRating={ad.rating}
           reviewCount={ad.reviewCount}
           itemName={ad.title}
         />

@@ -3,7 +3,6 @@ import { useLocalSearchParams } from 'expo-router';
 
 import { useGetUserAds } from '@/hooks/ad/useGetUserAds';
 import { useLanguage } from '@/hooks/useLanguage';
-import { useGetUser } from '@/hooks/user/useGetUser';
 import { useTheme } from '@/hooks/useTheme';
 
 import ErrorMessage from '@/components/common/ErrorMessage';
@@ -19,7 +18,7 @@ import { SortingMenu } from '@/components/common/SortingMenu';
 type SortingType = 'new' | 'old' | 'cheap' | 'expensive' | 'popular';
 
 export default function LandlordAds() {
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id, username } = useLocalSearchParams<{ id: string, username: string }>();
   const { colors } = useTheme();
   const { l } = useLanguage();
 
@@ -28,11 +27,6 @@ export default function LandlordAds() {
     isLoading: isLoadingAds,
     isError: isErrorAds,
   } = useGetUserAds(id);
-  const {
-    data: user,
-    isLoading: isLoadingUser,
-    isError: isErrorUser,
-  } = useGetUser(Number(id));
 
   const [sortBy, setSortBy] = useState<SortingType>('new');
   const handleSorting = (value: SortingType) => {
@@ -40,20 +34,13 @@ export default function LandlordAds() {
     console.log(`Сортировка по критерию ${value} выполнена`);
   };
 
-  if (isLoadingAds || isLoadingUser)
+  if (isLoadingAds)
     return (
       <ScreenContainer>
         <ActivityIndicator />
       </ScreenContainer>
     );
-  if (!user) {
-    return (
-      <ScreenContainer>
-        <ErrorMessage text={l.errorUserNotFound} />
-      </ScreenContainer>
-    );
-  }
-  if (isErrorAds || isErrorUser) {
+  if (isErrorAds) {
     return (
       <ScreenContainer>
         <ErrorMessage text={l.errorAPI} />
@@ -64,7 +51,7 @@ export default function LandlordAds() {
   return (
     <ScreenContainer>
       <View className={'px-4 gap-4'}>
-        <LandlordAdsHeader landlordName={user.name} adsCount={ads.length} />
+        <LandlordAdsHeader landlordName={username} adsCount={ads.length} />
 
         <FlatList
           data={ads}
