@@ -27,6 +27,7 @@ export class AuthService {
     }
 
     return code;
+    // return '5c56b302-f3da-450e-9fb0-5c2913905263.ba1fcc4d-5cb9-4e7e-9823-eac3c8c28f28.631efb21-4b37-4056-a60a-b30b061ff48a';
   }
 
   // static async login() {
@@ -60,22 +61,37 @@ export class AuthService {
     return api.post(`/users/me/profile/complete`, payload);
   }
 
-  static async exchangeToken(
-    code: string,
-  )
+  static async exchangeToken(code: string) {
     // : Promise<AxiosResponse<{ accessToken: string }>>
-  {
-    try {
-      console.log('Get token attempt:', { code });
-      const result = await api.post(`/sso/exchange`, { code });
-      console.log('Response: ', result.data);
-      return result;
-    } catch (e: any) {
-      console.log('FULL ERROR:', JSON.stringify(e, null, 2));
-      console.log('MESSAGE:', e.message);
-      console.log('CODE:', e.code);
-    };
 
+    try {
+      const r = await fetch('https://grabit.test/api/v1/mobile/sso/exchange', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ code: code }),
+      });
+
+      console.log('status', r.status);
+      console.log(await r.text());
+    } catch (e) {
+      console.log('FETCH ERROR', e);
+    }
+
+    // try {
+    //   console.log('Get token attempt:', { code });
+    //   const result = await api.post(`/sso/exchange`, { code });
+    //   console.log('Response: ', result.data);
+    //   return result;
+    // } catch (e: any) {
+    //   console.log('FULL ERROR:', JSON.stringify(e, null, 2));
+    //   console.log('MESSAGE:', e.message);
+    //   console.log('STATUS:', e.response?.status);
+    //   console.log('DATA:', e.response?.data);
+    //   console.log('HEADERS:', e.response?.headers);
+    //   console.log('CODE:', e.code);
+    // }
   }
 
   static async logout(): Promise<AxiosResponse<{ message: string }>> {

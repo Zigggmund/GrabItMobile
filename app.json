@@ -7,7 +7,7 @@
     "icon": "./assets/icons/logo.png",
     "scheme": "grabitmobile",
     "userInterfaceStyle": "light",
-    "newArchEnabled": false,
+    "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.zigmund.GrabIt",
@@ -16,15 +16,16 @@
       }
     },
     "android": {
-      "permissions": ["ACCESS_FINE_LOCATION"],
+      "permissions": [
+        "ACCESS_FINE_LOCATION"
+      ],
       "adaptiveIcon": {
         "backgroundColor": "#FFFFFF",
         "foregroundImage": "./assets/icons/logo.png"
       },
       "package": "com.zigmund.GrabIt",
       "edgeToEdgeEnabled": true,
-      "networkSecurityConfig":
-      "./android/app/src/main/res/xml/network_security_config.xml"
+      "networkSecurityConfig": "./android/app/src/main/res/xml/network_security_config.xml"
     },
     "web": {
       "bundler": "metro",
@@ -33,6 +34,16 @@
     },
     "plugins": [
       "./plugins/no-dark-mode.js",
+
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "networkSecurityConfig": "./android/app/src/main/res/xml/network_security_config.xml"
+          }
+        }
+      ],
+
       [
         "expo-router",
         {
