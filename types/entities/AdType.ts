@@ -1,12 +1,12 @@
 import { CostType } from '@/types/CostType';
 import { MediaType } from '@/types/MediaType';
-import { ReviewType } from '@/types/ReviewType';
-import { UserCardType } from '@/types/UserType';
+import { ReviewType } from '@/types/entities/ReviewType';
+import { UserCardType } from '@/types/entities/UserType';
 
 export type ProductType = 'product' | 'space' | 'service';
 
 export interface AdPreviewType {
-  id: number;
+  id: string;
   title: string;
   cost: CostType[];
   rating: number | null;
@@ -14,13 +14,13 @@ export interface AdPreviewType {
   reviewCount: number;
   address: string;
   productType: ProductType;
-  categoryId: number;
+  categoryId: string;
   previewImage: MediaType;
   createdDate: string; // no
 }
 
 export interface AdRentedType {
-  id: number;
+  id: string;
   chatId: number; // из bookingType
   landlord: UserCardType;
   title: string;

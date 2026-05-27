@@ -1,4 +1,4 @@
-import { ChatType } from '@/types/ChatType';
+import { ChatType } from '@/types/entities/ChatType';
 
 import { TouchableOpacity, View } from 'react-native';
 
@@ -25,7 +25,7 @@ export function Chat({ index = 1, chat }: ChatProps) {
       <GreyBlock index={index} className={'flex-row gap-4 items-center'}>
         <ProfileAvatar
           source={chat.talker.avatar}
-          id={chat.talker.id}
+          username={chat.talker.username}
           size={50}
         />
         <View className={'flex-col gap-2 flex-1'}>

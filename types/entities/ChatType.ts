@@ -1,10 +1,10 @@
 import { MediaType } from '@/types/MediaType';
-import { UserCardType } from '@/types/UserType';
+import { UserCardType } from '@/types/entities/UserType';
 
 export interface MessageType {
-  id: number;
+  id: string;
   text: string;
-  userId: number;
+  userId: string;
   date: string;
   isReceive: boolean;
   isRead: boolean;
@@ -12,7 +12,7 @@ export interface MessageType {
 }
 
 export interface ChatType {
-  id: number;
+  id: string;
   talker: UserCardType;
   adName: string;
   lastMessageDate: string;

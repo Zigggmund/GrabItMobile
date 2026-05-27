@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios';
-import { ReviewType } from '@/types/ReviewType';
+import { ReviewType } from '@/types/entities/ReviewType';
 import { api } from '@/services/api/instance';
 
 

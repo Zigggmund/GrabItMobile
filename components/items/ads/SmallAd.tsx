@@ -1,4 +1,4 @@
-import { AdPreviewType } from '@/types/AdType';
+import { AdPreviewType } from '@/types/entities/AdType';
 
 import { Image, TouchableOpacity, View } from 'react-native';
 

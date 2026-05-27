@@ -1,5 +1,5 @@
-import { ProductType } from '@/types/AdType';
-import { CategoryType } from '@/types/CategoryType';
+import { ProductType } from '@/types/entities/AdType';
+import { CategoryType } from '@/types/entities/CategoryType';
 
 import { useEffect, useMemo, useState } from 'react';
 import {
@@ -19,7 +19,7 @@ import { getProductTypeCategoryItems } from '@/utils/getProductTypeCategoryItems
 import SearchBar from '@/components/common/bars/SearchBar';
 import ErrorMessage from '@/components/common/ErrorMessage';
 import { SortingMenu } from '@/components/common/SortingMenu';
-import { Tag } from '@/components/common/Tag';
+// import { Tag } from '@/components/common/Tag';
 import SmallAd from '@/components/items/ads/SmallAd';
 import ScreenContainer from '@/components/layout/ScreenContainer';
 import { CustomText } from '@/components/ui/text/CustomText';
@@ -217,21 +217,21 @@ export default function Search() {
               )}
             </View>
             <View className={'flex-row gap-4'}>
-              <Tag
-                label={l.products}
-                selected={selectedTag == 'product'}
-                onPress={() => handleTag('product')}
-              />
-              <Tag
-                label={l.services}
-                selected={selectedTag == 'service'}
-                onPress={() => handleTag('service')}
-              />
-              <Tag
-                label={l.spaces}
-                selected={selectedTag == 'space'}
-                onPress={() => handleTag('space')}
-              />
+              {/*<Tag*/}
+              {/*  label={l.products}*/}
+              {/*  selected={selectedTag == 'product'}*/}
+              {/*  onPress={() => handleTag('product')}*/}
+              {/*/>*/}
+              {/*<Tag*/}
+              {/*  label={l.services}*/}
+              {/*  selected={selectedTag == 'service'}*/}
+              {/*  onPress={() => handleTag('service')}*/}
+              {/*/>*/}
+              {/*<Tag*/}
+              {/*  label={l.spaces}*/}
+              {/*  selected={selectedTag == 'space'}*/}
+              {/*  onPress={() => handleTag('space')}*/}
+              {/*/>*/}
             </View>
           </View>
         )}

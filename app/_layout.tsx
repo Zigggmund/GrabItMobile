@@ -6,13 +6,15 @@
 import { useEffect, useState } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider } from 'react-redux';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { MutationCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { loadAsync } from 'expo-font'; // tailwind
 import * as WebBrowser from 'expo-web-browser';
 
 import { HistoryProvider } from '@/context/HistoryProvider';
 import { LanguageProvider } from '@/context/LanguageProvider';
 import { ProfileProvider } from '@/context/ProfileProvider';
+import { AppToast } from '@/components/ui/toast/AppToast';
+import { toastService } from '@/services/toastService';
 import { ThemeProvider } from '@/context/ThemeProvider';
 
 import { loadCity } from '@/state/city/citySlice';
@@ -23,6 +25,7 @@ import AppContainer from '@/components/layout/AppContainer';
 import 'react-native-reanimated';
 import '../global.css';
 import LoadingScreen from '@/app/loading';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -34,7 +37,26 @@ export default function RootLayout() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const [dbInitialized, setDbInitialized] = useState(false);
   const [isAppReady, setIsAppReady] = useState(false);
-  const [queryClient] = useState(() => new QueryClient());
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        mutationCache: new MutationCache({
+          onError: (error, _vars, _ctx, mutation) => {
+            // Форм-мутации обрабатывают ошибки локально — пропускаем глобальный toast
+            if (mutation.meta?.suppressGlobalError) return;
+
+            const message =
+              error instanceof Error && error.message
+                ? error.message
+                : 'Connection Error';
+            toastService.error(message);
+          },
+        }),
+        defaultOptions: {
+          queries: { retry: 1 },
+        },
+      }),
+  );
 
   // ДЛЯ РАЗОВОЙ ОЧИСТКИ ПРИ ОШИБОЧНЫХ ДАННЫХ В ХРАНИЛИЩЕ
   // useEffect(() => {
@@ -99,6 +121,8 @@ export default function RootLayout() {
                     // для корректного взаимодействия с bgColor из Theme
                     <AppContainer />
                   )}
+                  {/* Глобальные toast-уведомления — поверх всего контента */}
+                  <AppToast />
                 </HistoryProvider>
               </ThemeProvider>
             </LanguageProvider>

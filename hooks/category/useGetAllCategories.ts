@@ -1,4 +1,4 @@
-import { CategoryType } from '@/types/CategoryType';
+import { CategoryType } from '@/types/entities/CategoryType';
 
 import { useQuery } from '@tanstack/react-query';
 
@@ -8,8 +8,8 @@ export const useGetAllCategories = () => {
   return useQuery<CategoryType[]>({
     queryKey: ['categories'],
     queryFn: async () => {
-      const { data } = await CategoryService.getAllCategories();
-      return data;
+      const res = await CategoryService.getAllCategories();
+      return res.data;
     },
     staleTime: Infinity,
   });

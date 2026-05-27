@@ -8,7 +8,7 @@ import { CustomText } from '@/components/ui/text/CustomText';
 import { icons } from '@/constants/icons';
 
 export default function SettingsPage() {
-  const { l, setLanguage, language } = useLanguage();
+  const { l, language, setLanguage, languageError, isLoading } = useLanguage();
   const { setTheme, colors, theme } = useTheme();
 
   return (
@@ -28,8 +28,9 @@ export default function SettingsPage() {
           { label: l.english, value: 'en' },
         ]}
         value={language}
-        disable={false}
-        onSelect={v => setLanguage(v)}
+        disable={!isLoading}
+        onSelect={l => setLanguage(l)}
+        errorMessage={languageError}
       />
 
       <CustomInputMenu

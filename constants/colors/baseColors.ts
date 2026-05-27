@@ -13,6 +13,9 @@ export const baseColors = {
     primary: '#FF2424',
     bright: '#FB5252',
   },
+  yellow: {
+    primary: '#FFCE1B',
+  },
   // некоторый серый неизменен
   grey: {
     primary: '#C2C4CC',

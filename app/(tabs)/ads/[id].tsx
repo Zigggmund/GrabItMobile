@@ -225,7 +225,7 @@ export default function AdDetails() {
             </View>
 
             <ProfileAvatar
-              id={ad.landlord.id}
+              username={ad.landlord.username}
               source={ad.landlord.avatar}
               size={60}
             />

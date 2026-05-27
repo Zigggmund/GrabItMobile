@@ -1,3 +1,5 @@
+import { TranslationKey } from '@/types/LanguageType';
+
 import { useState } from 'react';
 import { Pressable } from 'react-native';
 
@@ -10,13 +12,17 @@ import { useCustomDispatch, useCustomSelector } from '@/state/hoooks';
 import CityModal from '@/components/modals/CityModal';
 import { CustomText } from '@/components/ui/text/CustomText';
 
+import { CityKey } from '@/constants/cities';
+
 export default function CitySelector() {
   const { l } = useLanguage();
   const { colors } = useTheme();
 
   const dispatch = useCustomDispatch();
-  const currentCity = useCustomSelector(state => state.city.currentCity);
-  const cityKeys = useCustomSelector(state => state.city.cities);
+  const currentCity = useCustomSelector(
+    state => state.city.currentCity,
+  ) as CityKey;
+  const cityKeys = useCustomSelector(state => state.city.cities) as CityKey[];
 
   const [visible, setVisible] = useState(false);
 
@@ -39,14 +45,14 @@ export default function CitySelector() {
           style={{ color: colors.theme.blue.dark }}
           className={'underline font-bold text-18 align-middle'}
         >
-          {l[currentCity]}
+          {l[currentCity as TranslationKey]}
         </CustomText>
       </Pressable>
 
       <CityModal
         visible={visible}
         onClose={() => setVisible(false)}
-        cities={cityKeys}
+        cities={cityKeys as TranslationKey[]}
         onSelect={handleSelect}
         currentCity={currentCity}
       />

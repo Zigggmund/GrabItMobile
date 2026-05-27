@@ -1,4 +1,4 @@
-import { AdRentedType } from '@/types/AdType';
+import { AdRentedType } from '@/types/entities/AdType';
 
 import { Image, TouchableOpacity, View } from 'react-native';
 
@@ -66,7 +66,7 @@ export default function RentedAd({ width, ad, isEnded }: RentedAdProps) {
               <ProfileAvatar
                 size={30}
                 source={ad.landlord.avatar}
-                id={ad.landlord.id}
+                username={ad.landlord.username}
               />
             </View>
             <CustomText

@@ -1,4 +1,4 @@
-import { ReviewType } from '@/types/ReviewType';
+import { ReviewType } from '@/types/entities/ReviewType';
 
 import { FlatList, Pressable, View } from 'react-native';
 

@@ -146,7 +146,8 @@
 //   );
 // }
 
-import { ReviewType } from '@/types/ReviewType';
+import { ReviewType } from '@/types/entities/ReviewType';
+import { NativeSyntheticEvent, TextLayoutEventData } from 'react-native';
 
 import { useState } from 'react';
 import { Pressable, View } from 'react-native';
@@ -181,7 +182,7 @@ export function Review({
   const [isChecked, setIsChecked] = useState(false);
   const maxLines = 4;
 
-  const handleTextLayout = (e: any) => {
+  const handleTextLayout = (e: NativeSyntheticEvent<TextLayoutEventData>) => {
     if (isChecked) return;
 
     const lines = e.nativeEvent.lines.length;
@@ -200,7 +201,7 @@ export function Review({
         <ProfileAvatar
           source={review.author.avatar}
           size={60}
-          id={review.author.id}
+          username={review.author.username}
         />
         <View className={'gap-2 flex-1'}>
           <View className={'flex-row justify-between'}>

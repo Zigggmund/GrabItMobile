@@ -1,25 +1,48 @@
+import { ApiResponse } from '@/services/api/apiResponse';
+import { unwrap } from '@/services/api/apiUtils';
 import { api } from '@/services/api/instance';
-import { UserResponseDto } from '@/services/api/services/dto/user.dto';
+import {
+  UserChangingDto,
+  UserResponseDto,
+} from '@/services/api/services/dto/user.dto';
 
 export class UserService {
-  // получение дынных текущего юзера по токену
-  static async infoUser() {
-    console.log('Getting current user attempt');
-
-    return api.get<{ data: UserResponseDto }>('/users/me');
+  // Профиль текущего пользователя
+  static async getMe(): Promise<UserResponseDto> {
+    return unwrap(await api.get<ApiResponse<UserResponseDto>>('/users/me'));
   }
 
-  // получение другого юзера по username
-  static async getUserByUsername(username: string) {
-    console.log('Getting user by id attempt:', { username: username });
-
-    return api.get<{ data: UserResponseDto }>(`/users/${username}`);
+  // Обновление изменяемых полей профиля
+  static async changeMe(payload: UserChangingDto): Promise<UserResponseDto> {
+    return unwrap(
+      await api.put<ApiResponse<UserResponseDto>>('/users/me/profile', payload),
+    );
   }
 
-  // получение пользователя по userId
-  static async getUserById(userId: string) {
-    console.log('Getting user by id attempt:', { userId: userId });
+  // Мягкое удаление аккаунта (soft delete, 204)
+  static async deleteMe(): Promise<void> {
+    await api.delete('/users/me');
+  }
 
-    return api.get<{ data: UserResponseDto }>(`/users/${userId}`);
+  // Публичный профиль по username
+  static async getUserByUsername(username: string): Promise<UserResponseDto> {
+    return unwrap(
+      await api.get<ApiResponse<UserResponseDto>>(`/users/${username}`),
+    );
+  }
+
+  // Проверка доступности username
+  static async checkUsername(
+    username: string,
+  ): Promise<{ available: boolean }> {
+    const res = await api.get<ApiResponse<{ available: boolean }>>(
+      `/users/username-check?q=${encodeURIComponent(username)}`,
+    );
+    return unwrap(res);
+  }
+
+  // Смена языка интерфейса
+  static async changeLanguage(language: string): Promise<void> {
+    await api.put(`/users/me/language/`, language);
   }
 }

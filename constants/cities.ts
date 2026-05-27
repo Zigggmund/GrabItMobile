@@ -46,6 +46,6 @@ export const cityKeys = [
   'chita',
   'ulyanovsk',
   'cheboksary',
-]
+];
 
 export type CityKey = (typeof cityKeys)[number];

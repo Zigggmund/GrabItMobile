@@ -34,7 +34,8 @@ export default function LoginPage() {
         <CustomButton
           text={l.btnLoginViaSSO}
           type="secondary"
-          onPress={login.mutate}
+          onPress={() => login.mutate()}
+          disabled={login.isPending}
           textClassName="text-26"
           className={'w-full'}
         />

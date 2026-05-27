@@ -1,0 +1,47 @@
+import { PaginatedResponse } from '@/types/PaginatedResponse';
+
+// ─── Response DTOs ────────────────────────────────────────────────────────────
+
+export type BookingStatus =
+  | 'pending'
+  | 'approved'
+  | 'active'
+  | 'completed'
+  | 'rejected'
+  | 'cancelled';
+
+export interface BookingResponseDto {
+  booking_id: string;
+  listing_id: string;
+  renter_id: string;
+  quantity: number;
+  start_time: string;
+  end_time: string;
+  status: BookingStatus;
+  total_price: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export type GetBookingsResponseDto = PaginatedResponse<BookingResponseDto>;
+
+// ─── Request DTOs ─────────────────────────────────────────────────────────────
+
+export interface CreateBookingDto {
+  listing_id: string;
+  quantity: number;
+  start_time: string; // ISO 8601, e.g. "2026-06-15T10:00:00Z"
+  end_time: string;
+}
+
+export interface ExtendBookingDto {
+  new_end_time: string;
+}
+
+export interface RejectBookingDto {
+  reason?: string;
+}
+
+export interface CancelBookingDto {
+  reason?: string;
+}

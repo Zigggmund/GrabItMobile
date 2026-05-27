@@ -1,4 +1,4 @@
-import { ChatType } from '@/types/ChatType';
+import { ChatType } from '@/types/entities/ChatType';
 
 import { AxiosResponse } from 'axios';
 

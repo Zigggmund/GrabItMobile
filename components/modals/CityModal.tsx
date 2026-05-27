@@ -1,3 +1,5 @@
+import { TranslationKey } from '@/types/LanguageType';
+
 import { FlatList, Modal, Pressable, View } from 'react-native';
 
 import { useLanguage } from '@/hooks/useLanguage';
@@ -9,7 +11,7 @@ import { CityKey } from '@/constants/cities';
 interface Props {
   visible: boolean;
   onClose: () => void;
-  cities: string[];
+  cities: TranslationKey[];
   currentCity: CityKey;
   onSelect: (value: string) => void;
 }

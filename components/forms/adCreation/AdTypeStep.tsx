@@ -1,4 +1,4 @@
-import { ProductType } from '@/types/AdType';
+import { ProductType } from '@/types/entities/AdType';
 
 import { View } from 'react-native';
 

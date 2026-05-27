@@ -17,7 +17,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onPress, loading }) => {
   const { l, language } = useLanguage();
   const { colors, theme } = useTheme();
   console.log('НАЧАЛЬНАЯ ТЕМА:', theme);
-  console.log('НАЧАЛЬНАЯ ТЕМА:', language);
+  console.log('НАЧАЛЬНЫЙ ЯЗЫК:', language);
 
   return (
     <SafeAreaView

@@ -1,6 +1,4 @@
-import { UserType } from '@/types/UserType';
-
-import { FC, ReactNode, useEffect } from 'react';
+import { FC, ReactNode } from 'react';
 
 import { useMe } from '@/hooks/user/useMe';
 
@@ -14,7 +12,6 @@ export const ProfileProvider: FC<ProfileContextProviderProps> = ({
   children,
 }) => {
   const { data: user, isLoading: isLoading } = useMe();
-
   // useEffect(() => {
   //   const fetchUser = async () => {
   //     try {
@@ -40,8 +37,9 @@ export const ProfileProvider: FC<ProfileContextProviderProps> = ({
   // }, [user]);
 
   return (
+    // user ?? null против undefined
     <ProfileContext.Provider
-      value={{ user: user ? user.data : null, isLoading, isAuth: !!user }}
+      value={{ user: user ?? null, isLoading, isAuth: !!user }}
     >
       {children}
     </ProfileContext.Provider>

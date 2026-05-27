@@ -1,5 +1,6 @@
+import { UserType } from '@/types/entities/UserType';
+
 import { UserResponseDto } from '@/services/api/services/dto/user.dto';
-import { UserType } from '@/types/UserType';
 
 export const mapUser = (dto: UserResponseDto): UserType => {
   return {
@@ -17,8 +18,7 @@ export const mapUser = (dto: UserResponseDto): UserType => {
     phoneNumber: dto.phone,
 
     avatar: dto.avatar_url,
-    language: 'ru',
-    description: '',
+    language: dto.language,
 
     stats: {
       landlordReviews: dto.review_count_as_owner,

@@ -1,5 +1,3 @@
-import { MediaType } from '@/types/MediaType';
-
 export interface UserType {
   id: string;
   email: string;
@@ -17,7 +15,6 @@ export interface UserType {
   // avatar?: MediaType;
   avatar: string | null;
   language: string;
-  description: string;
   stats: {
     landlordReviews: number;
     renterReviews: number;

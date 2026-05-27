@@ -1,4 +1,4 @@
-import { AdPreviewType } from '@/types/AdType';
+import { AdPreviewType } from '@/types/entities/AdType';
 
 import { useQuery } from '@tanstack/react-query';
 
@@ -9,8 +9,8 @@ export const useGetAllAds = () => {
   return useQuery<AdPreviewType[]>({
     queryKey: ['ads'],
     queryFn: async () => {
-      const { data } = await AdService.getAllAds();
-      return data;
+      const res = await AdService.getAllAds();
+      return res.data;
     },
   });
 };

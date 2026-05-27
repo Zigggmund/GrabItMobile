@@ -4,12 +4,11 @@ import { useForm } from '@/hooks/useForm';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTheme } from '@/hooks/useTheme';
 
-import { TranslationKey } from '@/context/LanguageContext';
-
 import { Tag } from '@/components/common/Tag';
 import { CustomText } from '@/components/ui/text/CustomText';
 
 import { WEEKDAYS } from '@/constants/time';
+import { TranslationKey } from '@/types/LanguageType';
 
 export const AdWeekDaysStep = ({
   errors,

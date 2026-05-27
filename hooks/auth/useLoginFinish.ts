@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useHistory } from '@/hooks/useHistory';
 
@@ -7,6 +7,7 @@ import { LoginFinishDto } from '@/services/api/services/dto/auth.dto';
 
 export const useLoginFinish = () => {
   const { navigate } = useHistory();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (payload: LoginFinishDto) => {
@@ -14,11 +15,8 @@ export const useLoginFinish = () => {
     },
 
     onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['me'] });
       navigate('/(tabs)/ads/search');
-    },
-
-    onError: error => {
-      console.log(error);
     },
   });
 };

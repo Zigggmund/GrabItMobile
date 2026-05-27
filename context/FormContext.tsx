@@ -1,17 +1,8 @@
-import { ProductType } from '@/types/AdType';
+import { ProductType } from '@/types/entities/AdType';
 import { MediaType } from '@/types/MediaType';
+import { ExceptionDayType, TimePeriodType } from '@/types/TimeType';
 
 import { createContext } from 'react';
-
-type timePeriod = {
-  startTime: string;
-  endTime: string;
-};
-
-type exceptionTime = {
-  date: Date;
-  time: timePeriod[];
-}[];
 
 export type AdCreationFormDataType = {
   adType?: ProductType;
@@ -21,7 +12,7 @@ export type AdCreationFormDataType = {
   description: string;
   specifications: string[];
   previewImage?: MediaType | null;
-  categoryId?: number | null;
+  categoryId?: string | null;
   cost?: number | null;
   minInterval?: number | null;
   // cost: CostType[];
@@ -34,8 +25,10 @@ export type AdCreationFormDataType = {
   firstDate?: Date | null;
   endDate?: Date | null;
   weekDays: Array<boolean>;
-  weekDaysTime: Array<Array<string>>;
-  exceptions?: exceptionTime | null;
+  // [monday, tuesday, ... sunday]
+  // [['12 - 15', '18 - 20'], [...], [...], [...], [...], [...], [...] ]
+  weekDaysTime: Array<Array<TimePeriodType>>;
+  exceptions?: ExceptionDayType[] | null;
 };
 
 export type BookingFormDataType = {

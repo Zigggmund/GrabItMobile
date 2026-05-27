@@ -1,10 +1,21 @@
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
-import { Redirect } from 'expo-router';
 
 import { useLoginFinish } from '@/hooks/auth/useLoginFinish';
+import { useDebounce } from '@/hooks/useDebounce';
 import { useLanguage } from '@/hooks/useLanguage';
+import { useCheckUsername } from '@/hooks/user/useCheckUsername';
 import { useTheme } from '@/hooks/useTheme';
+
+const toApiDate = (date: string): string => {
+  const [day, month, year] = date.split('.');
+  return `${year}-${month}-${day}`;
+};
+
+import {
+  isValidBirthDate,
+  isValidPhone, validateUsername,
+} from '@/utils/validate/userValidators';
 
 import ScreenContainer from '@/components/layout/ScreenContainer';
 import { CustomButton } from '@/components/ui/button/CustomButton';
@@ -14,14 +25,8 @@ import { CustomText } from '@/components/ui/text/CustomText';
 
 import { LoginFinishDto } from '@/services/api/services/dto/auth.dto';
 
-// Простая проверка даты (ДД.ММ.ГГГГ)
-const dateRegex = /^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[0-2])\.(19|20)\d\d$/;
-// Простая маска для телефона (минимум 7 цифр, опциональный + в начале)
-const phoneRegex = /^\+?[0-9]{7,15}$/;
-
 // телефон и пол не обязательны
 export default function LoginFinishPage() {
-  const completedProfile = false;
   const { colors } = useTheme();
   const { l } = useLanguage();
   const loginFinish = useLoginFinish();
@@ -30,7 +35,6 @@ export default function LoginFinishPage() {
     firstName: '',
     lastName: '',
     gender: null as 'male' | 'female' | 'other' | null,
-    language: 'ru' as 'ru' | 'en',
     phoneNumber: '',
     username: '',
     birthDate: '',
@@ -39,7 +43,6 @@ export default function LoginFinishPage() {
     firstName: '',
     lastName: '',
     gender: '',
-    language: '',
     phoneNumber: '',
     username: '',
     birthDate: '',
@@ -52,12 +55,29 @@ export default function LoginFinishPage() {
     setForm(prev => ({ ...prev, [key]: value }));
   };
 
+  const debouncedUsername = useDebounce<string>(form.username, 500);
+  const { data: isAvailable, isFetching: isCheckingUsername } =
+    useCheckUsername(debouncedUsername);
+
+  const usernameHint = (() => {
+    if (!validateUsername(debouncedUsername)) return l.validationUsername;
+    if (isCheckingUsername) return l.checkingUsername;
+    if (isAvailable === true) return l.usernameAvailable;
+    if (isAvailable === false) return l.usernameUnavailable;
+    return '';
+  })();
+
+  const usernameHintColor = isCheckingUsername
+    ? colors.base.yellow.primary
+    : validateUsername(debouncedUsername) && isAvailable === true
+      ? colors.base.green.primary
+      : colors.base.red.primary;
+
   const validate = () => {
     const newErrors = {
       firstName: '',
       lastName: '',
       gender: '', // no validation
-      language: '', // no validation
       phoneNumber: '',
       username: '',
       birthDate: '',
@@ -67,21 +87,22 @@ export default function LoginFinishPage() {
       newErrors.firstName = l.validationFirstName;
     if (form.lastName.length < 2 || form.lastName.length > 20)
       newErrors.lastName = l.validationLastName;
-    if (form.username.length < 6 || form.username.length > 20)
+    if (
+      form.username.length < 6 ||
+      form.username.length > 20 ||
+      form.username.includes(' ')
+    ) {
       newErrors.username = l.validationUsername;
-    if (form.phoneNumber && !phoneRegex.test(form.phoneNumber.replace(/\s+/g, '')))
+    } else if (isCheckingUsername || isAvailable === undefined) {
+      newErrors.username = l.checkingUsername;
+    } else if (isAvailable === false) {
+      newErrors.username = l.validationUsernameAlreadyTaken;
+    }
+    if (form.phoneNumber.trim() && !isValidPhone(form.phoneNumber)) {
       newErrors.phoneNumber = l.validationPhone;
-
-    if (!dateRegex.test(form.birthDate)) {
+    }
+    if (!form.birthDate.trim() || !isValidBirthDate(form.birthDate)) {
       newErrors.birthDate = l.validationBirthDate;
-    } else {
-      const [d, m, y] = form.birthDate.split('.').map(Number);
-      const birthDateObj = new Date(y, m - 1, d);
-      const today = new Date();
-
-      if (birthDateObj > today || y < 1900) {
-        newErrors.birthDate = l.validationBirthDate;
-      }
     }
 
     setErrors(newErrors);
@@ -92,22 +113,16 @@ export default function LoginFinishPage() {
   const handleLoginFinish = async () => {
     if (!validate()) return;
 
-    console.log('Form data:', form);
     const payload: LoginFinishDto = {
-      firstName: form.firstName,
-      lastName: form.lastName,
-      phoneNumber: form.phoneNumber.replace(/\s+/g, '') ?? null,
+      first_name: form.firstName,
+      last_name: form.lastName,
+      phone: form.phoneNumber.replace(/\s+/g, '') ?? null,
       username: form.username,
-      birthDate: form.birthDate,
+      birth_date: toApiDate(form.birthDate),
       gender: form.gender,
-      // language: form.language as string,ns e
     };
     loginFinish.mutate(payload);
   };
-
-  if (completedProfile) {
-    return <Redirect href="/(tabs)/ads/search" />;
-  }
 
   return (
     <ScreenContainer className={'pt-6 px-10 justify-between'}>
@@ -120,29 +135,41 @@ export default function LoginFinishPage() {
           >
             {l.registrationFinish}
           </CustomText>
-          <CustomInputMenu
-            label={l.interfaceLanguage}
-            items={[
-              { label: l.russian, value: 'ru' },
-              { label: l.english, value: 'en' },
-            ]}
-            value={form.language}
-            placeholder={l.selectLanguage}
-            onSelect={v => setField('language', v)}
-            errorMessage={errors.language}
-            onClearError={() => setErrors(prev => ({ ...prev, language: '' }))}
-          />
-          <CustomInput
-            label={l.username}
-            placeholder={l.username}
-            value={form.username}
-            onChangeText={v => setField('username', v)}
-            onClearError={() => setErrors(prev => ({ ...prev, login: '' }))}
-            errorMessage={errors.username}
-          />
+          {/*<CustomInputMenu*/}
+          {/*  label={l.interfaceLanguage}*/}
+          {/*  items={[*/}
+          {/*    { label: l.russian, value: 'ru' },*/}
+          {/*    { label: l.english, value: 'en' },*/}
+          {/*  ]}*/}
+          {/*  value={form.language}*/}
+          {/*  placeholder={l.selectLanguage}*/}
+          {/*  onSelect={v => setField('language', v)}*/}
+          {/*  errorMessage={errors.language}*/}
+          {/*  onClearError={() => setErrors(prev => ({ ...prev, language: '' }))}*/}
+          {/*/>*/}
+          <View className="w-full">
+            <CustomInput
+              label={l.username}
+              placeholder={l.enterUsername}
+              value={form.username}
+              onChangeText={v => setField('username', v)}
+              onClearError={() =>
+                setErrors(prev => ({ ...prev, username: '' }))
+              }
+              errorMessage={errors.username}
+            />
+            {usernameHint !== '' && !errors.username && (
+              <CustomText
+                className="text-12 mt-1 ml-1"
+                style={{ color: usernameHintColor }}
+              >
+                {usernameHint}
+              </CustomText>
+            )}
+          </View>
           <CustomInput
             label={l.firstName}
-            placeholder={l.firstName}
+            placeholder={l.enterFirstName}
             value={form.firstName}
             onChangeText={v => setField('firstName', v)}
             onClearError={() => setErrors(prev => ({ ...prev, login: '' }))}
@@ -150,7 +177,7 @@ export default function LoginFinishPage() {
           />
           <CustomInput
             label={l.lastName}
-            placeholder={l.lastName}
+            placeholder={l.enterLastName}
             value={form.lastName}
             onChangeText={v => setField('lastName', v)}
             onClearError={() => setErrors(prev => ({ ...prev, login: '' }))}
@@ -158,14 +185,14 @@ export default function LoginFinishPage() {
           />
           <CustomInput
             label={l.birthDate}
-            placeholder={l.birthDate}
+            placeholder={l.enterBirthDate}
             value={form.birthDate}
             onChangeText={v => setField('birthDate', v)}
             onClearError={() => setErrors(prev => ({ ...prev, login: '' }))}
             errorMessage={errors.birthDate}
           />
           <CustomInputMenu
-            label={l.genderOptional}
+            label={`${l.gender} (${l.optional})`}
             items={[
               { label: l.male, value: 'male' },
               { label: l.female, value: 'female' },
@@ -178,8 +205,8 @@ export default function LoginFinishPage() {
             onClearError={() => setErrors(prev => ({ ...prev, language: '' }))}
           />
           <CustomInput
-            label={l.phoneNumber}
-            placeholder={l.phoneNumber}
+            label={`${l.phoneNumber} (${l.optional})`}
+            placeholder={l.enterPhoneNumber}
             value={form.phoneNumber}
             onChangeText={v => setField('phoneNumber', v)}
             onClearError={() => setErrors(prev => ({ ...prev, login: '' }))}
@@ -196,6 +223,7 @@ export default function LoginFinishPage() {
             text={l.btnFinish}
             textClassName="text-24"
             onPress={handleLoginFinish}
+            disabled={loginFinish.isPending}
             className={'w-full'}
           />
         </View>

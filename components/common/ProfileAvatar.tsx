@@ -3,11 +3,12 @@ import { Image, TouchableOpacity } from 'react-native';
 import { useHistory } from '@/hooks/useHistory';
 
 import { icons } from '@/constants/icons';
+import { useCallback } from 'react';
 
 interface ProfileAvatarProps {
   size?: number;
   isProfilePage?: boolean;
-  id?: string;
+  username?: string;
   source: string | null;
   className?: string;
 }
@@ -16,10 +17,13 @@ export function ProfileAvatar({
   size = 30,
   isProfilePage = false,
   source,
-  id = '',
+  username = '',
   className = '',
 }: ProfileAvatarProps) {
   const { navigate } = useHistory();
+
+  const onTouchableOpacityPress = useCallback(() =>
+    navigate({ pathname: '/(tabs)/users/[username]', params: { username: username } }), [navigate]);
   const borderRadius = isProfilePage ? size / 3 : size / 2;
   const avatar = (
     <Image
@@ -34,14 +38,13 @@ export function ProfileAvatar({
     />
   );
 
-  if (id == '' || isProfilePage) {
+  if (username == '' || isProfilePage) {
     return avatar;
   }
 
   return (
     <TouchableOpacity
-      onPress={() =>
-        navigate({ pathname: '/(tabs)/users/[id]', params: { id: String(id) } })
+      onPress={onTouchableOpacityPress
       }
     >
       {avatar}

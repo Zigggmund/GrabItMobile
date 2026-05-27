@@ -1,4 +1,4 @@
-import { UserCardType } from '@/types/UserType';
+import { UserCardType } from '@/types/entities/UserType';
 
 import { View } from 'react-native';
 
@@ -14,20 +14,19 @@ interface ChatHeaderProps {
   isOnline: boolean;
 }
 
-export default function ChatHeader({
-  userCard,
-  isOnline,
-}: ChatHeaderProps) {
+export default function ChatHeader({ userCard, isOnline }: ChatHeaderProps) {
   const { l } = useLanguage();
   const { colors } = useTheme();
 
   return (
     <GreyBlock>
-      <View
-        className={`flex-row justify-between px-2 items-center`}
-      >
+      <View className={`flex-row justify-between px-2 items-center`}>
         <View className={'gap-4 flex-row items-center'}>
-          <ProfileAvatar size={54} source={userCard.avatar} id={userCard.id} />
+          <ProfileAvatar
+            size={54}
+            source={userCard.avatar}
+            username={userCard.username}
+          />
           <CustomText
             highlight
             style={{ color: colors.theme.blue.dark }}

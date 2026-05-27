@@ -1,8 +1,11 @@
+import { LanguageType } from '@/types/LanguageType';
+
 export type LoginFinishDto = {
   username: string;
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   gender: 'male' | 'female' | 'other' | null;
-  phoneNumber: string | null;
-  birthDate: string;
+  phone: string | null;
+  birth_date: string;
+  // language: LanguageType;
 };

@@ -1,4 +1,4 @@
-import { MessageType } from '@/types/ChatType';
+import { MessageType } from '@/types/entities/ChatType';
 
 import { View } from 'react-native';
 
@@ -65,7 +65,9 @@ export function Message({ message, width }: MessageProps) {
           borderColor: isMine
             ? colors.base.orange.bright
             : colors.theme.grey.dark,
-          backgroundColor: isMine ? colors.base.orange.bright : colors.theme.white.primary,
+          backgroundColor: isMine
+            ? colors.base.orange.bright
+            : colors.theme.white.primary,
           width: width,
           paddingVertical: 8,
         }}
@@ -85,48 +87,48 @@ export function Message({ message, width }: MessageProps) {
     </View>
   );
 
-  return (
-    <View
-      style={{
-        borderRadius: 10,
-        borderWidth: 1,
-        borderColor: colors.theme.grey.dark,
-        backgroundColor: colors.theme.white.primary,
-        justifyContent: 'flex-start',
-      }}
-      className={'gap-2 flex-row'}
-    >
-      <CustomText
-        style={{
-          color: isMine
-            ? colors.base.neutral.whitePrimary
-            : colors.theme.black.primary,
-        }}
-        className={'text-16'}
-      >
-        {message.text}
-      </CustomText>
-      <View className={'flex-col justify-end gap-2'}>
-        <View>
-          <CustomIcon
-            style={{
-              tintColor: colors.theme.blue.bright,
-              display: message.isReceive ? 'flex' : 'none',
-            }}
-            source={icons.check}
-            size={10}
-          />
-          <CustomIcon
-            style={{
-              tintColor: colors.theme.blue.bright,
-              display: message.isRead ? 'flex' : 'none',
-            }}
-            source={icons.check}
-            size={10}
-          />
-        </View>
-        <CustomText>{timeFormat(message.date)}</CustomText>
-      </View>
-    </View>
-  );
+  // return (
+  //   <View
+  //     style={{
+  //       borderRadius: 10,
+  //       borderWidth: 1,
+  //       borderColor: colors.theme.grey.dark,
+  //       backgroundColor: colors.theme.white.primary,
+  //       justifyContent: 'flex-start',
+  //     }}
+  //     className={'gap-2 flex-row'}
+  //   >
+  //     <CustomText
+  //       style={{
+  //         color: isMine
+  //           ? colors.base.neutral.whitePrimary
+  //           : colors.theme.black.primary,
+  //       }}
+  //       className={'text-16'}
+  //     >
+  //       {message.text}
+  //     </CustomText>
+  //     <View className={'flex-col justify-end gap-2'}>
+  //       <View>
+  //         <CustomIcon
+  //           style={{
+  //             tintColor: colors.theme.blue.bright,
+  //             display: message.isReceive ? 'flex' : 'none',
+  //           }}
+  //           source={icons.check}
+  //           size={10}
+  //         />
+  //         <CustomIcon
+  //           style={{
+  //             tintColor: colors.theme.blue.bright,
+  //             display: message.isRead ? 'flex' : 'none',
+  //           }}
+  //           source={icons.check}
+  //           size={10}
+  //         />
+  //       </View>
+  //       <CustomText>{timeFormat(message.date)}</CustomText>
+  //     </View>
+  //   </View>
+  // );
 }

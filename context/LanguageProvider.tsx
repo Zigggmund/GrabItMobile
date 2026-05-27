@@ -1,10 +1,16 @@
+import { LanguageType, LType } from '@/types/LanguageType';
+
 import React, { ReactNode, useEffect, useMemo, useState } from 'react';
+
+import { useMe } from '@/hooks/user/useMe';
+import { useProfile } from '@/hooks/user/useProfile';
 
 import { translations } from '@/constants/translations';
 
+import { UserService } from '@/services/api/services/userService';
 import { storage } from '@/services/storage/asyncStorageService';
 
-import { defaultLang, LanguageType, LanguageContext, LType } from './LanguageContext';
+import { defaultLang, LanguageContext } from './LanguageContext';
 
 // РАБОТА С БД
 // import { useProfile } from '@/context/ProfileContext';
@@ -16,45 +22,44 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   // updateUserLanguage для сохранения на сервере
   // const { user, updateUserLanguage } = useProfile() ?? {};
   const [language, setLanguageState] = useState<LanguageType>(defaultLang);
-  const [isLoading, setIsLoading] = useState(true);
+  const [languageError, setLanguageError] = useState('');
+  const [isStorageLoading, setIsStorageLoading] = useState(true);
+  const { isAuth } = useProfile();
+  const { data: me, isLoading: isAPILoading } = useMe();
 
-  useEffect(
-    () => {
-      const loadLanguage = async () => {
-        try {
-          // РАБОТА С БД
-          const savedLocal = await storage.get(LANGUAGE_KEY);
-          // const profileLang = user?.language;
-          // if (profileLang && profileLang in translations) {
-          //   setLanguageState(profileLang as Language);
-          //   await storage.set(LANGUAGE_KEY, profileLang);
-          // } else
-          if (
-            savedLocal &&
-            typeof savedLocal === 'string' &&
-            savedLocal in translations
-          ) {
-            setLanguageState(savedLocal as LanguageType);
-          } else {
-            setLanguageState(defaultLang);
-          }
-        } catch (e) {
-          console.error('Ошибка при загрузке языка:', e);
+  useEffect(() => {
+    const loadCachedLanguage = async () => {
+      try {
+        const cached = await storage.get(LANGUAGE_KEY);
+        if (cached && typeof cached === 'string' && cached in translations) {
+          setLanguageState(cached as LanguageType);
+        } else {
           setLanguageState(defaultLang);
-        } finally {
-          setIsLoading(false);
         }
-      };
+      } catch (e) {
+        console.error('Ошибка при загрузке языка:', e);
+        setLanguageState(defaultLang);
+      } finally {
+        setIsStorageLoading(false);
+      }
+    };
 
-      loadLanguage();
-    },
-    // РАБОТА С БД
-    // [user?.language]
-    [],
-  );
+    loadCachedLanguage();
+  }, []);
+
+  useEffect(() => {
+    if (!isAuth) return;
+    if (!me?.language) return;
+
+    if (me.language !== language) {
+      setLanguageState(me.language as LanguageType);
+
+      storage.set(LANGUAGE_KEY, me.language);
+    }
+  }, [isAuth, me?.language]);
 
   const setLanguage = async (lang: LanguageType) => {
-    if (!(lang in translations)) return;
+    if (!(lang in translations)) setLanguageError(l.errorLanguage);
 
     try {
       setLanguageState(lang);
@@ -64,10 +69,19 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
       // if (user && updateUserLanguage) {
       //   await updateUserLanguage(lang);
       // }
+      try {
+        await UserService.changeLanguage(lang);
+      } catch (e) {
+        console.error(e);
+        setLanguageError(l.errorAPI);
+      }
+
       console.log('Язык изменен на:', lang);
     } catch (e) {
-      console.error('Ошибка при установке языка:', e);
+      console.error(e);
+      setLanguageError(l.errorStorage);
     }
+    setLanguageError('');
   };
 
   // Оптимизация производительности. Без useMemo, при каждом любом рендере пересоздает l
@@ -78,7 +92,15 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   );
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, l, isLoading }}>
+    <LanguageContext.Provider
+      value={{
+        language,
+        languageError,
+        setLanguage,
+        l,
+        isLoading: isAPILoading && isStorageLoading,
+      }}
+    >
       {children}
     </LanguageContext.Provider>
   );

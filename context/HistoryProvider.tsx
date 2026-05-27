@@ -13,7 +13,8 @@ import { HistoryContext } from '@/context/HistoryContext';
 const formPages: Href[] = [
   '/ads/createAd',
   '/login',
-  '/registration',
+  '/loginFinish',
+  // '/registration',
   '/ads/booking',
 ];
 

@@ -1,22 +1,21 @@
-import { UserType } from '@/types/UserType';
-
 import { useQuery } from '@tanstack/react-query';
 
 import { mapUser } from '@/hooks/user/mapUser';
-
 import { UserService } from '@/services/api/services/userService';
+import { UserType } from '@/types/entities/UserType';
 
-// хук для получения пользователя по username
 export const useGetUserByUsername = (
   username: string,
   options?: { enabled?: boolean },
 ) => {
-  return useQuery<UserType>({
+  return useQuery({
     queryKey: ['user', username],
     enabled: options?.enabled,
-    queryFn: async () => {
-      const res = await UserService.getUserByUsername(username);
-      return mapUser(res.data.data);
+    // Сервис возвращает UserResponseDto напрямую (unwrap внутри)
+    queryFn: () => UserService.getUserByUsername(username),
+    select: (data): UserType | null => {
+      if (!data) return null;
+      return mapUser(data);
     },
   });
 };

@@ -11,7 +11,7 @@ const defaultCity = cityKeys[0];
 
 // один раз, только при старте приложения
 export const loadCity = createAsyncThunk('city/loadCity', async () => {
-  const saved = await storage.get<string>(CITY_KEY);
+  const saved = await storage.get<CityKey>(CITY_KEY);
   return saved ?? defaultCity;
 });
 

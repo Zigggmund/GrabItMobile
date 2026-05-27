@@ -1,3 +1,5 @@
+import { LanguageType } from '@/types/LanguageType';
+
 export interface UserResponseDto {
   avatar_url: string | null;
   avg_rating_as_owner: number | null;
@@ -7,6 +9,7 @@ export interface UserResponseDto {
   email: string;
   first_name: string;
   gender: 'male' | 'female' | 'other' | null;
+  language: LanguageType;
   id: string;
   last_name: string;
   phone: string | null;
@@ -14,4 +17,12 @@ export interface UserResponseDto {
   review_count_as_owner: number;
   review_count_as_renter: number;
   username: string;
+}
+
+export interface UserChangingDto {
+  birth_date: string | null;
+  first_name: string;
+  gender: 'male' | 'female' | 'other' | null;
+  last_name: string;
+  phone: string | null;
 }

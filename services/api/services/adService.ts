@@ -1,4 +1,4 @@
-import { AdDetailsType, AdPreviewType, AdRentedType } from '@/types/AdType';
+import { AdDetailsType, AdPreviewType, AdRentedType } from '@/types/entities/AdType';
 
 import { AxiosResponse } from 'axios';
 

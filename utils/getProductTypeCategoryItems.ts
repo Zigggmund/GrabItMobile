@@ -1,7 +1,8 @@
-import { ProductType } from '@/types/AdType';
-import { CategoryType } from '@/types/CategoryType';
+import { ProductType } from '@/types/entities/AdType';
+import { CategoryType } from '@/types/entities/CategoryType';
 
-import { LType } from '@/context/LanguageContext';
+
+import { LType } from '@/types/LanguageType';
 
 interface getProductTypeCategoryItemsProps {
   l: LType;

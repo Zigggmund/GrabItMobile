@@ -9,9 +9,11 @@ import { useTheme } from '@/hooks/useTheme';
 
 // !!!ЗДЕСЬ НЕ ИСПОЛЬЗУЕТСЯ useHistory.
 // Блокировка маршрутов не должна сохраняться в стеке
+
+// Гуарды
 export default function AppContainer() {
   const { theme } = useTheme();
-  const { isAuth, isLoading } = useProfile();
+  const { user, isAuth, isLoading } = useProfile();
   const segments = useSegments();
 
   useEffect(() => {
@@ -24,8 +26,8 @@ export default function AppContainer() {
     if (!isAuth && !isAuthGroup) {
       router.replace('/(auth)/login');
     }
-    // ?блокировка auth маршрутов для залогиненнных юзеров
-    if (isAuth && isAuthGroup) {
+    // ?блокировка auth маршрутов для залогиненнных юзеров (с заполненным профилем)
+    if (isAuth && user?.isCompleted && isAuthGroup) {
       router.replace('/(tabs)/ads/search');
     }
   }, [isAuth, isLoading, segments]);

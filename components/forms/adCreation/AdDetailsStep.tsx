@@ -1,4 +1,4 @@
-import { CategoryType } from '@/types/CategoryType';
+import { CategoryType } from '@/types/entities/CategoryType';
 
 import { useState } from 'react';
 import { ScrollView, useWindowDimensions, View } from 'react-native';

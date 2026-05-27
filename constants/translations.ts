@@ -17,7 +17,6 @@ export const translations = {
     email: 'Почта',
     password: 'Пароль',
     gender: 'Пол',
-    genderOptional: 'Пол (необязательно)',
     male: 'Мужской',
     female: 'Женский',
     otherGender: 'Другой',
@@ -36,7 +35,7 @@ export const translations = {
     enterEmail: 'Введите почту',
     enterFirstName: 'Введите имя',
     enterLastName: 'Введите фамилию',
-    enterPhoneNumber: 'Введите номер телефона (необязательно)',
+    enterPhoneNumber: 'Введите номер телефона',
     enterBirthDate: 'Введите дату рождения (дд.мм.гггг)',
     selectLanguage: 'Выберите язык',
     registrationDate: 'Дата регистрации',
@@ -229,12 +228,14 @@ export const translations = {
     btnDelete: 'Удалить',
     btnConfirm: 'Подтвердить',
     btnCreateAccount: 'Создать аккаунт',
+    btnFillProfile: 'Заполнить профиль',
     btnSignUp: 'Зарегистрироваться',
     btnLogin: 'Войти',
     btnLoginViaSSO: 'Войти через SSO',
     btnNewAd: 'Новое объявление',
     btnMessage: 'Написать',
     btnEdit: 'Изменить',
+    btnUpload: 'Загрузить',
     btnLogout: 'Выйти из аккаунта',
     btnToReviews: 'Посмотреть отзывы',
     btnAllReviews: 'Все отзывы',
@@ -244,15 +245,18 @@ export const translations = {
     btnExtend: 'Продлить',
     btnReadMore: 'Читать далее',
     btnHide: 'Скрыть',
+    btnReset: 'Сбросить',
     btnBack: 'Назад',
     btnNext: 'Далее',
 
     // Ошибки
     error: 'Ошибка',
-    errorAPI: 'Ошибка получения данных api',
+    errorAPI: 'Ошибка получения данных API',
+    errorStorage: 'Ошибка получения данных из локального хранилища',
     errorUserNotFound: 'Пользователь не найден',
     errorChatNotFound: 'Чат не найден',
     errorAdNotFound: 'Объявление не найдено',
+    errorLanguage: 'Некорректный язык',
     // Формы
     errorAdTypeNull: 'Не выбран тип объявления',
     errorTitleNull: 'Не заполнено название объявления',
@@ -301,6 +305,18 @@ export const translations = {
     warningFillProfile:
       'Данный профиль необходимо заполнить, иначе он будет удален через ... дней',
 
+    // Модалки профиля
+    editProfileTitle: 'Редактирование профиля',
+    uploadAvatarTitle: 'Загрузка аватара',
+    completeProfileTitle: 'Заполнение профиля',
+    selectPhoto: 'Выбрать фото',
+    changePhoto: 'Изменить фото',
+    errorSaveProfile: 'Ошибка сохранения профиля',
+    errorCompleteProfile: 'Ошибка заполнения профиля',
+    usernameAvailable: 'Свободно',
+    usernameUnavailable: 'Занято',
+    checkingUsername: 'Проверка...',
+
     // Валидация
     validationEmail: 'Некорректная почта',
     validationPassword:
@@ -313,7 +329,8 @@ export const translations = {
       'Фамилия должна быть не менее 2 символов и не более 20 символов',
     validationPhone: 'Некорректный телефонный номер',
     validationUsername:
-      'Имя пользователя должно быть не менее 3 символов и не более 20 символов',
+      'Имя пользователя должно быть не менее 6 символов и не более 20 символов, а также не должно содержать пробелов',
+    validationUsernameAlreadyTaken: 'Это имя пользователя уже занято',
   },
   en: {
     // Settings
@@ -332,7 +349,6 @@ export const translations = {
     email: 'Email',
     username: 'Username',
     password: 'Password',
-    genderOptional: 'Gender (optional)',
     gender: 'Gender',
     male: 'Male',
     female: 'Female',
@@ -543,6 +559,7 @@ export const translations = {
     btnSave: 'Save',
     btnDelete: 'Delete',
     btnConfirm: 'Confirm',
+    btnFillProfile: 'Fill out a profile',
     btnCreateAccount: 'Create an account',
     btnSignUp: 'Sign up',
     btnLogin: 'Log in',
@@ -550,6 +567,7 @@ export const translations = {
     btnNewAd: 'New ad',
     btnMessage: 'Message',
     btnEdit: 'Edit',
+    btnUpload: 'Upload',
     btnLogout: 'Log out',
     btnToReviews: 'View reviews',
     btnAllReviews: 'All reviews',
@@ -558,6 +576,7 @@ export const translations = {
     btnFinish: 'Finish',
     btnExtend: 'Extend',
     btnReadMore: 'Read more',
+    btnReset: 'Reset',
     btnHide: 'Hide',
     btnBack: 'Back',
     btnNext: 'Next',
@@ -565,9 +584,11 @@ export const translations = {
     // Errors
     error: 'Error',
     errorAPI: 'Error receiving api data.',
+    errorStorage: 'Error requesting data from local storage',
     errorUserNotFound: 'The user was not found',
     errorChatNotFound: 'The chat was not found',
     errorAdNotFound: 'The ad was not found',
+    errorLanguage: 'Invalid language',
     // Forms
     errorAdTypeNull: 'Ad type is not selected',
     errorTitleNull: 'Ad name is not filled in',
@@ -617,6 +638,18 @@ export const translations = {
     warningFillProfile:
       'This profile must be filled in, otherwise it will be deleted after ... days',
 
+    // Profile modals
+    editProfileTitle: 'Edit Profile',
+    uploadAvatarTitle: 'Upload Avatar',
+    completeProfileTitle: 'Complete Profile',
+    selectPhoto: 'Select photo',
+    changePhoto: 'Change photo',
+    errorSaveProfile: 'Failed to save profile',
+    errorCompleteProfile: 'Failed to complete profile',
+    usernameAvailable: 'Available',
+    usernameUnavailable: 'Taken',
+    checkingUsername: 'Checking...',
+
     // Validation
     validationEmail: 'Incorrect email',
     validationPassword:
@@ -629,6 +662,7 @@ export const translations = {
       'Last name must be at least 2 characters and no more than 20 characters long',
     validationPhone: 'Incorrect phone number',
     validationUsername:
-      'Username must be at least 3 characters and no more than 20 characters long',
+      'Username must be at least 6 characters and no more than 20 characters long, and must not contain spaces',
+    validationUsernameAlreadyTaken: 'This username is already taken',
   },
 };

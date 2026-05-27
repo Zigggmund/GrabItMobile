@@ -1,4 +1,4 @@
-import { AdDetailsType } from '@/types/AdType';
+import { AdDetailsType } from '@/types/entities/AdType';
 
 import { useQuery } from '@tanstack/react-query';
 
@@ -9,8 +9,8 @@ export const useGetAd = (adId: number | string) => {
   return useQuery<AdDetailsType>({
     queryKey: ['ad', adId],
     queryFn: async () => {
-      const { data } = await AdService.getAdById(adId);
-      return data;
+      const res = await AdService.getAdById(adId);
+      return res.data;
     },
   });
 };

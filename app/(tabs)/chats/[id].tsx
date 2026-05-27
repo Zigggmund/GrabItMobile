@@ -16,6 +16,7 @@ import ScreenContainer from '@/components/layout/ScreenContainer';
 import { CustomText } from '@/components/ui/text/CustomText';
 
 import { FOOTER_HEIGHT } from '@/constants/sizes';
+import { MessageType } from '@/types/entities/ChatType';
 
 export default function Chat() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -27,7 +28,7 @@ export default function Chat() {
   const messageWidth = 220;
   const { data: chat, isLoading: isLoading, isError: isError } = useGetChat(id);
 
-  const [messages, setMessages] = useState(chat?.messages);
+  const [messages, setMessages] = useState<MessageType[] | undefined>(chat?.messages);
   const [message, setMessage] = useState('');
 
   const handleSendMessage = () => {
@@ -36,8 +37,8 @@ export default function Chat() {
     const newMessage = {
       id:
         messages && messages.length > 0
-          ? messages[messages.length - 1].id + 1
-          : 1,
+          ? String(Number(messages[messages.length - 1].id) + 1)
+          : '1',
       userId: user.id,
       text: message,
       date: new Date().toISOString(),
@@ -45,9 +46,7 @@ export default function Chat() {
       isReceive: false,
     };
 
-    setMessages(prev => {
-      return prev ? [...prev, newMessage] : [newMessage];
-    });
+    setMessages(prev => (prev ? [...prev, newMessage] : [newMessage]));
 
     console.log('Message was sent:', newMessage);
     setMessage('');

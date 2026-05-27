@@ -5,9 +5,10 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { useTheme } from '@/hooks/useTheme';
 
 import { CustomText } from '@/components/ui/text/CustomText';
+import { TranslationKey } from '@/types/LanguageType';
 
 interface CategoryProps {
-  categoryId: number;
+  categoryId: string;
   isSmall?: boolean;
   onPress?: () => void;
 }
@@ -21,7 +22,7 @@ export function Category({
   const { colors } = useTheme();
   // не нужно isError и isLoading, подгружаются при старте приложения
   const { data: categories = [] } = useGetAllCategories();
-  const category = categories.find(c => Number(c.id) === categoryId);
+  const category = categories.find(c => c.id === categoryId);
 
   return (
     <Pressable onPress={onPress}>
@@ -40,7 +41,7 @@ export function Category({
           style={{ color: colors.base.orange.primary }}
           numberOfLines={2}
         >
-          {l[category!.name]}
+          {l[category?.name as TranslationKey]}
         </CustomText>
       </View>
     </Pressable>

@@ -34,6 +34,7 @@ export default function CustomHeader({
   // );
 
   if (!user) return null;
+  // console.log(user, '-', user?.username);
 
   return (
     <>
@@ -81,8 +82,8 @@ export default function CustomHeader({
             size={70}
             onPress={() =>
               navigate({
-                pathname: '/(tabs)/users/[id]',
-                params: { id: user?.id.toString() },
+                pathname: '/(tabs)/users/[username]',
+                params: { username: user?.username },
               })
             }
           />

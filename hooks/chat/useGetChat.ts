@@ -1,4 +1,4 @@
-import { ChatType } from '@/types/ChatType';
+import { ChatType } from '@/types/entities/ChatType';
 
 import { useQuery } from '@tanstack/react-query';
 
@@ -9,8 +9,8 @@ export const useGetChat = (chatId: number | string) => {
   return useQuery<ChatType>({
     queryKey: ['chat', chatId],
     queryFn: async () => {
-      const { data } = await ChatService.getChat(chatId);
-      return data;
+      const res = await ChatService.getChat(chatId);
+      return res.data;
     },
   });
 };

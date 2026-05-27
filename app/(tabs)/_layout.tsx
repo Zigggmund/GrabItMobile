@@ -1,5 +1,5 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Redirect, Tabs, usePathname, useSegments } from 'expo-router';
+import { Tabs, usePathname, useSegments } from 'expo-router';
 
 import { useGetAllCategories } from '@/hooks/category/useGetAllCategories';
 import { useHistory } from '@/hooks/useHistory';
@@ -23,7 +23,6 @@ export default function TabsLayout() {
   const { colors } = useTheme();
   const segments = useSegments() as string[];
   const pathname = usePathname();
-  const profile = useProfile();
 
   // загрузка категорий (1 запрос при старте)
   useGetAllCategories();
@@ -47,11 +46,6 @@ export default function TabsLayout() {
   );
   const isRootTabScreen = ROOT_TAB_SCREENS.includes(current);
   const hasBack = !isRootTabScreen && !isUserProfile;
-
-  // редирект для неавторизованного пользователя, гарантия user!=undefined
-  if (!profile.user) {
-    return <Redirect href="/login" />;
-  }
 
   return (
     // SafeAreaView для предотвращения наложения системных панелей на footer/header
@@ -111,7 +105,7 @@ export default function TabsLayout() {
         {/* Второстепенные страницы */}
         <Tabs.Screen name={'users/settings'} options={{ href: null }} />
         <Tabs.Screen name={'users/landlordAds/[id]'} options={{ href: null }} />
-        <Tabs.Screen name={'users/[id]'} options={{ href: null }} />
+        <Tabs.Screen name={'users/[username]'} options={{ href: null }} />
         <Tabs.Screen name={'users/reviews/[id]'} options={{ href: null }} />
         <Tabs.Screen name={'chats/[id]'} options={{ href: null }} />
         <Tabs.Screen name={'ads/[id]'} options={{ href: null }} />

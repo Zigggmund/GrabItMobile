@@ -1,7 +1,7 @@
-import { UserCardType } from '@/types/UserType';
+import { UserCardType } from '@/types/entities/UserType';
 
 export interface ReviewType {
-  id: number;
+  id: string;
   adName: string;
   text: string;
   author: UserCardType;

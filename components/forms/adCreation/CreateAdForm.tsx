@@ -7,8 +7,6 @@ import { useHistory } from '@/hooks/useHistory';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTheme } from '@/hooks/useTheme';
 
-import { TranslationKey } from '@/context/LanguageContext';
-
 import { ProgressBar } from '@/components/common/bars/ProgressBar';
 import { AdAllDatesStep } from '@/components/forms/adCreation/AdAllDatesStep';
 import { AdDayTimeStep } from '@/components/forms/adCreation/AdDayTimeStep';
@@ -21,6 +19,7 @@ import { AdWeekDaysStep } from '@/components/forms/adCreation/AdWeekDaysStep';
 import { CustomAlert } from '@/components/modals/CustomAlert';
 import { CustomButton } from '@/components/ui/button/CustomButton';
 import { CustomText } from '@/components/ui/text/CustomText';
+import { TranslationKey } from '@/types/LanguageType';
 
 type StepComponentProps = {
   errors: Record<string, string>;

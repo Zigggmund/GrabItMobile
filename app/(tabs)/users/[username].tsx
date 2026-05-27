@@ -1,7 +1,10 @@
+import { useState } from 'react';
 import { ActivityIndicator, ScrollView, View } from 'react-native';
+import { useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams } from 'expo-router';
 
 import { useProfileLogout } from '@/hooks/auth/useLogout';
+import { useDeleteAvatar } from '@/hooks/media/useDeleteAvatar';
 import { useHistory } from '@/hooks/useHistory';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useGetUserByUsername } from '@/hooks/user/useGetUserByUsername';
@@ -15,6 +18,8 @@ import GreyBlock from '@/components/common/GreyBlock';
 import { ProfileAvatar } from '@/components/common/ProfileAvatar';
 import RatingStars from '@/components/common/RatingStars';
 import ScreenContainer from '@/components/layout/ScreenContainer';
+import AvatarUploadModal from '@/components/modals/AvatarUploadModal';
+import EditProfileModal from '@/components/modals/EditProfileModal';
 import { CustomButton } from '@/components/ui/button/CustomButton';
 import { CustomText } from '@/components/ui/text/CustomText';
 
@@ -26,6 +31,14 @@ export default function UserProfile() {
   const profileLogout = useProfileLogout();
   const profile = useProfile();
   const { navigate } = useHistory();
+  const queryClient = useQueryClient();
+
+  const deleteAvatar = useDeleteAvatar();
+
+  const [avatarModalVisible, setAvatarModalVisible] = useState(false);
+  const [editProfileModalVisible, setEditProfileModalVisible] = useState(false);
+  // const [completeProfileModalVisible, setCompleteProfileModalVisible] =
+  //   useState(false);
 
   const { username } = useLocalSearchParams<{ username: string }>();
 
@@ -76,15 +89,38 @@ export default function UserProfile() {
               {user?.username}
             </CustomText>
 
-            <GreyBlock className={'flex-row justify-between'}>
-              <ProfileAvatar source={user?.avatar} size={200} isProfilePage />
-              <CustomText
-                style={{ color: colors.theme.blue.primary }}
-                className={'text-13 w-2/5 align-middle'}
-                numberOfLines={10}
-              >
-                {user?.description}
-              </CustomText>
+            <GreyBlock className={'items-center w-full gap-2'}>
+              <ProfileAvatar source={user?.avatar} size={300} isProfilePage />
+              {/*<CustomText*/}
+              {/*  style={{ color: colors.theme.blue.primary }}*/}
+              {/*  className={'text-13 w-2/5 align-middle'}*/}
+              {/*  numberOfLines={10}*/}
+              {/*>*/}
+              {/*  {user?.description}*/}
+              {/*</CustomText>*/}
+              {isMine && (
+                <View className={'justify-between flex-row gap-3'}>
+                  <CustomButton
+                    textClassName={'text-18'}
+                    text={l.btnUpload}
+                    onPress={() => setAvatarModalVisible(true)}
+                  />
+                  {user.avatar && (
+                    <CustomButton
+                      type={'red'}
+                      textClassName={'text-18'}
+                      text={deleteAvatar.isPending ? l.loading : l.btnDelete}
+                      disabled={deleteAvatar.isPending}
+                      onPress={() =>
+                        deleteAvatar.mutate(undefined, {
+                          onSuccess: () =>
+                            queryClient.invalidateQueries({ queryKey: ['me'] }),
+                        })
+                      }
+                    />
+                  )}
+                </View>
+              )}
             </GreyBlock>
 
             <View className={'gap-1.5 pt-4 pb-2 px-2'}>
@@ -185,7 +221,7 @@ export default function UserProfile() {
                 >
                   {l.personalInfo}
                 </CustomText>
-                {user?.isCompleted && (
+                {!user?.isCompleted && (
                   <CustomButton
                     iconSource={icons.warning}
                     iconSize={30}
@@ -209,6 +245,15 @@ export default function UserProfile() {
                   </CustomText>
                 </View>
               )}
+              {/*{isMine && !user?.isCompleted ? (*/}
+              {/*  <CustomButton*/}
+              {/*  type={'secondary'}*/}
+              {/*  textClassName={'text-18'}*/}
+              {/*  text={l.btnFillProfile}*/}
+              {/*  onPress={() => setCompleteProfileModalVisible(true)}*/}
+              {/*  />*/}
+              {/*) : (*/}
+              {/*<>*/}
               <View className={'flex-row gap-2'}>
                 <CustomText
                   style={{ color: colors.theme.blue.bright }}
@@ -268,22 +313,27 @@ export default function UserProfile() {
                   {user?.gender}
                 </CustomText>
               </View>
+              {isMine && (
+                <View className={'px-24'}>
+                  <CustomButton
+                    type={'secondary'}
+                    textClassName={'text-24 font-medium'}
+                    className={'py-1.5'}
+                    text={l.btnEdit}
+                    onPress={() => setEditProfileModalVisible(true)}
+                  />
+                </View>
+              )}
+              {/*</>*/}
               {/*)}*/}
             </GreyBlock>
-            <View className={'px-24'}>
-              <CustomButton
-                textClassName={'text-24 font-medium'}
-                className={'py-1.5'}
-                text={l.btnEdit}
-                onPress={() => {}}
-              />
-            </View>
           </View>
 
           <View className={'px-8'}>
             {isMine ? (
               <CustomButton
                 iconSize={20}
+                type={'red'}
                 iconSource={icons.logout}
                 textClassName={'text-18'}
                 text={l.btnLogout}
@@ -327,6 +377,26 @@ export default function UserProfile() {
           </View>
         </View>
       </ScrollView>
+
+      {/* Модалки — только для своего профиля */}
+      {isMine && user && (
+        <>
+          <AvatarUploadModal
+            visible={avatarModalVisible}
+            onClose={() => setAvatarModalVisible(false)}
+            currentAvatarUrl={user.avatar}
+          />
+          <EditProfileModal
+            visible={editProfileModalVisible}
+            onClose={() => setEditProfileModalVisible(false)}
+            user={user}
+          />
+          {/*<CompleteProfileModal*/}
+          {/*  visible={completeProfileModalVisible}*/}
+          {/*  onClose={() => setCompleteProfileModalVisible(false)}*/}
+          {/*/>*/}
+        </>
+      )}
     </ScreenContainer>
   );
 }

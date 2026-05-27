@@ -1,4 +1,4 @@
-import { ReviewType } from '@/types/ReviewType';
+import { ReviewType } from '@/types/entities/ReviewType';
 
 import { useQuery } from '@tanstack/react-query';
 
@@ -9,8 +9,8 @@ export const useGetAdReviews = (adId: number | string) => {
   return useQuery<ReviewType[]>({
     queryKey: ['adReviews', adId],
     queryFn: async () => {
-      const { data } = await ReviewService.getAdReviews(adId);
-      return data;
+      const res = await ReviewService.getAdReviews(adId);
+      return res.data;
     },
   });
 };
