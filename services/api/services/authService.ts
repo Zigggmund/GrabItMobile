@@ -50,6 +50,6 @@ export class AuthService {
 
   // Завершение сессии
   static async logout(): Promise<void> {
-    await api.post('/sso/logout');
+    unwrap(await api.post('/sso/logout'));
   }
 }

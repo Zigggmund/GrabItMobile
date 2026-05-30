@@ -13,12 +13,12 @@ import { useTheme } from '@/hooks/useTheme';
 // Гуарды
 export default function AppContainer() {
   const { theme } = useTheme();
-  const { user, isAuth, isLoading } = useProfile();
+  const { user, isAuth, isLoading, isFetching } = useProfile();
   const segments = useSegments();
 
   useEffect(() => {
-    // если еще не загружено - откладываем до загрузки
-    if (isLoading) {
+    // если еще не загружено или идёт фоновый refetch — откладываем до завершения
+    if (isLoading || isFetching) {
       return;
     }
     const isAuthGroup = segments[0] == '(auth)';
@@ -30,7 +30,7 @@ export default function AppContainer() {
     if (isAuth && user?.isCompleted && isAuthGroup) {
       router.replace('/(tabs)/ads/search');
     }
-  }, [isAuth, isLoading, segments]);
+  }, [isAuth, isLoading, isFetching, segments]);
 
   return (
     <>

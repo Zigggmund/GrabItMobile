@@ -28,7 +28,7 @@ export default function SettingsPage() {
           { label: l.english, value: 'en' },
         ]}
         value={language}
-        disable={!isLoading}
+        disable={isLoading}
         onSelect={l => setLanguage(l)}
         errorMessage={languageError}
       />

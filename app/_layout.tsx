@@ -6,28 +6,34 @@
 import { useEffect, useState } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider } from 'react-redux';
-import { MutationCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import {
+  MutationCache,
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query';
 import { loadAsync } from 'expo-font'; // tailwind
 import * as WebBrowser from 'expo-web-browser';
 
 import { HistoryProvider } from '@/context/HistoryProvider';
 import { LanguageProvider } from '@/context/LanguageProvider';
 import { ProfileProvider } from '@/context/ProfileProvider';
-import { AppToast } from '@/components/ui/toast/AppToast';
-import { toastService } from '@/services/toastService';
 import { ThemeProvider } from '@/context/ThemeProvider';
 
 import { loadCity } from '@/state/city/citySlice';
 import { store } from '@/state/store';
 
 import AppContainer from '@/components/layout/AppContainer';
+import { AppToast } from '@/components/ui/toast/AppToast';
+
+import { toastService } from '@/services/toastService';
 
 import 'react-native-reanimated';
 import '../global.css';
 import LoadingScreen from '@/app/loading';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import MapLibreGL from '@maplibre/maplibre-react-native';
 
 WebBrowser.maybeCompleteAuthSession();
+MapLibreGL.setAccessToken('');
 
 // import YaMap from 'react-native-yamap';
 

@@ -57,12 +57,14 @@ export default function RentedAd({ width, ad, isEnded }: RentedAdProps) {
         <View className={'flex-1 pt-2 px-2 pb-2 justify-between'}>
           <View className={'gap-2'}>
             <View className={'flex-row justify-between items-center'}>
-              <CustomText
-                style={{ color: colors.theme.blue.primary }}
-                className={'text-12'}
-              >
-                {phoneNumberFormat(ad.landlord.phoneNumber)}
-              </CustomText>
+              {ad.landlord.phoneNumber && (
+                <CustomText
+                  style={{ color: colors.theme.blue.primary }}
+                  className={'text-12'}
+                >
+                  {phoneNumberFormat(ad.landlord.phoneNumber)}
+                </CustomText>
+              )}
               <ProfileAvatar
                 size={30}
                 source={ad.landlord.avatar}

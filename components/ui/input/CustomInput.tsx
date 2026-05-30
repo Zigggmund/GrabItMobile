@@ -16,6 +16,7 @@ interface CompositeInputProps {
   onChangeText?: (value: string) => void;
   onBlur?: () => void;
   onClearError?: () => void;
+  isSmall?: boolean;
   disable?: boolean;
   multiline?: boolean;
   errorMessage?: string;
@@ -32,6 +33,7 @@ export default function CustomInput({
   onBlur = () => {},
   onClearError,
   placeholder = '',
+  isSmall = false,
   isPassword = false,
   disable = false,
   multiline = false,
@@ -59,7 +61,7 @@ export default function CustomInput({
         <CustomText
           style={{ color: colors.theme.blue.dark }}
           highlight
-          className={`pl-1 text-15 ${labelClassName}`}
+          className={`pl-1 ${isSmall ? 'text-13' : 'text-15'} ${labelClassName}`}
         >
           {label.toUpperCase()}
         </CustomText>
@@ -71,12 +73,12 @@ export default function CustomInput({
           borderWidth: errorMessage == '' ? 0 : 1,
           borderColor: colors.base.red.primary,
         }}
-        className={`rounded-xl px-3 py-1 gap-2 flex-row items-center ${inputClassName}`}
+        className={`rounded-xl  flex-row items-center ${isSmall ? 'px-1 gap-1' : 'px-3 py-1 gap-2'} ${inputClassName}`}
       >
         <TextInput
           style={{ color: colors.base.neutral.blackPrimary }}
           keyboardType={keyboardType}
-          className={`flex-1 text-18`}
+          className={`flex-1 ${isSmall ? 'text-16' : 'text-18'}`}
           placeholder={placeholder}
           placeholderTextColor={colors.base.neutral.greyDark}
           secureTextEntry={isPassword && !showPassword}

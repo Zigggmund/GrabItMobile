@@ -20,25 +20,3 @@ export const useLoginFinish = () => {
     },
   });
 };
-
-// export const useProfileLoginFinish = () => {
-//   const { navigate } = useHistory();
-//   return useMutation({
-//     mutationKey: ['userPublicInfo'],
-//     mutationFn: ({
-//
-//     }: {
-//       login: string;
-//       password: string;
-//       email: string;
-//       language: string;
-//     }) => AuthService.loginFinish(login, password, email, language),
-//     onSuccess: () => {
-//       navigate('/(tabs)/ads/search');
-//     },
-//     onError: error => {
-//       console.log(error);
-//       navigate('/(auth)/loginFinish');
-//     },
-//   });
-// };

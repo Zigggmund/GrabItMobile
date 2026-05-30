@@ -14,8 +14,7 @@ import { CustomText } from '@/components/ui/text/CustomText';
 import { BIG_AD_WIDTH } from '@/constants/sizes';
 import { useState } from 'react';
 import { SortingMenu } from '@/components/common/SortingMenu';
-
-type SortingType = 'new' | 'old' | 'cheap' | 'expensive' | 'popular';
+import { SortingAdsType } from '@/types/SortingType';
 
 export default function LandlordAds() {
   const { id, username } = useLocalSearchParams<{ id: string, username: string }>();
@@ -28,8 +27,8 @@ export default function LandlordAds() {
     isError: isErrorAds,
   } = useGetUserAds(id);
 
-  const [sortBy, setSortBy] = useState<SortingType>('new');
-  const handleSorting = (value: SortingType) => {
+  const [sortBy, setSortBy] = useState<SortingAdsType>('new');
+  const handleSorting = (value: SortingAdsType) => {
     setSortBy(value);
     console.log(`Сортировка по критерию ${value} выполнена`);
   };
@@ -61,7 +60,7 @@ export default function LandlordAds() {
           ListHeaderComponentStyle={{ paddingBottom: 14, zIndex: 10 }}
           ListHeaderComponent={() => (
             <View className={'items-center'}>
-              <SortingMenu<SortingType>
+              <SortingMenu<SortingAdsType>
                 items={[
                   { label: l.byNew, value: 'new' },
                   { label: l.byOld, value: 'old' },

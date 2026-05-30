@@ -5,7 +5,7 @@ import { MediaService } from '@/services/api/services/mediaService';
 export const useUploadAvatar = () => {
   return useMutation({
     mutationFn: (fileUri: string) => MediaService.uploadAvatar(fileUri),
-    // Ошибки обрабатываются локально в AvatarUploadModal → не нужен глобальный toast
+    // Ошибки обрабатываются локально в AvatarUploadModal
     meta: { suppressGlobalError: true },
   });
 };

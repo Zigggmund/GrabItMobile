@@ -1,6 +1,5 @@
 import { ComponentType, useEffect, useMemo, useState } from 'react';
 import { InteractionManager, View } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { useForm } from '@/hooks/useForm';
 import { useHistory } from '@/hooks/useHistory';
@@ -222,8 +221,7 @@ export const CreateAdForm = () => {
     const results = form.adCreationFormData;
     console.log(results);
     console.log('===');
-    AsyncStorage.setItem('adCreationFormData', JSON.stringify(results));
-    console.log(AsyncStorage.getItem('adCreationFormData'));
+
     form.clear();
     navigate({ pathname: '/(tabs)/ads/[id]', params: { id: adId } }, false);
   };

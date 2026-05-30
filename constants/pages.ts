@@ -1,10 +1,9 @@
-// чтобы избежать typeScrypt ошибок
 import { icons } from '@/constants/icons';
 
 // допустимые ключи перевода для страниц
 export const pageKeys = ['search', 'myAds', 'rent', 'chats'] as const;
 export type PageKey = (typeof pageKeys)[number];
-// допустимые ключи иконок
+// допустимые ключи навигации
 export type IconKey = keyof typeof icons;
 
 export type Page = {

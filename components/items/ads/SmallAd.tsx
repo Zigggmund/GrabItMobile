@@ -6,6 +6,8 @@ import { useHistory } from '@/hooks/useHistory';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTheme } from '@/hooks/useTheme';
 
+import { images } from '@/constants/images';
+
 import RatingStars from '@/components/common/RatingStars';
 import { CustomText } from '@/components/ui/text/CustomText';
 
@@ -18,6 +20,11 @@ export default function SmallAd({ width, ad }: SmallAdProps) {
   const { colors } = useTheme();
   const { l } = useLanguage();
   const { navigate } = useHistory();
+  // const isSpace = ad.productType == 'space';
+  // заглушка
+  const isSpace = false;
+  const price = isSpace ? ad.rub_per_hour * 24 : ad.rub_per_hour;
+  const rubPer = isSpace ? l.rubPerDay : l.rubPerHour;
 
   return (
     <TouchableOpacity
@@ -42,7 +49,7 @@ export default function SmallAd({ width, ad }: SmallAdProps) {
             borderWidth: 1,
             borderColor: colors.components.card.rent.border,
           }}
-          source={{ uri: ad.previewImage.url }}
+          source={ad.previewImage.url ? { uri: ad.previewImage.url } : images.rentCardExample}
           height={100}
         />
         <View className={'pt-2 gap-1 px-2'}>
@@ -60,7 +67,7 @@ export default function SmallAd({ width, ad }: SmallAdProps) {
             className={'pt-1 text-11 font-bold'}
             numberOfLines={1}
           >
-            {ad.cost[0].payment} {l[ad.cost[0].priceUnit]}
+            {price} {rubPer}
           </CustomText>
           <CustomText
             style={{ color: colors.theme.blue.bright }}

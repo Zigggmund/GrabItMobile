@@ -19,6 +19,20 @@ export interface UserResponseDto {
   username: string;
 }
 
+export interface PublicUserResponseDto {
+  id: string;
+  username: string;
+  first_name: string;
+  last_name: string;
+  avatar_url: string | null;
+  active_listings_count: number;
+  avg_rating_as_owner: number;
+  review_count_as_owner: number;
+  avg_rating_as_renter: number;
+  review_count_as_renter: number;
+  created_at: string;
+}
+
 export interface UserChangingDto {
   birth_date: string | null;
   first_name: string;

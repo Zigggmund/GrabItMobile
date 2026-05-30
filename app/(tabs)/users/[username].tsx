@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ActivityIndicator, ScrollView, View } from 'react-native';
 import { useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams } from 'expo-router';
@@ -21,6 +21,7 @@ import ScreenContainer from '@/components/layout/ScreenContainer';
 import AvatarUploadModal from '@/components/modals/AvatarUploadModal';
 import EditProfileModal from '@/components/modals/EditProfileModal';
 import { CustomButton } from '@/components/ui/button/CustomButton';
+import { CustomIcon } from '@/components/ui/icon/CustomIcon';
 import { CustomText } from '@/components/ui/text/CustomText';
 
 import { icons } from '@/constants/icons';
@@ -37,6 +38,7 @@ export default function UserProfile() {
 
   const [avatarModalVisible, setAvatarModalVisible] = useState(false);
   const [editProfileModalVisible, setEditProfileModalVisible] = useState(false);
+  const [avatarVersion, setAvatarVersion] = useState(Date.now());
   // const [completeProfileModalVisible, setCompleteProfileModalVisible] =
   //   useState(false);
 
@@ -53,6 +55,9 @@ export default function UserProfile() {
   });
 
   const user = isMine ? profile.user : remoteUser;
+  useEffect(() => {
+    console.log('avatar', user?.avatar);
+  }, [user?.avatar]);
 
   if (!isMine && isLoading) {
     return (
@@ -90,7 +95,13 @@ export default function UserProfile() {
             </CustomText>
 
             <GreyBlock className={'items-center w-full gap-2'}>
-              <ProfileAvatar source={user?.avatar} size={300} isProfilePage />
+              <ProfileAvatar
+                // source={user?.avatar}
+                source={user.avatar}
+                cacheBuster={avatarVersion}
+                size={300}
+                isProfilePage
+              />
               {/*<CustomText*/}
               {/*  style={{ color: colors.theme.blue.primary }}*/}
               {/*  className={'text-13 w-2/5 align-middle'}*/}
@@ -99,26 +110,26 @@ export default function UserProfile() {
               {/*  {user?.description}*/}
               {/*</CustomText>*/}
               {isMine && (
-                <View className={'justify-between flex-row gap-3'}>
+                <View className={'justify-between flex-row gap-6'}>
                   <CustomButton
-                    textClassName={'text-18'}
+                    type={'red'}
+                    disabled={user.avatar == null || deleteAvatar.isPending}
+                    textClassName={'text-16'}
+                    text={deleteAvatar.isPending ? l.loading : l.btnDelete}
+                    onPress={() =>
+                      deleteAvatar.mutate(undefined, {
+                        onSuccess: () => {
+                          queryClient.invalidateQueries({ queryKey: ['me'] });
+                          setAvatarVersion(Date.now());
+                        },
+                      })
+                    }
+                  />
+                  <CustomButton
+                    textClassName={'text-16'}
                     text={l.btnUpload}
                     onPress={() => setAvatarModalVisible(true)}
                   />
-                  {user.avatar && (
-                    <CustomButton
-                      type={'red'}
-                      textClassName={'text-18'}
-                      text={deleteAvatar.isPending ? l.loading : l.btnDelete}
-                      disabled={deleteAvatar.isPending}
-                      onPress={() =>
-                        deleteAvatar.mutate(undefined, {
-                          onSuccess: () =>
-                            queryClient.invalidateQueries({ queryKey: ['me'] }),
-                        })
-                      }
-                    />
-                  )}
                 </View>
               )}
             </GreyBlock>
@@ -213,18 +224,21 @@ export default function UserProfile() {
             </View>
 
             {/* Персональная информация */}
-            <GreyBlock className={'px-2 mb-2'}>
-              <View className={'flex-row gap-2'}>
+            <GreyBlock className={'px-2 my-2 gap-1'}>
+              <View
+                className={'flex-row gap-3 justify-center items-center mb-2'}
+              >
                 <CustomText
                   style={{ color: colors.theme.blue.dark }}
-                  className={'text-24 font-medium'}
+                  className={'text-24 font-medium '}
                 >
                   {l.personalInfo}
                 </CustomText>
                 {!user?.isCompleted && (
-                  <CustomButton
-                    iconSource={icons.warning}
-                    iconSize={30}
+                  <CustomIcon
+                    source={icons.warning}
+                    size={30}
+                    // iconSize={30}
                     onPress={() => alert(l.warningFillProfile)}
                   />
                 )}
@@ -254,70 +268,76 @@ export default function UserProfile() {
               {/*  />*/}
               {/*) : (*/}
               {/*<>*/}
-              <View className={'flex-row gap-2'}>
-                <CustomText
-                  style={{ color: colors.theme.blue.bright }}
-                  className={'text-17'}
-                >
-                  {l.firstAndLastName}
-                </CustomText>
-                <CustomText
-                  style={{ color: colors.theme.blue.primary }}
-                  className={'text-17 font-bold'}
-                >
-                  {user?.firstName} {user?.lastName}
-                </CustomText>
-              </View>
-              <View className={'flex-row gap-2'}>
-                <CustomText
-                  style={{ color: colors.theme.blue.bright }}
-                  className={'text-17'}
-                >
-                  {l.birthDate}
-                </CustomText>
-                <CustomText
-                  style={{ color: colors.theme.blue.primary }}
-                  className={'text-17 font-bold'}
-                >
-                  {user?.birthDate}
-                </CustomText>
-              </View>
-              {/*{user?.phoneNumber && (*/}
-              <View className={'flex-row gap-2'}>
-                <CustomText
-                  style={{ color: colors.theme.blue.bright }}
-                  className={'text-17'}
-                >
-                  {l.phoneNumber ?? '-'}:
-                </CustomText>
-                <CustomText
-                  style={{ color: colors.theme.blue.primary }}
-                  className={'text-17 font-bold'}
-                >
-                  {user?.phoneNumber}
-                </CustomText>
-              </View>
-              {/*)}*/}
-              {/*{user?.gender && (*/}
-              <View className={'flex-row gap-2'}>
-                <CustomText
-                  style={{ color: colors.theme.blue.bright }}
-                  className={'text-17'}
-                >
-                  {l.gender ?? '-'}:
-                </CustomText>
-                <CustomText
-                  style={{ color: colors.theme.blue.primary }}
-                  className={'text-17 font-bold'}
-                >
-                  {user?.gender}
-                </CustomText>
-              </View>
+              {(user?.firstName || user?.lastName) && (
+                <View className={'flex-row gap-2'}>
+                  <CustomText
+                    style={{ color: colors.theme.blue.bright }}
+                    className={'text-17'}
+                  >
+                    {l.firstAndLastName}
+                  </CustomText>
+                  <CustomText
+                    style={{ color: colors.theme.blue.primary }}
+                    className={'text-17 font-bold'}
+                  >
+                    {user?.firstName} {user?.lastName}
+                  </CustomText>
+                </View>
+              )}
+              {user.birthDate && (
+                <View className={'flex-row gap-2'}>
+                  <CustomText
+                    style={{ color: colors.theme.blue.bright }}
+                    className={'text-17'}
+                  >
+                    {l.birthDate}
+                  </CustomText>
+                  <CustomText
+                    style={{ color: colors.theme.blue.primary }}
+                    className={'text-17 font-bold'}
+                  >
+                    {user?.birthDate}
+                  </CustomText>
+                </View>
+              )}
+              {user?.phoneNumber && (
+                <View className={'flex-row gap-2'}>
+                  <CustomText
+                    style={{ color: colors.theme.blue.bright }}
+                    className={'text-17'}
+                  >
+                    {l.phoneNumber ?? '-'}:
+                  </CustomText>
+                  <CustomText
+                    style={{ color: colors.theme.blue.primary }}
+                    className={'text-17 font-bold'}
+                  >
+                    {user?.phoneNumber}
+                  </CustomText>
+                </View>
+              )}
+              {user?.gender && (
+                <View className={'flex-row gap-2'}>
+                  <CustomText
+                    style={{ color: colors.theme.blue.bright }}
+                    className={'text-17'}
+                  >
+                    {l.gender ?? '-'}:
+                  </CustomText>
+                  <CustomText
+                    style={{ color: colors.theme.blue.primary }}
+                    className={'text-17 font-bold'}
+                  >
+                    {user?.gender}
+                  </CustomText>
+                </View>
+              )}
               {isMine && (
-                <View className={'px-24'}>
+                <View className={'px-24 pt-2'}>
                   <CustomButton
+                    isSmall
                     type={'secondary'}
-                    textClassName={'text-24 font-medium'}
+                    textClassName={'text-18 font-medium'}
                     className={'py-1.5'}
                     text={l.btnEdit}
                     onPress={() => setEditProfileModalVisible(true)}
@@ -385,6 +405,7 @@ export default function UserProfile() {
             visible={avatarModalVisible}
             onClose={() => setAvatarModalVisible(false)}
             currentAvatarUrl={user.avatar}
+            onAvatarChanged={() => setAvatarVersion(Date.now())}
           />
           <EditProfileModal
             visible={editProfileModalVisible}

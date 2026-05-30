@@ -61,9 +61,21 @@ export const translations = {
     product: 'Вещь',
     spaces: 'Помещения',
     space: 'Помещение',
+    searchNearby: 'Рядом',
+    everywhere: 'Везде',
+    searchRadius: 'Радиус поиска, км',
+    clearLocation: 'Сбросить геолокацию',
+    priceFrom: 'от',
+    priceTo: 'до',
+    adsFound: 'Найдено объявлений',
+    priceRange: 'Ценовой диапозон',
 
     // Мои объявления
     revs: 'отз.',
+
+    // Мои объявления
+    active: 'Активные',
+    deleted: 'Удалённые',
 
     // Арендованное
     rentEndSoon: 'До конца аренды',
@@ -71,6 +83,7 @@ export const translations = {
     hours: 'часы',
     rentEnded: 'Аренда завершена',
     current: 'Текущие',
+    paused: 'Приостановленные',
     ended: 'Завершенные',
 
     // Чаты и сообщения
@@ -131,6 +144,17 @@ export const translations = {
     byHigh: 'Сначала положительные',
     byLow: 'Сначала отрицательные',
 
+    // Модалки профиля
+    editProfileTitle: 'Редактирование профиля',
+    uploadAvatarTitle: 'Загрузка аватара',
+    completeProfileTitle: 'Заполнение профиля',
+    selectPhoto: 'Выбрать фото',
+    errorSaveProfile: 'Ошибка сохранения профиля',
+    errorCompleteProfile: 'Ошибка заполнения профиля',
+    usernameAvailable: 'Свободно',
+    usernameUnavailable: 'Занято',
+    checkingUsername: 'Проверка...',
+
     // Другое
     success: 'Успех',
     loading: 'Загрузка',
@@ -139,6 +163,8 @@ export const translations = {
     category: 'Категория',
     start: 'Начало',
     end: 'Конец',
+    km: 'км',
+    geolocation: 'Геолокация',
 
     // ОплатаПоПериоду
     rubPerHour: '₽/час',
@@ -248,6 +274,11 @@ export const translations = {
     btnReset: 'Сбросить',
     btnBack: 'Назад',
     btnNext: 'Далее',
+    btnApply: 'Применить фильтры',
+    btnMark: 'Отметить',
+    btnClose: 'Закрыть',
+    btnPause: 'Приостановить',
+    btnResume: 'Возобновить',
 
     // Ошибки
     error: 'Ошибка',
@@ -268,10 +299,10 @@ export const translations = {
     errorQuantityZeroOrLess: 'Количество должно быть больше 0',
     errorDescriptionTooShort: 'Слишком короткое описание; не менее 10 символов',
     errorDescriptionTooLong: 'Слишком длинное описание; не более 500 символов',
-    errorSpecificationTooLong:
-      'Слишком длинные характеристики; не более 100 символов',
-    errorSpecificationTooShort:
-      'Слишком короткие характеристики; не менее 5 символов',
+    // errorSpecificationTooLong:
+    //   'Слишком длинные характеристики; не более 100 символов',
+    // errorSpecificationTooShort:
+    //   'Слишком короткие характеристики; не менее 5 символов',
     errorPreviewImageNull: 'Не выбрано превью-изображение',
     errorImageTooBig: 'Изображение слишком большого размера (>200Кб)',
     errorBigImageTooBig: 'Изображение слишком большого размера (>1000Кб)',
@@ -292,6 +323,8 @@ export const translations = {
     errorWeekDaysNull: 'Не выбрано ни одного дня недели',
     errorDayTimeNull:
       'Не выбрано ни одного промежутка для одного из указанных дней',
+    errorPriceMinMaxInt: 'Только целые числа',
+    errorPriceMinMaxMismatch: 'Минимум не может быть больше максимума',
 
     // Пустые элементы
     emptyReviewList: 'Пока нет отзывов',
@@ -299,23 +332,13 @@ export const translations = {
     emptyMessageList: 'Пока нет сообщений',
     emptyAdList: 'Пока нет объявлений',
 
+    // Предупреждения
     confirmation: 'Подтверждение',
     warningFormExit: 'Есть несохраненные изменения. Выйти без сохранения?',
     warningFormFinish: 'Подтвердите создание объявления.',
     warningFillProfile:
       'Данный профиль необходимо заполнить, иначе он будет удален через ... дней',
-
-    // Модалки профиля
-    editProfileTitle: 'Редактирование профиля',
-    uploadAvatarTitle: 'Загрузка аватара',
-    completeProfileTitle: 'Заполнение профиля',
-    selectPhoto: 'Выбрать фото',
-    changePhoto: 'Изменить фото',
-    errorSaveProfile: 'Ошибка сохранения профиля',
-    errorCompleteProfile: 'Ошибка заполнения профиля',
-    usernameAvailable: 'Свободно',
-    usernameUnavailable: 'Занято',
-    checkingUsername: 'Проверка...',
+    warningDeleteAd: 'Вы уверены, что хотите удалить объявление?',
 
     // Валидация
     validationEmail: 'Некорректная почта',
@@ -393,9 +416,21 @@ export const translations = {
     product: 'Product',
     spaces: 'Spaces',
     space: 'Space',
+    searchNearby: 'Nearby',
+    everywhere: 'Everywhere',
+    searchRadius: 'Search radius, km',
+    clearLocation: 'Clear location',
+    priceFrom: 'from',
+    priceTo: 'to',
+    adsFound: 'Ads found',
+    priceRange: 'Price range',
 
     // MyAdsPage
     revs: 'revs',
+
+    // My ads - statuses
+    active: 'Active',
+    deleted: 'Deleted',
 
     // Rented
     rentEndSoon: 'Until the end of the lease',
@@ -403,6 +438,7 @@ export const translations = {
     hours: 'hours',
     rentEnded: 'The lease has ended',
     current: 'Current',
+    paused: 'Paused',
     ended: 'Completed',
 
     // Chats and messages
@@ -463,6 +499,17 @@ export const translations = {
     byHigh: 'Positive first',
     byLow: 'Negative first',
 
+    // Profile modals
+    editProfileTitle: 'Edit Profile',
+    uploadAvatarTitle: 'Upload Avatar',
+    completeProfileTitle: 'Complete Profile',
+    selectPhoto: 'Select photo',
+    errorSaveProfile: 'Failed to save profile',
+    errorCompleteProfile: 'Failed to complete profile',
+    usernameAvailable: 'Available',
+    usernameUnavailable: 'Taken',
+    checkingUsername: 'Checking...',
+
     // Other
     success: 'Success',
     loading: 'Loading',
@@ -471,6 +518,8 @@ export const translations = {
     category: 'Category',
     start: 'Start',
     end: 'End',
+    km: 'km',
+    geolocation: 'Geolocation',
 
     // priceUnits
     rubPerHour: '₽/hour',
@@ -580,6 +629,11 @@ export const translations = {
     btnHide: 'Hide',
     btnBack: 'Back',
     btnNext: 'Next',
+    btnApply: 'Apply filters',
+    btnMark: 'Mark',
+    btnClose: 'Close',
+    btnPause: 'Pause',
+    btnResume: 'Resume',
 
     // Errors
     error: 'Error',
@@ -601,10 +655,10 @@ export const translations = {
       'Description is too short; at least 10 characters required',
     errorDescriptionTooLong:
       'Description is too long; no more than 500 characters allowed',
-    errorSpecificationTooLong:
-      'Specifications is too long; no more than 100 characters allowed',
-    errorSpecificationTooShort:
-      'Specifications are too short; no less than 5 characters allowed',
+    // errorSpecificationTooLong:
+    //   'Specifications is too long; no more than 100 characters allowed',
+    // errorSpecificationTooShort:
+    //   'Specifications are too short; no less than 5 characters allowed',
     errorPreviewImageNull: 'Preview image is not selected',
     errorCategoryIdNull: 'Category is not selected',
     errorCostNull: 'Cost is not specified/an incorrect number',
@@ -624,6 +678,8 @@ export const translations = {
       'Invalid date: end date is earlier than start date',
     errorWeekDaysNull: 'No weekdays selected',
     errorDayTimeNull: 'No time slot selected for one of the chosen days',
+    errorPriceMinMaxInt: 'Integers only',
+    errorPriceMinMaxMismatch: 'Min cannot be greater than max',
 
     // Empty
     emptyReviewList: 'No reviews yet',
@@ -637,18 +693,7 @@ export const translations = {
     warningFormFinish: 'Confirm the creation of the ad.',
     warningFillProfile:
       'This profile must be filled in, otherwise it will be deleted after ... days',
-
-    // Profile modals
-    editProfileTitle: 'Edit Profile',
-    uploadAvatarTitle: 'Upload Avatar',
-    completeProfileTitle: 'Complete Profile',
-    selectPhoto: 'Select photo',
-    changePhoto: 'Change photo',
-    errorSaveProfile: 'Failed to save profile',
-    errorCompleteProfile: 'Failed to complete profile',
-    usernameAvailable: 'Available',
-    usernameUnavailable: 'Taken',
-    checkingUsername: 'Checking...',
+    warningDeleteAd: 'Are you sure you want to delete this listing?',
 
     // Validation
     validationEmail: 'Incorrect email',

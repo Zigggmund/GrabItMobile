@@ -4,6 +4,12 @@ import Geolocation from 'react-native-geolocation-service';
 import MapLibreGL from '@maplibre/maplibre-react-native';
 import { Feature, Point } from 'geojson';
 
+const EMPTY_MAP_STYLE = {
+  version: 8,
+  sources: {},
+  layers: [],
+};
+
 import { useForm } from '@/hooks/useForm';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTheme } from '@/hooks/useTheme';
@@ -93,6 +99,7 @@ export const AdMapStep = ({ errors }: { errors: Record<string, string> }) => {
       <View className="gap-2">
         <MapLibreGL.MapView
           style={{ height: 300, width: '100%' }}
+          mapStyle={EMPTY_MAP_STYLE}
           onPress={(e: Feature) => {
             const geom = e.geometry;
 
@@ -136,56 +143,24 @@ export const AdMapStep = ({ errors }: { errors: Record<string, string> }) => {
           </MapLibreGL.RasterSource>
 
           {coords && (
-            // Иконка не подгружается
-            // <MapLibreGL.Images
-            //   images={{
-            //     marker: icons.mapMarker, // важно!
-            //   }}
-            // >
-            //   <MapLibreGL.ShapeSource
-            //     id="markerSource"
-            //     shape={{
-            //       type: 'Feature',
-            //       properties: {},
-            //       geometry: {
-            //         type: 'Point',
-            //         coordinates: [coords[1], coords[0]],
-            //       },
-            //     }}
-            //   >
-            //     <MapLibreGL.SymbolLayer
-            //       id="markerLayer"
-            //       style={{
-            //         iconImage: 'marker',
-            //         iconSize: 0.5,
-            //         iconAllowOverlap: true,
-            //         iconIgnorePlacement: true,
-            //       }}
-            //     />
-            //   </MapLibreGL.ShapeSource>
-            // </MapLibreGL.Images>
-
-            <MapLibreGL.PointAnnotation
-              id="marker"
-              coordinate={coords ? [coords[1], coords[0]] : [0, 0]}
+            <MapLibreGL.ShapeSource
+              id="markerSource"
+              shape={{
+                type: 'Feature',
+                geometry: { type: 'Point', coordinates: [coords[1], coords[0]] },
+                properties: {},
+              }}
             >
-              {/*<MapLibreGL.SymbolLayer*/}
-              {/*  id="markerLayer"*/}
-              {/*  style={{*/}
-              {/*    iconImage: 'marker',*/}
-              {/*    iconSize: 0.5,*/}
-              {/*  }}*/}
-              {/*/>*/}
-              <View
+              <MapLibreGL.CircleLayer
+                id="markerCircle"
                 style={{
-                  width: 20,
-                  height: 20,
-                  backgroundColor: 'red',
-                  borderRadius: 10,
+                  circleRadius: 10,
+                  circleColor: colors.base.orange.primary,
+                  circleStrokeWidth: 2,
+                  circleStrokeColor: '#ffffff',
                 }}
               />
-              {/*<CustomIcon source={icons.mapMarker} size={60} />*/}
-            </MapLibreGL.PointAnnotation>
+            </MapLibreGL.ShapeSource>
           )}
         </MapLibreGL.MapView>
 

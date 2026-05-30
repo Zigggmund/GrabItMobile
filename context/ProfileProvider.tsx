@@ -11,7 +11,7 @@ interface ProfileContextProviderProps {
 export const ProfileProvider: FC<ProfileContextProviderProps> = ({
   children,
 }) => {
-  const { data: user, isLoading: isLoading } = useMe();
+  const { data: user, isLoading, isFetching } = useMe();
   // useEffect(() => {
   //   const fetchUser = async () => {
   //     try {
@@ -39,7 +39,7 @@ export const ProfileProvider: FC<ProfileContextProviderProps> = ({
   return (
     // user ?? null против undefined
     <ProfileContext.Provider
-      value={{ user: user ?? null, isLoading, isAuth: !!user }}
+      value={{ user: user ?? null, isLoading, isFetching, isAuth: !!user }}
     >
       {children}
     </ProfileContext.Provider>

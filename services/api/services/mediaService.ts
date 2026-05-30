@@ -29,7 +29,10 @@ export class MediaService {
     listingId: string,
     mediaId: string,
   ): Promise<void> {
-    await api.delete(`/rent/listings/${listingId}/media/${mediaId}`);
+    unwrap(
+
+      await api.delete(`/rent/listings/${listingId}/media/${mediaId}`),
+    )
   }
 
   // Загрузка аватара пользователя (max 4 МБ)
@@ -52,6 +55,8 @@ export class MediaService {
 
   // Сброс аватара к дефолтному (204 No Content)
   static async deleteAvatar(): Promise<void> {
-    await api.delete('/users/me/avatar');
+    unwrap(
+      await api.delete('/users/me/avatar'),
+    )
   }
 }

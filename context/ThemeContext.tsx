@@ -36,26 +36,3 @@ export const ThemeContext = createContext<ThemeContextProps>({
   },
   isLoading: true,
 });
-
-// import { createContext } from 'react';
-//
-// import { themeColors } from '@/constants/colors/themeColors';
-// import { baseColors } from '@/constants/colors/baseColors';
-//
-// export const defaultTheme = 'light';
-// export type ThemeType = 'light' | 'dark';
-// export type colorType = typeof baseColors & (typeof themeColors)['light'];
-//
-// interface ThemeContextProps {
-//   theme: ThemeType;
-//   setTheme: (theme: ThemeType) => void;
-//   colors: colorType;
-//   isLoading: boolean;
-// }
-//
-// export const ThemeContext = createContext<ThemeContextProps>({
-//   theme: defaultTheme,
-//   setTheme: () => {},
-//   colors: { ...baseColors, ...themeColors.light },
-//   isLoading: true,
-// });

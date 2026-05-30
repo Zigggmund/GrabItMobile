@@ -31,7 +31,7 @@ export interface UserCardType {
   avatar: string | null;
   landlordRating: number;
   reviewCount: number;
-  phoneNumber: string;
+  phoneNumber: string | null;
 }
 
 

@@ -4,8 +4,8 @@ import { useQuery } from '@tanstack/react-query';
 
 import { AdService } from '@/services/api/services/adService';
 
-// хук для получения всех объявлений (+фильтры?)
-export const useGetAllAds = () => {
+// хук для получения объявлений с пагинацией
+export const useGetAds = () => {
   return useQuery<AdPreviewType[]>({
     queryKey: ['ads'],
     queryFn: async () => {

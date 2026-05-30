@@ -1,7 +1,6 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Tabs, usePathname, useSegments } from 'expo-router';
 
-import { useGetAllCategories } from '@/hooks/category/useGetAllCategories';
 import { useHistory } from '@/hooks/useHistory';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useProfile } from '@/hooks/user/useProfile';
@@ -25,7 +24,7 @@ export default function TabsLayout() {
   const pathname = usePathname();
 
   // загрузка категорий (1 запрос при старте)
-  useGetAllCategories();
+  // useGetProductTypeCategories();
 
   // Скрывать header и tabs?
   const isAuthFlow = segments[0] === '(auth)' || segments[0] === 'loading';
@@ -34,7 +33,7 @@ export default function TabsLayout() {
   const isUserProfile =
     pathname.startsWith('/users/') &&
     pathname.split('/').length === 3 &&
-    pathname.endsWith(String(user?.id));
+    pathname.endsWith(String(user?.username));
 
   // Подсвечивать настройки?
   const isSettingsScreen = segments.includes('settings');

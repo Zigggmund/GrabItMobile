@@ -3,7 +3,7 @@ import { CategoryType } from '@/types/entities/CategoryType';
 import { useState } from 'react';
 import { ScrollView, useWindowDimensions, View } from 'react-native';
 
-import { useGetAllCategories } from '@/hooks/category/useGetAllCategories';
+import { useGetProductTypeCategories } from '@/hooks/category/useGetProductTypeCategories';
 import { useForm } from '@/hooks/useForm';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTheme } from '@/hooks/useTheme';
@@ -32,7 +32,8 @@ export const AdDetailsStep = ({
   //   (form.adCreationFormData.cost || '').toString(),
   // );
 
-  const categories = useGetAllCategories().data;
+  if (!form.adCreationFormData.adType) return;
+  const categories = useGetProductTypeCategories(form.adCreationFormData.adType).data;
   const [category, setCategory] = useState<CategoryType | null>(null);
 
   const handleCategory = (value: CategoryType | null) => {
@@ -204,6 +205,14 @@ export const AdDetailsStep = ({
           <View className="gap-1 items-center">
             {specs.map((spec, index) => (
               <View key={index} className="gap-4 flex-row">
+                <View className={'flex-1'}>
+                  <CustomInput
+                    value={spec}
+                    placeholder={`${l.specification} ${index + 1}`}
+                    onChangeText={text => handleSpecChange(index, text)}
+                    errorMessage={specErrors[index]}
+                  />
+                </View>
                 <View className={'flex-1'}>
                   <CustomInput
                     value={spec}

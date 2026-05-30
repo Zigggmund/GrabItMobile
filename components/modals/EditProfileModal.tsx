@@ -1,4 +1,5 @@
-import { useQueryClient } from '@tanstack/react-query';
+import { UserType } from '@/types/entities/UserType';
+
 import { useState } from 'react';
 import {
   ActivityIndicator,
@@ -9,17 +10,17 @@ import {
   ScrollView,
   View,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useQueryClient } from '@tanstack/react-query';
 
-import { useChangeProfile } from '@/hooks/user/useChangeProfile';
 import { useLanguage } from '@/hooks/useLanguage';
+import { useChangeProfile } from '@/hooks/user/useChangeProfile';
 import { useTheme } from '@/hooks/useTheme';
 
 import { CustomButton } from '@/components/ui/button/CustomButton';
 import CustomInput from '@/components/ui/input/CustomInput';
 import { CustomInputMenu } from '@/components/ui/input/CustomInputMenu';
 import { CustomText } from '@/components/ui/text/CustomText';
-
-import { UserType } from '@/types/entities/UserType';
 
 interface Props {
   visible: boolean;
@@ -67,6 +68,7 @@ export default function EditProfileModal({ visible, onClose, user }: Props) {
   const { colors } = useTheme();
   const queryClient = useQueryClient();
   const changeProfile = useChangeProfile();
+  const insets = useSafeAreaInsets();
 
   const [firstName, setFirstName] = useState(user.firstName ?? '');
   const [lastName, setLastName] = useState(user.lastName ?? '');
@@ -128,7 +130,13 @@ export default function EditProfileModal({ visible, onClose, user }: Props) {
         style={{ flex: 1 }}
       >
         <View
-          style={{ flex: 1, backgroundColor: '#00000066', justifyContent: 'flex-end' }}
+          style={{
+            flex: 1,
+            backgroundColor: '#00000066',
+            justifyContent: 'flex-end',
+            paddingTop: insets.top,
+            paddingBottom: insets.bottom,
+          }}
         >
           <Pressable style={{ flex: 1 }} onPress={onClose} />
 
@@ -150,7 +158,10 @@ export default function EditProfileModal({ visible, onClose, user }: Props) {
               {l.editProfileTitle}
             </CustomText>
 
-            <ScrollView showsVerticalScrollIndicator={false}>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{ paddingBottom: 100 }}
+            >
               <View className={'gap-4'}>
                 <CustomInput
                   label={l.firstName}
@@ -158,9 +169,7 @@ export default function EditProfileModal({ visible, onClose, user }: Props) {
                   onChangeText={setFirstName}
                   placeholder={l.enterFirstName}
                   errorMessage={errors.firstName}
-                  onClearError={() =>
-                    setErrors(p => ({ ...p, firstName: '' }))
-                  }
+                  onClearError={() => setErrors(p => ({ ...p, firstName: '' }))}
                 />
 
                 <CustomInput
@@ -189,13 +198,11 @@ export default function EditProfileModal({ visible, onClose, user }: Props) {
                   placeholder={l.enterBirthDate}
                   keyboardType="numeric"
                   errorMessage={errors.birthDate}
-                  onClearError={() =>
-                    setErrors(p => ({ ...p, birthDate: '' }))
-                  }
+                  onClearError={() => setErrors(p => ({ ...p, birthDate: '' }))}
                 />
 
                 <CustomInputMenu
-                  label={l.genderOptional}
+                  label={l.gender}
                   items={[
                     { label: l.male, value: 'male' },
                     { label: l.female, value: 'female' },
@@ -217,15 +224,14 @@ export default function EditProfileModal({ visible, onClose, user }: Props) {
 
                 <View className={'flex-row gap-3 mt-2 mb-4'}>
                   <CustomButton
-                    type={'secondary'}
+                    type={'red'}
                     text={l.btnCancel}
                     className={'flex-1'}
                     onPress={onClose}
                   />
                   <CustomButton
-                    text={
-                      changeProfile.isPending ? l.loading : l.btnSave
-                    }
+                    type={'green'}
+                    text={changeProfile.isPending ? l.loading : l.btnSave}
                     className={'flex-1'}
                     disabled={changeProfile.isPending}
                     onPress={handleSave}
@@ -236,7 +242,11 @@ export default function EditProfileModal({ visible, onClose, user }: Props) {
 
             {changeProfile.isPending && (
               <ActivityIndicator
-                style={{ position: 'absolute', alignSelf: 'center', bottom: 80 }}
+                style={{
+                  position: 'absolute',
+                  alignSelf: 'center',
+                  bottom: 80,
+                }}
                 color={colors.base.orange.primary}
               />
             )}

@@ -19,6 +19,7 @@ import { CustomIcon } from '@/components/ui/icon/CustomIcon';
 import { CustomText } from '@/components/ui/text/CustomText';
 
 import { icons } from '@/constants/icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const MAX_AVATAR_SIZE = 4 * 1024 * 1024; // 4 МБ по swagger
 
@@ -26,17 +27,20 @@ interface Props {
   visible: boolean;
   onClose: () => void;
   currentAvatarUrl: string | null;
+  onAvatarChanged?: () => void;
 }
 
 export default function AvatarUploadModal({
   visible,
   onClose,
   currentAvatarUrl,
+  onAvatarChanged,
 }: Props) {
   const { l } = useLanguage();
   const { colors } = useTheme();
   const queryClient = useQueryClient();
   const uploadAvatar = useUploadAvatar();
+  const insets = useSafeAreaInsets();
 
   const [selectedUri, setSelectedUri] = useState<string | null>(null);
   const [error, setError] = useState('');
@@ -94,6 +98,7 @@ export default function AvatarUploadModal({
     uploadAvatar.mutate(selectedUri, {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['me'] });
+        onAvatarChanged?.();
         setSelectedUri(null);
         onClose();
       },
@@ -119,6 +124,8 @@ export default function AvatarUploadModal({
           flex: 1,
           backgroundColor: '#00000066',
           justifyContent: 'flex-end',
+          paddingTop: insets.top,
+          paddingBottom: insets.bottom,
         }}
       >
         <Pressable style={{ flex: 1 }} onPress={handleClose} />
@@ -194,14 +201,14 @@ export default function AvatarUploadModal({
 
           <View className={'flex-row gap-3 w-full mb-2'}>
             <CustomButton
-              type={'secondary'}
-              text={l.changePhoto}
+              type={'red'}
+              text={l.btnCancel}
               className={'flex-1'}
-              onPress={handleSelectPhoto}
-              disabled={uploadAvatar.isPending}
+              onPress={handleClose}
             />
             <CustomButton
-              text={uploadAvatar.isPending ? l.loading : l.btnUpload}
+              type={'green'}
+              text={uploadAvatar.isPending ? l.loading : l.btnSave}
               className={'flex-1'}
               disabled={!selectedUri || uploadAvatar.isPending}
               onPress={handleUpload}

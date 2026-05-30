@@ -21,6 +21,7 @@ interface SortingMenuProps<T> {
   width?: number;
   maxWidth?: number;
   disable?: boolean;
+  placeholder?: string;
 }
 
 export function SortingMenu<T>({
@@ -30,11 +31,15 @@ export function SortingMenu<T>({
   onSelect,
   width = 200,
   maxWidth = width,
+  placeholder,
   disable = false,
 }: SortingMenuProps<T>) {
   const [open, setOpen] = useState(false);
   const { colors } = useTheme();
-  const selectedItem = items.find(i => i.value === value);
+  const selectedItem = items.find(i => i.value === value) ?? {
+    label: placeholder,
+    value: null,
+  };
 
   // для показа в меню лишь невыбранных опций
   const filteredItems = items.filter(i => i.value !== value);

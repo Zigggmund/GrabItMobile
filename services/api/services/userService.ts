@@ -2,6 +2,7 @@ import { ApiResponse } from '@/services/api/apiResponse';
 import { unwrap } from '@/services/api/apiUtils';
 import { api } from '@/services/api/instance';
 import {
+  PublicUserResponseDto,
   UserChangingDto,
   UserResponseDto,
 } from '@/services/api/services/dto/user.dto';
@@ -21,7 +22,7 @@ export class UserService {
 
   // Мягкое удаление аккаунта (soft delete, 204)
   static async deleteMe(): Promise<void> {
-    await api.delete('/users/me');
+    return unwrap(await api.delete('/users/me'));
   }
 
   // Публичный профиль по username
@@ -35,14 +36,22 @@ export class UserService {
   static async checkUsername(
     username: string,
   ): Promise<{ available: boolean }> {
-    const res = await api.get<ApiResponse<{ available: boolean }>>(
-      `/users/username-check?q=${encodeURIComponent(username)}`,
+    return unwrap(
+      await api.get<ApiResponse<{ available: boolean }>>(
+        `/users/username-check?q=${encodeURIComponent(username)}`,
+      ),
     );
-    return unwrap(res);
+  }
+
+  // Публичный профиль по id
+  static async getUserById(id: string): Promise<PublicUserResponseDto> {
+    return unwrap(
+      await api.get<ApiResponse<PublicUserResponseDto>>(`/users/id/${id}`),
+    );
   }
 
   // Смена языка интерфейса
   static async changeLanguage(language: string): Promise<void> {
-    await api.put(`/users/me/language/`, language);
+    unwrap(await api.put(`/users/me/language`, { language }));
   }
 }

@@ -10,6 +10,8 @@ import { Category } from '@/components/common/Category';
 import RatingStars from '@/components/common/RatingStars';
 import { CustomText } from '@/components/ui/text/CustomText';
 
+import { images } from '@/constants/images';
+
 interface BigAdProps {
   ad: AdPreviewType;
   width: number;
@@ -19,6 +21,11 @@ export default function BigAd({ width, ad }: BigAdProps) {
   const { l } = useLanguage();
   const { colors } = useTheme();
   const { navigate } = useHistory();
+  // const isSpace = ad.productType == 'space';
+  // заглушка
+  const isSpace = false;
+  const price = isSpace ? ad.rub_per_hour * 24 : ad.rub_per_hour;
+  const rubPer = isSpace ? l.rubPerDay : l.rubPerHour;
 
   return (
     <TouchableOpacity
@@ -45,7 +52,11 @@ export default function BigAd({ width, ad }: BigAdProps) {
             borderColor: colors.components.card.rent.border,
             borderRadius: 10,
           }}
-          source={{ uri: ad.previewImage.url }}
+          source={
+            ad.previewImage.url
+              ? { uri: ad.previewImage.url }
+              : images.rentCardExample
+          }
         />
         <View className={'flex-1 pt-2 px-2 pb-1 justify-between'}>
           <View className={'gap-1'}>
@@ -87,9 +98,14 @@ export default function BigAd({ width, ad }: BigAdProps) {
                 style={{ color: colors.theme.blue.dark }}
                 className={'text-11 font-bold'}
               >
-                {ad.cost[0].payment} {l[ad.cost[0].priceUnit]}
+                {price} {rubPer}
               </CustomText>
-              <Category categoryId={ad.categoryId} isSmall />
+              {/* ЗАГЛУШКА */}
+              <Category
+                categoryId={ad.categoryId}
+                isSmall
+                productType={'product'}
+              />
             </View>
             <CustomText
               style={{ color: colors.theme.blue.bright }}

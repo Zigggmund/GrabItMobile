@@ -12,15 +12,9 @@ import { storage } from '@/services/storage/asyncStorageService';
 
 import { defaultLang, LanguageContext } from './LanguageContext';
 
-// РАБОТА С БД
-// import { useProfile } from '@/context/ProfileContext';
-
 const LANGUAGE_KEY = 'language';
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
-  // РАБОТА С БД
-  // updateUserLanguage для сохранения на сервере
-  // const { user, updateUserLanguage } = useProfile() ?? {};
   const [language, setLanguageState] = useState<LanguageType>(defaultLang);
   const [languageError, setLanguageError] = useState('');
   const [isStorageLoading, setIsStorageLoading] = useState(true);
@@ -64,11 +58,6 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     try {
       setLanguageState(lang);
       await storage.set(LANGUAGE_KEY, lang);
-      // РАБОТА С БД
-      // Если пользователь вошёл — отправляем обновление на сервер
-      // if (user && updateUserLanguage) {
-      //   await updateUserLanguage(lang);
-      // }
       try {
         await UserService.changeLanguage(lang);
       } catch (e) {
@@ -84,8 +73,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     setLanguageError('');
   };
 
-  // Оптимизация производительности. Без useMemo, при каждом любом рендере пересоздает l
-  // useMemo - пересчет объекта l лишь тогда, когда меняется language
+  // Оптимизация производительности. пересчет объекта l когда меняется language
   const l: LType = useMemo(
     () => translations[language] || translations[defaultLang],
     [language],

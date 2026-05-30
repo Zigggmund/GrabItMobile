@@ -28,7 +28,7 @@ export interface AdResponseDto {
   lat: number | null;
   lon: number | null;
   address: string | null;
-  status: 'active' | 'paused' | 'closed';
+  status: 'active' | 'paused' | 'deleted';
   avg_rating: number;
   review_count: number;
   media: AdMediaDto[];
@@ -50,6 +50,20 @@ export interface AvailableSlotsResponseDto {
 }
 
 // ─── Request DTOs ─────────────────────────────────────────────────────────────
+
+export interface SearchListingsRequestDto {
+  query?: string;
+  category_id?: string;
+  min_price?: number; // ₽/час
+  max_price?: number; // ₽/час
+  lat?: number;
+  lon?: number;
+  radius_km?: number;
+  // product_type?: string;
+  // sort_by: string;
+  page: number;
+  page_size: number;
+}
 
 export interface CreateListingDto {
   title: string;
@@ -84,3 +98,4 @@ export interface SetAvailabilityDto {
     weekday_hours: Record<string, number[]>; // ключ: '1'=пн … '7'=вс
   }[];
 }
+
