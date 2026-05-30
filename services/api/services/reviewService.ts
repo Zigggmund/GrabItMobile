@@ -1,6 +1,9 @@
 import { AxiosResponse } from 'axios';
 import { ReviewType } from '@/types/entities/ReviewType';
 import { api } from '@/services/api/instance';
+import { ApiResponse } from '@/services/api/apiResponse';
+import { GetReviewsResponseDto } from '@/services/api/services/dto/review.dto';
+import { unwrap } from '@/services/api/apiUtils';
 
 
 export class ReviewService {
@@ -15,9 +18,11 @@ export class ReviewService {
 
   // получение отзывов по объявлению
   static async getAdReviews(
-    AdId: string | number,
-  ): Promise<AxiosResponse<ReviewType[]>> {
-    console.log('Getting ad reviews attempt, adId:', AdId);
-    return api.get('/review');
+    adId: string | number,
+    params?: { page?: number; page_size?: number },
+  ): Promise<GetReviewsResponseDto> {
+    return unwrap(
+      await api.get<ApiResponse<GetReviewsResponseDto>>(`/rent/listings/${adId}/reviews`, { params }),
+    );
   }
 }

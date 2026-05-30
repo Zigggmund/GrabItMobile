@@ -1,7 +1,7 @@
 import { ExceptionDayType, TimePeriodType } from '@/types/TimeType';
 
 import { useMemo, useState } from 'react';
-import { FlatList, View } from 'react-native';
+import { FlatList, ScrollView, View } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 
 import { useForm } from '@/hooks/useForm';
@@ -206,9 +206,10 @@ export const AdExceptionsStep = ({
   };
 
   return (
-    <View className="flex-1 gap-3">
+    <ScrollView contentContainerStyle={{ gap: 12, paddingBottom: 16 }}>
       <FlatList
         horizontal
+        scrollEnabled={false}
         data={exceptions}
         keyExtractor={item => item.date}
         contentContainerStyle={{
@@ -224,15 +225,20 @@ export const AdExceptionsStep = ({
         )}
       />
 
-      <Calendar
-        minDate={form.adCreationFormData.firstDate?.toISOString().split('T')[0]}
-        maxDate={form.adCreationFormData.endDate?.toISOString().split('T')[0]}
-        markedDates={markedDates}
-        onDayPress={handleSelectDay}
-      />
+      {!selectedException && (
+        <Calendar
+          minDate={form.adCreationFormData.firstDate?.toISOString().split('T')[0]}
+          maxDate={form.adCreationFormData.endDate?.toISOString().split('T')[0]}
+          markedDates={markedDates}
+          onDayPress={handleSelectDay}
+        />
+      )
+
+      }
+
 
       {selectedException && (
-        <View className="flex-1 gap-3">
+        <View className="gap-3">
           <CustomText className="text-18">
             {new Date(selectedException.date).toLocaleDateString()}
           </CustomText>
@@ -240,6 +246,7 @@ export const AdExceptionsStep = ({
           <FlatList
             data={HOUR_INTERVALS}
             numColumns={4}
+            scrollEnabled={false}
             keyExtractor={item => item}
             contentContainerStyle={{
               alignItems: 'center',
@@ -286,6 +293,6 @@ export const AdExceptionsStep = ({
           {errors.exceptions}
         </CustomText>
       )}
-    </View>
+    </ScrollView>
   );
 };

@@ -1,10 +1,17 @@
 import { ComponentType, useEffect, useMemo, useState } from 'react';
 import { InteractionManager, View } from 'react-native';
 
+import { AdCreationFormDataType } from '@/context/FormContext';
 import { useForm } from '@/hooks/useForm';
 import { useHistory } from '@/hooks/useHistory';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTheme } from '@/hooks/useTheme';
+
+import { periodsToHours } from '@/utils/periodsToHours';
+
+import { AdService } from '@/services/api/services/adService';
+import { MediaService } from '@/services/api/services/mediaService';
+import { SetAvailabilityDto } from '@/services/api/services/dto/ad.dto';
 
 import { ProgressBar } from '@/components/common/bars/ProgressBar';
 import { AdAllDatesStep } from '@/components/forms/adCreation/AdAllDatesStep';
@@ -24,13 +31,36 @@ type StepComponentProps = {
   errors: Record<string, string>;
 };
 
+const buildAvailabilityPayload = (data: AdCreationFormDataType): SetAvailabilityDto => {
+  const fmt = (d: Date) => d.toISOString().split('T')[0];
+  const weekdayHours: Record<string, number[]> = {};
+  if (data.adType === 'product') {
+    data.weekDays.forEach((selected, idx) => {
+      if (!selected) return;
+      const hours = periodsToHours(data.weekDaysTime[idx]).map(h => parseInt(h.split('-')[0]));
+      weekdayHours[(idx + 1).toString()] = hours;
+    });
+  } else {
+    for (let i = 1; i <= 7; i++) {
+      weekdayHours[i.toString()] = Array.from({ length: 24 }, (_, h) => h);
+    }
+  }
+  return {
+    periods: [{
+      valid_from: fmt(data.firstDate!),
+      valid_until: fmt(data.endDate!),
+      weekday_hours: weekdayHours,
+    }],
+  };
+};
+
 export const CreateAdForm = () => {
   const { l } = useLanguage();
   const { navigate } = useHistory();
   const form = useForm();
   const { colors } = useTheme();
 
-  const adId = 1;
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const steps: {
     key: TranslationKey;
@@ -108,10 +138,11 @@ export const CreateAdForm = () => {
         }
 
         form.adCreationFormData.specifications.forEach(item => {
-          if (item.length > 100)
-            stepErrors.specifications = l.errorSpecificationTooLong;
-          if (item.length < 5)
-            stepErrors.specifications = l.errorSpecificationTooShort;
+          const keyFilled = item.key.trim().length > 0;
+          const valueFilled = item.value.trim().length > 0;
+          if (keyFilled !== valueFilled) {
+            stepErrors.specifications = l.errorSpecificationIncomplete;
+          }
         });
 
         if (!form.adCreationFormData.categoryId) {
@@ -218,12 +249,42 @@ export const CreateAdForm = () => {
     });
     if (!response) return;
 
-    const results = form.adCreationFormData;
-    console.log(results);
-    console.log('===');
+    setIsSubmitting(true);
+    try {
+      const data = form.adCreationFormData;
+      const validSpecs = data.specifications.filter(s => s.key.trim() && s.value.trim());
 
-    form.clear();
-    navigate({ pathname: '/(tabs)/ads/[id]', params: { id: adId } }, false);
+      const listing = await AdService.createAd({
+        title: data.title,
+        description: data.description,
+        category_id: parseInt(data.categoryId!),
+        price_per_hour: data.cost!,
+        quantity: data.quantity!,
+        buffer_hours: data.minInterval ?? undefined,
+        lat: data.latitude ?? undefined,
+        lon: data.longitude ?? undefined,
+        address: data.address ?? undefined,
+        attributes: validSpecs.length > 0 ? validSpecs : undefined,
+      });
+      const listingId = listing.listing_id;
+
+      if (data.previewImage?.url) {
+        await MediaService.uploadMedia(listingId, data.previewImage.url);
+      }
+
+      if (data.uriMedias.length > 0) {
+        await Promise.all(data.uriMedias.map(m => MediaService.uploadMedia(listingId, m.url)));
+      }
+
+      await AdService.setAvailability(listingId, buildAvailabilityPayload(data));
+
+      form.clear();
+      navigate({ pathname: '/(tabs)/ads/[id]', params: { id: listingId } }, false);
+    } catch {
+      // global MutationCache.onError показывает тост
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleNextStep = () => {
@@ -265,12 +326,14 @@ export const CreateAdForm = () => {
           type={form.currentStep != 1 ? 'primary' : 'red'}
           text={form.currentStep != 1 ? l.btnBack : l.btnCancel}
           onPress={form.formGoBack}
+          disabled={isSubmitting}
         />
 
         <CustomButton
           type={form.currentStep != form.totalSteps ? 'primary' : 'green'}
           text={form.currentStep != form.totalSteps ? l.btnNext : l.btnFinish}
           onPress={handleNextStep}
+          disabled={isSubmitting}
         />
       </View>
     </View>

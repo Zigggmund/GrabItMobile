@@ -118,6 +118,8 @@ export const translations = {
     address: 'Адрес',
     specifications: 'Характеристики',
     specification: 'Характеристика',
+    specificationKey: 'Ключ',
+    specificationValue: 'Значение',
     bookingCalendar: 'Календарь бронирования',
     landlord: 'Арендодатель',
     preview: 'Превью-изображение',
@@ -303,6 +305,7 @@ export const translations = {
     //   'Слишком длинные характеристики; не более 100 символов',
     // errorSpecificationTooShort:
     //   'Слишком короткие характеристики; не менее 5 символов',
+    errorSpecificationIncomplete: 'Заполните ключ и значение характеристики',
     errorPreviewImageNull: 'Не выбрано превью-изображение',
     errorImageTooBig: 'Изображение слишком большого размера (>200Кб)',
     errorBigImageTooBig: 'Изображение слишком большого размера (>1000Кб)',
@@ -474,6 +477,8 @@ export const translations = {
     bookingCalendar: 'Booking calendar',
     specifications: 'Specifications',
     specification: 'Specification',
+    specificationKey: 'Key',
+    specificationValue: 'Value',
     landlord: 'Landlord',
     preview: 'Preview image',
     quantity: 'Quantity',
@@ -659,6 +664,7 @@ export const translations = {
     //   'Specifications is too long; no more than 100 characters allowed',
     // errorSpecificationTooShort:
     //   'Specifications are too short; no less than 5 characters allowed',
+    errorSpecificationIncomplete: 'Fill in both the key and value of the specification',
     errorPreviewImageNull: 'Preview image is not selected',
     errorCategoryIdNull: 'Category is not selected',
     errorCostNull: 'Cost is not specified/an incorrect number',

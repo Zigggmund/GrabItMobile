@@ -10,7 +10,7 @@ export type AdCreationFormDataType = {
   title: string;
   quantity?: number | null;
   description: string;
-  specifications: string[];
+  specifications: { key: string; value: string }[];
   previewImage?: MediaType | null;
   categoryId?: string | null;
   cost?: number | null;

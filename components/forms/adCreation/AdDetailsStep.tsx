@@ -1,16 +1,14 @@
 import { CategoryType } from '@/types/entities/CategoryType';
 
 import { useState } from 'react';
-import { ScrollView, useWindowDimensions, View } from 'react-native';
+import { ScrollView, TouchableOpacity, View } from 'react-native';
 
 import { useGetProductTypeCategories } from '@/hooks/category/useGetProductTypeCategories';
 import { useForm } from '@/hooks/useForm';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTheme } from '@/hooks/useTheme';
 
-import { getProductTypeCategoryItems } from '@/utils/getProductTypeCategoryItems';
-
-import { SortingMenu } from '@/components/common/SortingMenu';
+import { CategoryModal } from '@/components/modals/CategoryModal';
 import { CustomIcon } from '@/components/ui/icon/CustomIcon';
 import CustomInput from '@/components/ui/input/CustomInput';
 import { CustomText } from '@/components/ui/text/CustomText';
@@ -25,43 +23,44 @@ export const AdDetailsStep = ({
   const { l } = useLanguage();
   const { colors } = useTheme();
   const form = useForm();
-  // АДАПТИВНОСТЬ
-  const { width: screenWidth } = useWindowDimensions();
+
+  // Все хуки — до любого условного возврата
+  const adType = form.adCreationFormData.adType ?? 'product';
+  const { data: categories } = useGetProductTypeCategories(adType);
+
+  const [category, setCategory] = useState<CategoryType | null>(null);
+  const [categoryModalVisible, setCategoryModalVisible] = useState(false);
+
+  const [specs, setSpecs] = useState<{ key: string; value: string }[]>(
+    form.adCreationFormData.specifications.length > 0
+      ? form.adCreationFormData.specifications
+      : [{ key: '', value: '' }],
+  );
+  const [specErrors, setSpecErrors] = useState<Record<number, string>>({});
 
   // const [cost, setCost] = useState(
   //   (form.adCreationFormData.cost || '').toString(),
   // );
 
-  if (!form.adCreationFormData.adType) return;
-  const categories = useGetProductTypeCategories(form.adCreationFormData.adType).data;
-  const [category, setCategory] = useState<CategoryType | null>(null);
+  if (!form.adCreationFormData.adType) return null;
 
   const handleCategory = (value: CategoryType | null) => {
     setCategory(value);
-    form.changeAdCreationFormData('categoryId', value?.id || null);
+    form.changeAdCreationFormData('categoryId', value?.id.toString() ?? null);
     if (value) console.log(`Категория ${value?.name} выбрана`);
   };
 
-  const [specs, setSpecs] = useState<string[]>(
-    form.adCreationFormData.specifications || [''],
-  );
-  const [specErrors, setSpecErrors] = useState<Record<number, string>>({});
-
-  const handleSpecChange = (index: number, value: string) => {
+  const handleSpecChange = (index: number, field: 'key' | 'value', value: string) => {
     const newSpecs = [...specs];
-    newSpecs[index] = value;
+    newSpecs[index] = { ...newSpecs[index], [field]: value };
     setSpecs(newSpecs);
-
-    form.changeAdCreationFormData(
-      'specifications',
-      newSpecs.filter(spec => spec.length > 0),
-    );
+    form.changeAdCreationFormData('specifications', newSpecs);
 
     const newErrors = { ...specErrors };
-    if (value.length > 100) {
-      newErrors[index] = l.errorSpecificationTooLong;
-    } else if (value.length < 5) {
-      newErrors[index] = l.errorSpecificationTooShort;
+    const keyFilled = newSpecs[index].key.trim().length > 0;
+    const valueFilled = newSpecs[index].value.trim().length > 0;
+    if (keyFilled !== valueFilled) {
+      newErrors[index] = l.errorSpecificationIncomplete;
     } else {
       delete newErrors[index];
     }
@@ -70,7 +69,7 @@ export const AdDetailsStep = ({
 
   const addSpec = () => {
     if (specs.length < 10) {
-      setSpecs([...specs, '']);
+      setSpecs([...specs, { key: '', value: '' }]);
     }
   };
 
@@ -160,39 +159,49 @@ export const AdDetailsStep = ({
           errorMessage={errors.minInterval}
           placeholder={l.requiredToFillIn}
         />
-        {categories && (
-          <View>
-            <CustomText
-              style={{ color: colors.theme.blue.dark }}
-              highlight
-              className={`pl-1 text-15 mb-1`}
-            >
-              {l.category.toUpperCase()}
-            </CustomText>
-            {form.adCreationFormData.adType && (
-              <SortingMenu<CategoryType | null>
-                items={getProductTypeCategoryItems({
-                  l,
-                  productType: form.adCreationFormData.adType,
-                  allCategories: categories,
-                })}
-                value={category}
-                onSelect={v => handleCategory(v)}
-                width={screenWidth * 0.6}
-                maxWidth={240}
-              />
-            )}
 
-            {errors.categoryId && (
-              <CustomText
-                style={{ color: colors.base.red.primary }}
-                className={'text-12'}
-              >
-                {errors.categoryId}
-              </CustomText>
-            )}
-          </View>
-        )}
+        {/* КАТЕГОРИЯ */}
+        <View>
+          <CustomText
+            style={{ color: colors.theme.blue.dark }}
+            highlight
+            className={`pl-1 text-15 mb-1`}
+          >
+            {l.category.toUpperCase()}
+          </CustomText>
+          <TouchableOpacity
+            onPress={() => setCategoryModalVisible(true)}
+            style={{
+              borderWidth: 1,
+              borderColor: errors.categoryId
+                ? colors.base.red.primary
+                : colors.base.grey.primary,
+              borderRadius: 8,
+              padding: 12,
+            }}
+          >
+            <CustomText
+              style={{
+                color: category
+                  ? colors.theme.black.primary
+                  : colors.base.neutral.greyDark,
+              }}
+            >
+              {category
+                ? ((l[category.name as keyof typeof l] as string) ?? category.name)
+                : l.requiredToFillIn}
+            </CustomText>
+          </TouchableOpacity>
+          {errors.categoryId && (
+            <CustomText
+              style={{ color: colors.base.red.primary }}
+              className={'text-12'}
+            >
+              {errors.categoryId}
+            </CustomText>
+          )}
+        </View>
+
         {/* SPECS */}
         <View>
           <CustomText
@@ -207,17 +216,17 @@ export const AdDetailsStep = ({
               <View key={index} className="gap-4 flex-row">
                 <View className={'flex-1'}>
                   <CustomInput
-                    value={spec}
-                    placeholder={`${l.specification} ${index + 1}`}
-                    onChangeText={text => handleSpecChange(index, text)}
+                    value={spec.key}
+                    placeholder={l.specificationKey}
+                    onChangeText={text => handleSpecChange(index, 'key', text)}
                     errorMessage={specErrors[index]}
                   />
                 </View>
                 <View className={'flex-1'}>
                   <CustomInput
-                    value={spec}
-                    placeholder={`${l.specification} ${index + 1}`}
-                    onChangeText={text => handleSpecChange(index, text)}
+                    value={spec.value}
+                    placeholder={l.specificationValue}
+                    onChangeText={text => handleSpecChange(index, 'value', text)}
                     errorMessage={specErrors[index]}
                   />
                 </View>
@@ -237,6 +246,16 @@ export const AdDetailsStep = ({
           </View>
         </View>
       </View>
+
+      {categories && (
+        <CategoryModal
+          visible={categoryModalVisible}
+          onClose={() => setCategoryModalVisible(false)}
+          onSelect={handleCategory}
+          categories={categories}
+          selected={category}
+        />
+      )}
     </ScrollView>
   );
 };

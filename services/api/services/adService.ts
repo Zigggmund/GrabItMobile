@@ -1,20 +1,19 @@
 import {
-  AdDetailsType,
   AdPreviewType,
   AdRentedType,
 } from '@/types/entities/AdType';
 
 import { AxiosResponse } from 'axios';
 
-import { AdCreationFormDataType } from '@/context/FormContext';
-
 import { ApiResponse } from '@/services/api/apiResponse';
 import { unwrap } from '@/services/api/apiUtils';
 import { api } from '@/services/api/instance';
 import {
   AdResponseDto,
+  CreateListingDto,
   SearchListingsRequestDto,
   SearchListingsResponseDto,
+  SetAvailabilityDto,
 } from '@/services/api/services/dto/ad.dto';
 
 export class AdService {
@@ -86,9 +85,16 @@ export class AdService {
   }
 
   // создание объявления
-  static async createAd(
-    ad: AdCreationFormDataType,
-  ): Promise<AxiosResponse<AdDetailsType>> {
-    return unwrap();
+  static async createAd(dto: CreateListingDto): Promise<AdResponseDto> {
+    return unwrap(
+      await api.post<ApiResponse<AdResponseDto>>('/rent/listings', dto),
+    );
+  }
+
+  // установка расписания доступности
+  static async setAvailability(listingId: string, dto: SetAvailabilityDto): Promise<void> {
+    await unwrap(
+      await api.put<ApiResponse<null>>(`/rent/listings/${listingId}/availability`, dto),
+    );
   }
 }
