@@ -25,6 +25,7 @@ export const translations = {
     lastName: 'Фамилия',
     firstAndLastName: 'Имя и фамилия',
     birthDate: 'Дата рождения',
+    dateFormat: 'дд.мм.гггг',
     confirmPassword: 'Подтвердите пароль',
     noAccountYet: 'Еще нет аккаунта?',
     loginIsImportant:
@@ -36,7 +37,7 @@ export const translations = {
     enterFirstName: 'Введите имя',
     enterLastName: 'Введите фамилию',
     enterPhoneNumber: 'Введите номер телефона',
-    enterBirthDate: 'Введите дату рождения (дд.мм.гггг)',
+    enterBirthDate: 'Введите дату рождения',
     selectLanguage: 'Выберите язык',
     registrationDate: 'Дата регистрации',
 
@@ -124,6 +125,7 @@ export const translations = {
     landlord: 'Арендодатель',
     preview: 'Превью-изображение',
     quantity: 'Количество',
+    calendar: 'Календарь',
 
     // Создание объявления
     step: 'Шаг',
@@ -145,6 +147,8 @@ export const translations = {
     // Reviews
     byHigh: 'Сначала положительные',
     byLow: 'Сначала отрицательные',
+
+    editAdTitle: 'Редактирование объявления',
 
     // Модалки профиля
     editProfileTitle: 'Редактирование профиля',
@@ -309,6 +313,7 @@ export const translations = {
     errorPreviewImageNull: 'Не выбрано превью-изображение',
     errorImageTooBig: 'Изображение слишком большого размера (>200Кб)',
     errorBigImageTooBig: 'Изображение слишком большого размера (>1000Кб)',
+    errorVideoTooBig: 'Видео слишком большое (>3.5МБ). Увеличьте лимит на сервере',
     errorCategoryIdNull: 'Не выбрана категория',
     errorCostNull: 'Не указана стоимость/некорректное число',
     errorCostZeroOrLess: 'Стоимость должна быть больше 0',
@@ -319,13 +324,15 @@ export const translations = {
     errorMinIntervalTooBig:
       'Минимальный интервал бронирования должен быть не более 24 часов',
     errorMediaArrayTooLong: 'Слишком много медиа файлов: не более 10',
-    errorAddressNull: 'Не указан адрес',
+    errorAddressNull: 'Ошибка при загрузки адреса',
     errorDatePeriodNull: 'Не указаны даты начала/конца периода',
     errorEndDateStartDateComparison:
       'Некорректная дата: дата окончания раньше даты начала',
     errorWeekDaysNull: 'Не выбрано ни одного дня недели',
     errorDayTimeNull:
       'Не выбрано ни одного промежутка для одного из указанных дней',
+    errorTimePeriodMinInterval:
+      'Временные промежутки не должны быть минимального интервала бронирования',
     errorPriceMinMaxInt: 'Только целые числа',
     errorPriceMinMaxMismatch: 'Минимум не может быть больше максимума',
 
@@ -342,6 +349,7 @@ export const translations = {
     warningFillProfile:
       'Данный профиль необходимо заполнить, иначе он будет удален через ... дней',
     warningDeleteAd: 'Вы уверены, что хотите удалить объявление?',
+    warningDeleteAvatar: 'Вы уверены, что хотите удалить аватар?',
 
     // Валидация
     validationEmail: 'Некорректная почта',
@@ -384,6 +392,7 @@ export const translations = {
     lastName: 'Last Name',
     firstAndLastName: 'First and last name',
     birthDate: 'Birth Date',
+    dateFormat: 'dd.mm.yyyy',
     confirmPassword: 'Confirm the password',
     noAccountYet: 'Not registered yet?',
     loginIsImportant: 'You need to log in to use the app.',
@@ -393,7 +402,7 @@ export const translations = {
     enterLastName: 'Enter your last name',
     enterUsername: 'Enter your username',
     enterPhoneNumber: 'Enter your phone (optional)',
-    enterBirthDate: 'Enter your birth date (dd.mm.yyyy)',
+    enterBirthDate: 'Enter your birth date',
     enterEmail: 'Enter your email',
     selectLanguage: 'Select a language',
     registrationDate: 'Registration date',
@@ -482,6 +491,7 @@ export const translations = {
     landlord: 'Landlord',
     preview: 'Preview image',
     quantity: 'Quantity',
+    calendar: 'Calendar',
 
     // AdCreation
     step: 'Step',
@@ -678,12 +688,15 @@ export const translations = {
     errorMediaArrayTooLong: 'Too many media files; no more than 10 allowed',
     errorImageTooBig: 'The image is too large (>200Kb)',
     errorBigImageTooBig: 'The image is too large (>1000Kb)',
-    errorAddressNull: 'Address is not specified',
+    errorVideoTooBig: 'Video is too large (>3.5MB). Increase the server limit',
+    errorAddressNull: 'Error uploading the address',
     errorDatePeriodNull: 'Start/end dates of the period is not specified',
     errorEndDateStartDateComparison:
       'Invalid date: end date is earlier than start date',
     errorWeekDaysNull: 'No weekdays selected',
     errorDayTimeNull: 'No time slot selected for one of the chosen days',
+    errorTimePeriodMinInterval:
+      'Time periods must not be shorter than the minimum booking interval',
     errorPriceMinMaxInt: 'Integers only',
     errorPriceMinMaxMismatch: 'Min cannot be greater than max',
 
@@ -700,6 +713,7 @@ export const translations = {
     warningFillProfile:
       'This profile must be filled in, otherwise it will be deleted after ... days',
     warningDeleteAd: 'Are you sure you want to delete this listing?',
+    warningDeleteAvatar: 'Are you sure you want to delete your avatar?',
 
     // Validation
     validationEmail: 'Incorrect email',
@@ -715,5 +729,7 @@ export const translations = {
     validationUsername:
       'Username must be at least 6 characters and no more than 20 characters long, and must not contain spaces',
     validationUsernameAlreadyTaken: 'This username is already taken',
+
+    editAdTitle: 'Edit Listing',
   },
 };

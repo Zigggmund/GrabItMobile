@@ -9,7 +9,7 @@ import { useTheme } from '@/hooks/useTheme';
 
 import { CustomText } from '@/components/ui/text/CustomText';
 
-type buttonType = 'primary' | 'secondary' | 'red' | 'green';
+type buttonType = 'primary' | 'secondary' | 'red' | 'green' | 'highlighted';
 
 interface CustomButtonProps extends TouchableOpacityProps {
   type?: buttonType;
@@ -40,24 +40,41 @@ export const CustomButton = ({
   const buttonColorMap = {
     primary: colors.components.button.primary,
     secondary: colors.components.button.secondary,
+    highlighted: { bg: colors.base.orange.dark },
     red: { bg: colors.base.red.bright },
     green: { bg: colors.base.green.bright },
   } as const;
   const colorRef = buttonColorMap[type];
-  const borderWidth = type == 'primary' ? (isSmall ? 1 : 2) : 0;
-  const sizeClass = isSmall ? 'px-4 py-2 gap-4' : 'px-8 py-3 gap-6 min-w-40';
+  const borderWidth =
+    type == 'primary' || type == 'highlighted' ? (isSmall ? 1 : 2) : 0;
+  const isCircled = iconSource && !text.trim();
+
+  const sizeClass = isCircled
+    ? 'p-0 min-w-0'
+    : isSmall
+      ? 'px-4 py-2 gap-4'
+      : 'px-8 py-3 gap-6 min-w-40';
+  const radiusClass = isCircled ? 'rounded-full' : 'rounded-2xl';
+
+  const circleSize = iconSize + (iconSize > 25 ? 24 : 20);
+  const dynamicCircleStyle = isCircled
+    ? { width: circleSize, height: circleSize }
+    : {};
 
   return (
     <TouchableOpacity
       activeOpacity={0.5}
       onPress={!disabled ? onPress : undefined}
       disabled={disabled}
-      style={{
-        backgroundColor: colorRef.bg,
-        borderWidth: borderWidth,
-        opacity: disabled ? 0.7 : 1,
-      }}
-      className={`rounded-2xl items-center justify-center flex-row ${sizeClass} ${className}`}
+      style={[
+        {
+          backgroundColor: colorRef.bg,
+          borderWidth: borderWidth,
+          opacity: disabled ? 0.7 : 1,
+        },
+        dynamicCircleStyle,
+      ]}
+      className={`${radiusClass} items-center justify-center flex-row ${sizeClass} ${className}`}
       {...props}
     >
       <CustomText

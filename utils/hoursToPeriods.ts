@@ -31,7 +31,7 @@ export const hoursToPeriods = (hours: string[]): TimePeriodType[] => {
 
   result.push({
     startTime: start,
-    endTime: HOUR_INTERVALS[prevIndex + 1],
+    endTime: prevIndex + 1 < HOUR_INTERVALS.length ? HOUR_INTERVALS[prevIndex + 1] : '24',
   });
 
   return result;

@@ -11,9 +11,11 @@ interface TagProps {
   className?: string;
   textClassName?: string;
   width?: number | null;
+  isSmall?: boolean;
 }
 
 export function Tag({
+  isSmall = false,
   label,
   selected,
   onPress,
@@ -26,7 +28,7 @@ export function Tag({
   return (
     <TouchableOpacity
       onPress={onPress}
-      className={`px-4 py-2 rounded-full items-center justify-center ${className}`}
+      className={`${isSmall ? 'px-2 py-1.5' : 'px-4 py-2'} rounded-full items-center justify-center ${className}`}
       style={{
         width: width ?? 'auto',
         borderWidth: 1,
@@ -42,7 +44,7 @@ export function Tag({
             ? colors.components.tag.default.text
             : colors.base.neutral.whitePrimary,
         }}
-        className={`text-16 ${textClassName}`}
+        className={`${isSmall ? 'text-15' : 'text-16'} ${textClassName}`}
       >
         {label}
       </CustomText>

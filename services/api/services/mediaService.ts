@@ -7,12 +7,14 @@ export class MediaService {
   static async uploadMedia(
     listingId: string,
     fileUri: string,
+    mimeType: string = 'image/jpeg',
   ): Promise<{ id: string; url: string }> {
     const formData = new FormData();
+    const ext = mimeType.startsWith('video') ? 'mp4' : 'jpg';
     formData.append('file', {
       uri: fileUri,
-      type: 'image/jpeg',
-      name: 'media.jpg',
+      type: mimeType,
+      name: `media.${ext}`,
     } as unknown as Blob);
 
     return unwrap(

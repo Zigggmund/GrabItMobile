@@ -1,28 +1,32 @@
-import { AxiosResponse } from 'axios';
-import { ReviewType } from '@/types/entities/ReviewType';
-import { api } from '@/services/api/instance';
 import { ApiResponse } from '@/services/api/apiResponse';
-import { GetReviewsResponseDto } from '@/services/api/services/dto/review.dto';
 import { unwrap } from '@/services/api/apiUtils';
-
+import { api } from '@/services/api/instance';
+import { GetReviewsResponseDto } from '@/services/api/services/dto/review.dto';
 
 export class ReviewService {
-
-  // получение отзывов по пользователю
+  // получение отзывов по объявлению
   static async getUserReviews(
     userId: string | number,
-  ): Promise<AxiosResponse<ReviewType[]>> {
-    console.log('Getting user reviews attempt, userId:', userId);
-    return api.get('/review');
+    params?: { page?: number; page_size?: number; sort_by?: string },
+  ): Promise<GetReviewsResponseDto> {
+    return unwrap(
+      await api.get<ApiResponse<GetReviewsResponseDto>>(
+        `/rent/users/${userId}/reviews`,
+        { params },
+      ),
+    );
   }
 
   // получение отзывов по объявлению
   static async getAdReviews(
     adId: string | number,
-    params?: { page?: number; page_size?: number },
+    params?: { page?: number; page_size?: number; sort_by?: string },
   ): Promise<GetReviewsResponseDto> {
     return unwrap(
-      await api.get<ApiResponse<GetReviewsResponseDto>>(`/rent/listings/${adId}/reviews`, { params }),
+      await api.get<ApiResponse<GetReviewsResponseDto>>(
+        `/rent/listings/${adId}/reviews`,
+        { params },
+      ),
     );
   }
 }

@@ -138,7 +138,11 @@ export default function Search() {
 
   useEffect(() => {
     if (!data?.items) return;
-    setAllAds(prev => (page === 1 ? data.items : [...prev, ...data.items]));
+    setAllAds(prev => {
+      if (page === 1) return data.items;
+      const existingIds = new Set(prev.map(a => a.id));
+      return [...prev, ...data.items.filter(a => !existingIds.has(a.id))];
+    });
   }, [data]);
 
   const ads = allAds;
@@ -505,9 +509,9 @@ export default function Search() {
                 </CustomText>
               )}
 
-              <View className={'px-10'}>
+              <View className={'px-16'}>
                 <CustomButton
-                  type={'primary'}
+                  type={'highlighted'}
                   textClassName={'text-18'}
                   text={l.btnApply}
                   onPress={handleApplyFilters}

@@ -17,6 +17,7 @@ import { useGetUserRentedAds } from '@/hooks/ad/useGetUserRentedAds';
 import { useProfile } from '@/hooks/user/useProfile';
 
 import ErrorMessage from '@/components/common/ErrorMessage';
+import { Tag } from '@/components/common/Tag';
 
 import { BIG_AD_WIDTH } from '@/constants/sizes';
 
@@ -26,6 +27,7 @@ export default function RentPage() {
   const profile = useProfile();
   const [isOpenCurrent, setIsOpenCurrent] = useState(true);
   const [isOpenEnded, setIsOpenEnded] = useState(false);
+  const [status, setStatus] = useState();
 
   const {
     data: rentedAds = [],
@@ -50,6 +52,34 @@ export default function RentPage() {
   return (
     <ScreenContainer>
       <ScrollView>
+        <View
+          className={'gap-x-2 px-2 gap-y-3 flex-row  justify-center flex-wrap'}
+        >
+          <Tag
+            isSmall
+            label={l.active}
+            selected={status == 'active'}
+            onPress={() => setStatus('active')}
+          />
+          <Tag
+            isSmall
+            label={l.paused}
+            selected={status == 'paused'}
+            onPress={() => setStatus('paused')}
+          />
+          <Tag
+            isSmall
+            label={l.deleted}
+            selected={status == 'deleted'}
+            onPress={() => setStatus('deleted')}
+          />
+        </View>
+        <CustomText
+          className={'text-14'}
+          style={{ color: colors.theme.blue.bright }}
+        >
+          {/*{l.adsFound}: {total}*/}
+        </CustomText>
         <View
           style={{ width: BIG_AD_WIDTH }}
           className={'pb-2 flex-row items-center justify-between'}

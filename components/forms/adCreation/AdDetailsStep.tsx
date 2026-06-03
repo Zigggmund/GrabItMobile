@@ -50,7 +50,11 @@ export const AdDetailsStep = ({
     if (value) console.log(`Категория ${value?.name} выбрана`);
   };
 
-  const handleSpecChange = (index: number, field: 'key' | 'value', value: string) => {
+  const handleSpecChange = (
+    index: number,
+    field: 'key' | 'value',
+    value: string,
+  ) => {
     const newSpecs = [...specs];
     newSpecs[index] = { ...newSpecs[index], [field]: value };
     setSpecs(newSpecs);
@@ -149,12 +153,15 @@ export const AdDetailsStep = ({
         />
 
         <CustomInput
-          value={form.adCreationFormData.minInterval?.toString()}
+          value={form.adCreationFormData.minHoursInterval?.toString()}
           label={`${l.minInterval} (${l.hours})`}
           keyboardType="numeric"
           onChangeText={text => {
             const numericValue = parseInt(text || '');
-            form.changeAdCreationFormData('minInterval', isNaN(numericValue) ? null : numericValue,);
+            form.changeAdCreationFormData(
+              'minHoursInterval',
+              isNaN(numericValue) ? null : numericValue,
+            );
           }}
           errorMessage={errors.minInterval}
           placeholder={l.requiredToFillIn}
@@ -188,7 +195,8 @@ export const AdDetailsStep = ({
               }}
             >
               {category
-                ? ((l[category.name as keyof typeof l] as string) ?? category.name)
+                ? ((l[category.name as keyof typeof l] as string) ??
+                  category.name)
                 : l.requiredToFillIn}
             </CustomText>
           </TouchableOpacity>
@@ -226,7 +234,9 @@ export const AdDetailsStep = ({
                   <CustomInput
                     value={spec.value}
                     placeholder={l.specificationValue}
-                    onChangeText={text => handleSpecChange(index, 'value', text)}
+                    onChangeText={text =>
+                      handleSpecChange(index, 'value', text)
+                    }
                     errorMessage={specErrors[index]}
                   />
                 </View>

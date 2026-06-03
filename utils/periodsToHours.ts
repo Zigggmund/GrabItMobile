@@ -7,7 +7,7 @@ export const periodsToHours = (periods: TimePeriodType[]): string[] => {
 
   periods.forEach(period => {
     const start = HOUR_INTERVALS.indexOf(period.startTime);
-    const end = HOUR_INTERVALS.indexOf(period.endTime);
+    const end = period.endTime === '24' ? HOUR_INTERVALS.length : HOUR_INTERVALS.indexOf(period.endTime);
 
     for (let i = start; i < end; i++) {
       result.push(HOUR_INTERVALS[i]);

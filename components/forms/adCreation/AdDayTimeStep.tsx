@@ -55,7 +55,7 @@ export const AdDayTimeStep = ({
     }
 
     // добавляем часы с учетом minInterval
-    const minInterval = form.adCreationFormData.minInterval || 1;
+    const minInterval = form.adCreationFormData.minHoursInterval || 1;
 
     const updatedHours = [...selectedHours];
 

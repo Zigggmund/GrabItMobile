@@ -28,6 +28,7 @@ interface Props {
   onClose: () => void;
   currentAvatarUrl: string | null;
   onAvatarChanged?: () => void;
+  cacheBuster?: number;
 }
 
 export default function AvatarUploadModal({
@@ -35,6 +36,7 @@ export default function AvatarUploadModal({
   onClose,
   currentAvatarUrl,
   onAvatarChanged,
+  cacheBuster,
 }: Props) {
   const { l } = useLanguage();
   const { colors } = useTheme();
@@ -114,7 +116,8 @@ export default function AvatarUploadModal({
     onClose();
   };
 
-  const previewUri = selectedUri ?? currentAvatarUrl;
+  const previewUri = selectedUri
+    ?? (currentAvatarUrl ? `${currentAvatarUrl}?t=${cacheBuster ?? 0}` : null);
   const PREVIEW_SIZE = 220;
 
   return (

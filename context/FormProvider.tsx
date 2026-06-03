@@ -20,7 +20,7 @@ const initialAdCreationData: AdCreationFormDataType = {
   uriMedias: [],
   weekDays: [false, false, false, false, false, false, false],
   weekDaysTime: [[], [], [], [], [], [], []],
-  minInterval: 1,
+  minHoursInterval: 1,
 };
 
 export const FormProvider = ({ children }: { children: ReactNode }) => {

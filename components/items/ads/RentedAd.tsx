@@ -14,6 +14,7 @@ import { CustomButton } from '@/components/ui/button/CustomButton';
 import { CustomText } from '@/components/ui/text/CustomText';
 
 import { icons } from '@/constants/icons';
+import { images } from '@/constants/images';
 
 interface RentedAdProps {
   ad: AdRentedType;
@@ -52,7 +53,7 @@ export default function RentedAd({ width, ad, isEnded }: RentedAdProps) {
             borderColor: colors.components.card.rent.border,
             borderRadius: 10,
           }}
-          source={{ uri: ad.previewImage.url }}
+          source={ad.previewImage.url ? { uri: ad.previewImage.url } : images.defaultAd}
         />
         <View className={'flex-1 pt-2 px-2 pb-2 justify-between'}>
           <View className={'gap-2'}>

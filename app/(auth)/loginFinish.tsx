@@ -184,7 +184,7 @@ export default function LoginFinishPage() {
             errorMessage={errors.lastName}
           />
           <CustomInput
-            label={l.birthDate}
+            label={`${l.birthDate} (${l.dateFormat})`}
             placeholder={l.enterBirthDate}
             value={form.birthDate}
             onChangeText={v => setField('birthDate', v)}

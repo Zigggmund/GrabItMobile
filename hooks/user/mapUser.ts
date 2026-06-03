@@ -25,7 +25,7 @@ export const mapUser = (dto: UserResponseDto): UserType => {
       renterReviews: dto.review_count_as_renter,
       landlordRating: dto.avg_rating_as_owner,
       renterRating: dto.avg_rating_as_renter,
-      offers: 0,
+      offers: dto.active_listings_count,
     },
   };
 };

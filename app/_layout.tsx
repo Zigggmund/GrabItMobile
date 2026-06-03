@@ -30,13 +30,19 @@ import { toastService } from '@/services/toastService';
 import 'react-native-reanimated';
 import '../global.css';
 import LoadingScreen from '@/app/loading';
-import MapLibreGL from '@maplibre/maplibre-react-native';
+import MapLibreGL, { Logger } from '@maplibre/maplibre-react-native';
 
 WebBrowser.maybeCompleteAuthSession();
+// для игнорирования логов timeout ошибок mapLibre
 MapLibreGL.setAccessToken('');
+Logger.setLogCallback(log => {
+  return (
+    log.message.includes('Read timed out') ||
+    log.message.includes('Request failed due to a permanent error')
+  );
+});
 
 // import YaMap from 'react-native-yamap';
-
 // YaMap.init('API_KEY');
 
 export default function RootLayout() {

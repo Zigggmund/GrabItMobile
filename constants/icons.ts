@@ -24,6 +24,8 @@ import profile from '@/assets/icons/profile.png';
 import rent from '@/assets/icons/rent.png';
 import search from '@/assets/icons/search.png';
 import settings from '@/assets/icons/settings.png';
+import trash from '@/assets/icons/minor/trash.png';
+import edit from '@/assets/icons/minor/edit.png';
 
 export const icons = {
   // pages
@@ -57,4 +59,6 @@ export const icons = {
   starFilled,
   mapMarker,
   warning,
+  edit,
+  trash,
 };

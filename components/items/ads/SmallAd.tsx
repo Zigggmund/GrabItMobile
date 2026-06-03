@@ -6,10 +6,10 @@ import { useHistory } from '@/hooks/useHistory';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTheme } from '@/hooks/useTheme';
 
-import { images } from '@/constants/images';
-
 import RatingStars from '@/components/common/RatingStars';
 import { CustomText } from '@/components/ui/text/CustomText';
+
+import { images } from '@/constants/images';
 
 interface SmallAdProps {
   ad: AdPreviewType;
@@ -49,7 +49,11 @@ export default function SmallAd({ width, ad }: SmallAdProps) {
             borderWidth: 1,
             borderColor: colors.components.card.rent.border,
           }}
-          source={ad.previewImage.url ? { uri: ad.previewImage.url } : images.rentCardExample}
+          source={
+            ad.previewImage.url
+              ? { uri: ad.previewImage.url }
+              : images.defaultAd
+          }
           height={100}
         />
         <View className={'pt-2 gap-1 px-2'}>

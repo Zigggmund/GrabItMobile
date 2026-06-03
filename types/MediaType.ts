@@ -1,4 +1,5 @@
 export interface MediaType {
-  id: number;
+  id: string;
   url: string;
+  mediaType?: 'photo' | 'video';
 }

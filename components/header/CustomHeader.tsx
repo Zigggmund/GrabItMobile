@@ -78,8 +78,10 @@ export default function CustomHeader({
                 ? colors.base.orange.primary
                 : colors.components.icon.navIcon.bg
             }
+            // source={user.avatar ? { uri: user.avatar } : icons.profile}
             source={icons.profile}
             size={70}
+            borderRadius={10}
             onPress={() =>
               navigate({
                 pathname: '/(tabs)/users/[username]',

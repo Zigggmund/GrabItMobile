@@ -1,7 +1,8 @@
+import { TranslationKey } from '@/types/LanguageType';
+
 import { ComponentType, useEffect, useMemo, useState } from 'react';
 import { InteractionManager, View } from 'react-native';
 
-import { AdCreationFormDataType } from '@/context/FormContext';
 import { useForm } from '@/hooks/useForm';
 import { useHistory } from '@/hooks/useHistory';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -9,35 +10,40 @@ import { useTheme } from '@/hooks/useTheme';
 
 import { periodsToHours } from '@/utils/periodsToHours';
 
-import { AdService } from '@/services/api/services/adService';
-import { MediaService } from '@/services/api/services/mediaService';
-import { SetAvailabilityDto } from '@/services/api/services/dto/ad.dto';
+import { AdCreationFormDataType } from '@/context/FormContext';
 
 import { ProgressBar } from '@/components/common/bars/ProgressBar';
 import { AdAllDatesStep } from '@/components/forms/adCreation/AdAllDatesStep';
 import { AdDayTimeStep } from '@/components/forms/adCreation/AdDayTimeStep';
 import { AdDetailsStep } from '@/components/forms/adCreation/AdDetailsStep';
 import { AdExceptionsStep } from '@/components/forms/adCreation/AdExceptionsStep';
-import { AdMapStep } from '@/components/forms/adCreation/AdMapStep';
+import { AdMapStep } from '@/components/forms/AdMapStep';
 import { AdMediaStep } from '@/components/forms/adCreation/AdMediaStep';
 import { AdTypeStep } from '@/components/forms/adCreation/AdTypeStep';
 import { AdWeekDaysStep } from '@/components/forms/adCreation/AdWeekDaysStep';
 import { CustomAlert } from '@/components/modals/CustomAlert';
 import { CustomButton } from '@/components/ui/button/CustomButton';
 import { CustomText } from '@/components/ui/text/CustomText';
-import { TranslationKey } from '@/types/LanguageType';
+
+import { AdService } from '@/services/api/services/adService';
+import { SetAvailabilityDto } from '@/services/api/services/dto/ad.dto';
+import { MediaService } from '@/services/api/services/mediaService';
 
 type StepComponentProps = {
   errors: Record<string, string>;
 };
 
-const buildAvailabilityPayload = (data: AdCreationFormDataType): SetAvailabilityDto => {
+const buildAvailabilityPayload = (
+  data: AdCreationFormDataType,
+): SetAvailabilityDto => {
   const fmt = (d: Date) => d.toISOString().split('T')[0];
   const weekdayHours: Record<string, number[]> = {};
   if (data.adType === 'product') {
     data.weekDays.forEach((selected, idx) => {
       if (!selected) return;
-      const hours = periodsToHours(data.weekDaysTime[idx]).map(h => parseInt(h.split('-')[0]));
+      const hours = periodsToHours(data.weekDaysTime[idx]).map(h =>
+        parseInt(h.split('-')[0]),
+      );
       weekdayHours[(idx + 1).toString()] = hours;
     });
   } else {
@@ -46,11 +52,13 @@ const buildAvailabilityPayload = (data: AdCreationFormDataType): SetAvailability
     }
   }
   return {
-    periods: [{
-      valid_from: fmt(data.firstDate!),
-      valid_until: fmt(data.endDate!),
-      weekday_hours: weekdayHours,
-    }],
+    periods: [
+      {
+        valid_from: fmt(data.firstDate!),
+        valid_until: fmt(data.endDate!),
+        weekday_hours: weekdayHours,
+      },
+    ],
   };
 };
 
@@ -155,11 +163,11 @@ export const CreateAdForm = () => {
           stepErrors.cost = l.errorCostZeroOrLess;
         }
 
-        if (!form.adCreationFormData.minInterval) {
+        if (!form.adCreationFormData.minHoursInterval) {
           stepErrors.minInterval = l.errorMinIntervalNull;
-        } else if (form.adCreationFormData.minInterval <= 0) {
+        } else if (form.adCreationFormData.minHoursInterval <= 0) {
           stepErrors.minInterval = l.errorMinIntervalZeroOrLess;
-        } else if (form.adCreationFormData.minInterval > 24) {
+        } else if (form.adCreationFormData.minHoursInterval > 24) {
           stepErrors.minInterval = l.errorMinIntervalTooBig;
         }
         // if (
@@ -203,16 +211,42 @@ export const CreateAdForm = () => {
         }
         break;
 
-      case 'adDayTimeStep':
+      case 'adDayTimeStep': {
+        const minHours = form.adCreationFormData.minHoursInterval ?? 1;
         form.adCreationFormData.weekDaysTime.forEach((weekDay, index) => {
           if (weekDay.length === 0 && form.adCreationFormData.weekDays[index]) {
             stepErrors.weekDaysTime = l.errorDayTimeNull;
           }
         });
+        const hasShortDayPeriod = form.adCreationFormData.weekDaysTime.some(
+          (weekDay, index) =>
+            form.adCreationFormData.weekDays[index] &&
+            weekDay.some(period => {
+              const startH = parseInt(period.startTime.split('-')[0]);
+              const endH = period.endTime === '24' ? 24 : parseInt(period.endTime.split('-')[0]);
+              return endH - startH < minHours;
+            }),
+        );
+        if (hasShortDayPeriod) {
+          stepErrors.weekDaysTime = l.errorTimePeriodMinInterval;
+        }
         break;
+      }
 
-      case 'adExceptionsStep':
+      case 'adExceptionsStep': {
+        const minHours = form.adCreationFormData.minHoursInterval ?? 1;
+        const hasShortExceptionPeriod = (form.adCreationFormData.exceptions ?? []).some(ex =>
+          ex.timings.some(period => {
+            const startH = parseInt(period.startTime.split('-')[0]);
+            const endH = period.endTime === '24' ? 24 : parseInt(period.endTime.split('-')[0]);
+            return endH - startH < minHours;
+          }),
+        );
+        if (hasShortExceptionPeriod) {
+          stepErrors.exceptions = l.errorTimePeriodMinInterval;
+        }
         break;
+      }
     }
 
     console.log(stepErrors, stepKey);
@@ -252,7 +286,9 @@ export const CreateAdForm = () => {
     setIsSubmitting(true);
     try {
       const data = form.adCreationFormData;
-      const validSpecs = data.specifications.filter(s => s.key.trim() && s.value.trim());
+      const validSpecs = data.specifications.filter(
+        s => s.key.trim() && s.value.trim(),
+      );
 
       const listing = await AdService.createAd({
         title: data.title,
@@ -260,7 +296,7 @@ export const CreateAdForm = () => {
         category_id: parseInt(data.categoryId!),
         price_per_hour: data.cost!,
         quantity: data.quantity!,
-        buffer_hours: data.minInterval ?? undefined,
+        buffer_hours: data.minHoursInterval ?? undefined,
         lat: data.latitude ?? undefined,
         lon: data.longitude ?? undefined,
         address: data.address ?? undefined,
@@ -273,13 +309,27 @@ export const CreateAdForm = () => {
       }
 
       if (data.uriMedias.length > 0) {
-        await Promise.all(data.uriMedias.map(m => MediaService.uploadMedia(listingId, m.url)));
+        await Promise.all(
+          data.uriMedias.map(m =>
+            MediaService.uploadMedia(
+              listingId,
+              m.url,
+              m.mediaType === 'video' ? 'video/mp4' : 'image/jpeg',
+            ),
+          ),
+        );
       }
 
-      await AdService.setAvailability(listingId, buildAvailabilityPayload(data));
+      await AdService.setAvailability(
+        listingId,
+        buildAvailabilityPayload(data),
+      );
 
       form.clear();
-      navigate({ pathname: '/(tabs)/ads/[id]', params: { id: listingId } }, false);
+      navigate(
+        { pathname: '/(tabs)/ads/[id]', params: { id: listingId } },
+        false,
+      );
     } catch {
       // global MutationCache.onError показывает тост
     } finally {

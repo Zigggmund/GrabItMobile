@@ -1,4 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
+import { ReviewType } from '@/types/entities/ReviewType';
+import { SortingReviewsType } from '@/types/SortingType';
+
+import { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, View } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 
@@ -14,10 +17,6 @@ import { Review } from '@/components/items/reviews/Review';
 import ScreenContainer from '@/components/layout/ScreenContainer';
 import { CustomText } from '@/components/ui/text/CustomText';
 
-import { PAGE_SIZE } from '@/constants/sizes';
-
-type SortingType = 'new' | 'old' | 'high' | 'low';
-
 export default function UserReviews() {
   const { id, username, reviewCount, userRating } = useLocalSearchParams<{
     id: string;
@@ -28,73 +27,41 @@ export default function UserReviews() {
   const { colors } = useTheme();
   const { l } = useLanguage();
 
-  const {
-    data: reviews = [],
-    isLoading: isLoadingReviews,
-    isError: isErrorReviews,
-  } = useGetUserReviews(id);
+  const [serverPage, setServerPage] = useState(1);
+  const [allReviews, setAllReviews] = useState<ReviewType[]>([]);
+  const [sortBy, setSortBy] = useState<SortingReviewsType>('new');
 
-  const [sortBy, setSortBy] = useState<SortingType>('new');
-  const [ratingFilterBy, setRatingFilterBy] = useState<number | null>(null);
-  const [page, setPage] = useState(1);
+  const { data, isLoading, isFetching } = useGetUserReviews(id, serverPage, sortBy);
 
-  // Sorting + data filters
-  const processedReviews = useMemo(() => {
-    let result = [...reviews];
+  const total = data?.total ?? 0;
 
-    if (ratingFilterBy != null)
-      result = result.filter(v => v.rating == ratingFilterBy);
-    switch (sortBy) {
-      case 'new':
-        result.sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt));
-        break;
-      case 'old':
-        result.sort((a, b) => +new Date(a.createdAt) - +new Date(b.createdAt));
-        break;
-      case 'high':
-        result.sort((a, b) => b.rating - a.rating);
-        break;
-      case 'low':
-        result.sort((a, b) => a.rating - b.rating);
-        break;
-    }
-
-    return result;
-  }, [reviews, ratingFilterBy, sortBy]);
-
-  // Pagination
-  const paginatedReviews = useMemo(() => {
-    return processedReviews.slice(0, page * PAGE_SIZE);
-  }, [processedReviews, page]);
-
-  // Сброс при изменении фильтров/режима сортировки
   useEffect(() => {
-    setPage(1);
-  }, [ratingFilterBy, sortBy]);
+    setServerPage(1);
+    setAllReviews([]);
+  }, [sortBy]);
 
-  const handleSorting = (value: SortingType) => {
-    setSortBy(value);
-    if (value) console.log(`Сортировка по критерию ${value} выполнена`);
-  };
+  useEffect(() => {
+    if (!data?.items) return;
+    setAllReviews(prev => {
+      if (serverPage === 1) return data.items;
+      const existingIds = new Set(prev.map(r => r.id));
+      return [...prev, ...data.items.filter(r => !existingIds.has(r.id))];
+    });
+  }, [data]);
 
-  const handleRatingFilter = (value: number | null) => {
-    setRatingFilterBy(value);
-    if (value) console.log(`Фильтрация по рейтингу ${value} выполнена`);
-  };
-
-  if (isLoadingReviews)
+  if (isLoading && allReviews.length === 0)
     return (
       <ScreenContainer>
         <ActivityIndicator />
       </ScreenContainer>
     );
-  if (isErrorReviews) {
+
+  if (!data && !isLoading)
     return (
       <ScreenContainer>
         <ErrorMessage text={l.errorAPI} />
       </ScreenContainer>
     );
-  }
 
   return (
     <ScreenContainer>
@@ -106,29 +73,29 @@ export default function UserReviews() {
         />
 
         <FlatList
-          keyExtractor={item => item.id.toString()}
-          data={paginatedReviews}
+          keyExtractor={item => item.id}
+          data={allReviews}
           renderItem={({ item, index }) => (
             <Review isUserReview review={item} index={index} />
           )}
           ItemSeparatorComponent={() => <View className={'h-4'} />}
           contentContainerStyle={{ paddingBottom: 20 }}
-          // infinite scroll
           onEndReached={() => {
-            if (paginatedReviews.length < processedReviews.length) {
-              setPage(prev => prev + 1);
+            if (allReviews.length < total && !isFetching) {
+              setServerPage(prev => prev + 1);
             }
           }}
           onEndReachedThreshold={0.5}
+          ListFooterComponent={() => (isFetching ? <ActivityIndicator /> : null)}
           ListHeaderComponentStyle={{ paddingBottom: 14, zIndex: 10 }}
           ListHeaderComponent={() => (
             <View className={'items-center gap-4'}>
               <ReviewDistribution
-                reviews={reviews}
-                value={ratingFilterBy}
-                onSelect={v => handleRatingFilter(v)}
+                reviews={allReviews}
+                value={null}
+                onSelect={() => {}}
               />
-              <SortingMenu<SortingType>
+              <SortingMenu<SortingReviewsType>
                 items={[
                   { label: l.byNew, value: 'new' },
                   { label: l.byOld, value: 'old' },
@@ -137,11 +104,7 @@ export default function UserReviews() {
                 ]}
                 value={sortBy}
                 width={220}
-                onSelect={v => {
-                  if (v !== null) {
-                    handleSorting(v);
-                  }
-                }}
+                onSelect={v => setSortBy(v)}
               />
             </View>
           )}

@@ -1,4 +1,4 @@
-import { ReviewType as ReviewEntityType } from '@/types/entities/ReviewType';
+import { ReviewType } from '@/types/entities/ReviewType';
 
 import { useQuery } from '@tanstack/react-query';
 
@@ -7,7 +7,7 @@ import { UserService } from '@/services/api/services/userService';
 
 // получение последних 3 отзывов по объявлению
 export const useGetAdShortenedReviews = (adId: number | string) => {
-  return useQuery<ReviewEntityType[]>({
+  return useQuery<ReviewType[]>({
     queryKey: ['adShortenedReviews', adId],
     queryFn: async () => {
       const res = await ReviewService.getAdReviews(adId, { page: 1, page_size: 3 });
@@ -28,7 +28,7 @@ export const useGetAdShortenedReviews = (adId: number | string) => {
             },
             createdAt: dto.created_at,
             rating: dto.rating,
-          } as ReviewEntityType;
+          };
         }),
       );
     },

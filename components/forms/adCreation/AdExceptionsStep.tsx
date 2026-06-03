@@ -15,6 +15,7 @@ import { Tag } from '@/components/common/Tag';
 import { CustomButton } from '@/components/ui/button/CustomButton';
 import { CustomText } from '@/components/ui/text/CustomText';
 
+import { icons } from '@/constants/icons';
 import { HOUR_INTERVALS } from '@/constants/time';
 
 type CalendarDay = {
@@ -130,12 +131,10 @@ export const AdExceptionsStep = ({
 
     let updatedHours = [...selectedHours];
 
-    // REMOVE
     if (selectedSet.has(clickedHour)) {
       updatedHours = updatedHours.filter(h => h !== clickedHour);
     } else {
-      // ADD
-      const minInterval = form.adCreationFormData.minInterval || 1;
+      const minInterval = form.adCreationFormData.minHoursInterval || 1;
 
       for (let i = 0; i < minInterval; i++) {
         const nextHour = hourIndex + i;
@@ -168,8 +167,6 @@ export const AdExceptionsStep = ({
 
     const filtered = exceptions.filter(e => e.date !== dateString);
 
-    // identical to default weekday
-    // => remove override
     if (areTimingsEqual(timings, defaultTimings)) {
       form.changeAdCreationFormData('exceptions', filtered);
 
@@ -199,11 +196,11 @@ export const AdExceptionsStep = ({
     }
   };
 
-  const clearException = () => {
-    if (!selectedException) return;
-
-    updateExceptionTimings(selectedException.date, []);
-  };
+  // const clearException = () => {
+  //   if (!selectedException) return;
+  //
+  //   updateExceptionTimings(selectedException.date, []);
+  // };
 
   return (
     <ScrollView contentContainerStyle={{ gap: 12, paddingBottom: 16 }}>
@@ -220,22 +217,25 @@ export const AdExceptionsStep = ({
           <Tag
             label={new Date(item.date).toLocaleDateString()}
             selected={selectedDate === item.date}
-            onPress={() => setSelectedDate(item.date)}
+            onPress={() =>
+              selectedDate === item.date
+                ? setSelectedDate(null)
+                : setSelectedDate(item.date)
+            }
           />
         )}
       />
 
       {!selectedException && (
         <Calendar
-          minDate={form.adCreationFormData.firstDate?.toISOString().split('T')[0]}
+          minDate={
+            form.adCreationFormData.firstDate?.toISOString().split('T')[0]
+          }
           maxDate={form.adCreationFormData.endDate?.toISOString().split('T')[0]}
           markedDates={markedDates}
           onDayPress={handleSelectDay}
         />
-      )
-
-      }
-
+      )}
 
       {selectedException && (
         <View className="gap-3">
@@ -267,19 +267,20 @@ export const AdExceptionsStep = ({
             }}
           />
 
-          <View className="flex-row gap-2">
+          <View className="flex-row justify-between flex-1">
             <CustomButton
-              text={l.btnReset}
-              type="red"
-              onPress={clearException}
-            />
-
-            <CustomButton
+              iconSize={20}
+              iconSource={icons.trash}
               text={l.btnDelete}
               type="red"
               onPress={() => removeException(selectedException.date)}
             />
+            <CustomButton text={l.calendar} type="primary" onPress={() => setSelectedDate(null)} />
           </View>
+          <View
+            className={'w-full h-0.5'}
+            style={{ backgroundColor: colors.base.orange.dark }}
+          />
         </View>
       )}
 

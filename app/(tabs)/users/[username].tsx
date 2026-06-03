@@ -6,6 +6,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { useProfileLogout } from '@/hooks/auth/useLogout';
 import { useDeleteAvatar } from '@/hooks/media/useDeleteAvatar';
 import { useHistory } from '@/hooks/useHistory';
+import { useMediaPreview } from '@/hooks/useMediaPreview';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useGetUserByUsername } from '@/hooks/user/useGetUserByUsername';
 import { useProfile } from '@/hooks/user/useProfile';
@@ -20,11 +21,13 @@ import RatingStars from '@/components/common/RatingStars';
 import ScreenContainer from '@/components/layout/ScreenContainer';
 import AvatarUploadModal from '@/components/modals/AvatarUploadModal';
 import EditProfileModal from '@/components/modals/EditProfileModal';
+import { PreviewMediaModal } from '@/components/modals/PreviewMediaModal';
 import { CustomButton } from '@/components/ui/button/CustomButton';
 import { CustomIcon } from '@/components/ui/icon/CustomIcon';
 import { CustomText } from '@/components/ui/text/CustomText';
 
 import { icons } from '@/constants/icons';
+import { CustomAlert } from '@/components/modals/CustomAlert';
 
 export default function UserProfile() {
   const { colors } = useTheme();
@@ -33,6 +36,7 @@ export default function UserProfile() {
   const profile = useProfile();
   const { navigate } = useHistory();
   const queryClient = useQueryClient();
+  const { visible, openPreview, closePreview, uri: imageUri } = useMediaPreview();
 
   const deleteAvatar = useDeleteAvatar();
 
@@ -94,10 +98,10 @@ export default function UserProfile() {
               {user?.username}
             </CustomText>
 
-            <GreyBlock className={'items-center w-full gap-2'}>
+            <GreyBlock className={'items-center w-full gap-2 relative'}>
               <ProfileAvatar
-                // source={user?.avatar}
                 source={user.avatar}
+                onPress={() => openPreview(user.avatar)}
                 cacheBuster={avatarVersion}
                 size={300}
                 isProfilePage
@@ -110,27 +114,41 @@ export default function UserProfile() {
               {/*  {user?.description}*/}
               {/*</CustomText>*/}
               {isMine && (
-                <View className={'justify-between flex-row gap-6'}>
+                <>
                   <CustomButton
                     type={'red'}
                     disabled={user.avatar == null || deleteAvatar.isPending}
-                    textClassName={'text-16'}
-                    text={deleteAvatar.isPending ? l.loading : l.btnDelete}
-                    onPress={() =>
+                    className={'absolute left-4 bottom-4'}
+                    iconSize={35}
+                    iconSource={icons.trash}
+                    // textClassName={'text-16'}
+                    // text={deleteAvatar.isPending ? l.loading : l.btnDelete}
+                    onPress={async () => {
+                      const confirmed = await CustomAlert({
+                        message: l.warningDeleteAvatar,
+                        confirmation: l.confirmation,
+                        btnCancel: l.btnCancel,
+                        btnConfirm: l.btnConfirm,
+                      });
+                      if (!confirmed) return;
                       deleteAvatar.mutate(undefined, {
                         onSuccess: () => {
                           queryClient.invalidateQueries({ queryKey: ['me'] });
                           setAvatarVersion(Date.now());
                         },
-                      })
-                    }
+                      });
+                    }}
                   />
                   <CustomButton
-                    textClassName={'text-16'}
-                    text={l.btnUpload}
+                    // textClassName={'text-16'}
+                    // text={l.btnUpload}
+                    className={'absolute right-4 bottom-4'}
+                    type={'secondary'}
+                    iconSize={35}
+                    iconSource={icons.edit}
                     onPress={() => setAvatarModalVisible(true)}
                   />
-                </View>
+                </>
               )}
             </GreyBlock>
 
@@ -336,6 +354,8 @@ export default function UserProfile() {
                 <View className={'px-24 pt-2'}>
                   <CustomButton
                     isSmall
+                    iconSize={24}
+                    iconSource={icons.edit}
                     type={'secondary'}
                     textClassName={'text-18 font-medium'}
                     className={'py-1.5'}
@@ -365,7 +385,7 @@ export default function UserProfile() {
                 <CustomButton
                   textClassName={'text-18'}
                   text={l.btnToOffers}
-                  className={'mb-2'}
+                  className={'mb-6'}
                   onPress={() =>
                     navigate({
                       pathname: '/(tabs)/users/landlordAds/[id]',
@@ -398,6 +418,12 @@ export default function UserProfile() {
         </View>
       </ScrollView>
 
+      <PreviewMediaModal
+        visible={visible}
+        uri={imageUri}
+        onClose={closePreview}
+      />
+
       {/* Модалки — только для своего профиля */}
       {isMine && user && (
         <>
@@ -405,6 +431,7 @@ export default function UserProfile() {
             visible={avatarModalVisible}
             onClose={() => setAvatarModalVisible(false)}
             currentAvatarUrl={user.avatar}
+            cacheBuster={avatarVersion}
             onAvatarChanged={() => setAvatarVersion(Date.now())}
           />
           <EditProfileModal

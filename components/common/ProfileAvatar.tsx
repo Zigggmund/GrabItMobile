@@ -12,12 +12,14 @@ interface ProfileAvatarProps {
   source: string | null;
   cacheBuster?: number;
   className?: string;
+  onPress?: () => void;
   // gender?: 'male' | 'female';
 }
 
 export function ProfileAvatar({
   size = 30,
   isProfilePage = false,
+  onPress,
   // gender = 'male',
   source,
   cacheBuster,
@@ -26,14 +28,17 @@ export function ProfileAvatar({
 }: ProfileAvatarProps) {
   const { navigate } = useHistory();
 
-  const onTouchableOpacityPress = useCallback(
-    () =>
-      navigate({
-        pathname: '/(tabs)/users/[username]',
-        params: { username: username },
-      }),
-    [navigate],
-  );
+  const onTouchableOpacityPress = useCallback(() => {
+    if (onPress) {
+      onPress();
+      return;
+    }
+
+    navigate({
+      pathname: '/(tabs)/users/[username]',
+      params: { username: username },
+    });
+  }, [navigate, username, onPress]);
   const borderRadius = isProfilePage ? size / 3 : size / 2;
   const imageUri = source ? `${source}?t=${cacheBuster ?? 0}` : null;
   const avatar = (
@@ -49,7 +54,7 @@ export function ProfileAvatar({
     />
   );
 
-  if (username == '' || isProfilePage) {
+  if ((username === '' && !onPress) || isProfilePage) {
     return avatar;
   }
 

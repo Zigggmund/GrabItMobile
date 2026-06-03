@@ -1,4 +1,5 @@
 import { PaginatedResponse } from '@/types/PaginatedResponse';
+import { MyAdStatus } from '@/types/entities/AdType';
 
 // ─── Media & Attributes ───────────────────────────────────────────────────────
 
@@ -25,9 +26,9 @@ export interface AdResponseDto {
   price_per_hour: number;
   quantity: number;
   buffer_hours: number;
-  lat: number | null;
-  lon: number | null;
-  address: string | null;
+  lat: number;
+  lon: number;
+  address: string;
   status: 'active' | 'paused' | 'deleted';
   avg_rating: number;
   review_count: number;
@@ -54,13 +55,20 @@ export interface AvailableSlotsResponseDto {
 export interface SearchListingsRequestDto {
   query?: string;
   category_id?: string;
+  owner_id?: string;
   min_price?: number; // ₽/час
   max_price?: number; // ₽/час
   lat?: number;
   lon?: number;
   radius_km?: number;
   // product_type?: string;
-  // sort_by: string;
+  sort_by?: string;
+  page: number;
+  page_size: number;
+}
+
+export interface MyAdsRequestDto {
+  status: MyAdStatus;
   page: number;
   page_size: number;
 }

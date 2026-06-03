@@ -1,8 +1,11 @@
-import { MediaType } from '@/types/MediaType';
 import { ReviewType } from '@/types/entities/ReviewType';
 import { UserCardType } from '@/types/entities/UserType';
+import { MediaType } from '@/types/MediaType';
 
 export type ProductType = 'product' | 'space' | 'service';
+
+export type MyAdStatus = 'active' | 'paused' | 'deleted';
+
 export interface SpecificationType {
   key: string;
   value: string;
@@ -33,9 +36,11 @@ export interface AdRentedType {
 }
 
 export interface AdDetailsType extends AdPreviewType {
-  lat: number | null;
-  lon: number | null;
-  media: MediaType[] | null;
+  lat: number;
+  lon: number;
+  quantity: number;
+  minHoursInterval: number;
+  media: MediaType[];
   createdDate: string;
   specifications: SpecificationType[];
   landlord: UserCardType;

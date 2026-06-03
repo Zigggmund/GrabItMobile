@@ -1,20 +1,27 @@
+import { CostType } from '@/types/CostType';
+import { ProductType } from '@/types/entities/AdType';
+import { CategoryType } from '@/types/entities/CategoryType';
+
 import { useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
   Image,
+  Pressable,
   ScrollView,
   TouchableOpacity,
   View,
 } from 'react-native';
 import MapLibreGL from '@maplibre/maplibre-react-native';
-import { useLocalSearchParams } from 'expo-router';
 import { useQueryClient } from '@tanstack/react-query';
+import { useLocalSearchParams } from 'expo-router';
 
 import { useGetAd } from '@/hooks/ad/useGetAd';
 import { useGetAdShortenedReviews } from '@/hooks/review/useGetAdShortenedReviews';
 import { useHistory } from '@/hooks/useHistory';
 import { useLanguage } from '@/hooks/useLanguage';
+import { useMediaPreview } from '@/hooks/useMediaPreview';
+import { useProfile } from '@/hooks/user/useProfile';
 import { useTheme } from '@/hooks/useTheme';
 
 import { dateFormat } from '@/utils/dateFormat';
@@ -28,24 +35,34 @@ import RatingStars from '@/components/common/RatingStars';
 import { Review } from '@/components/items/reviews/Review';
 import ScreenContainer from '@/components/layout/ScreenContainer';
 import AdMapModal from '@/components/modals/AdMapModal';
+import { PreviewMediaModal } from '@/components/modals/PreviewMediaModal';
 import { CustomButton } from '@/components/ui/button/CustomButton';
 import { CustomText } from '@/components/ui/text/CustomText';
 
+import { CustomAlert } from '@/components/modals/CustomAlert';
+
+import { AdService } from '@/services/api/services/adService';
+
 import { icons } from '@/constants/icons';
 import { images } from '@/constants/images';
-import { CostType } from '@/types/CostType';
-import { ProductType } from '@/types/entities/AdType';
-import { CategoryType } from '@/types/entities/CategoryType';
 
 const EMPTY_MAP_STYLE = { version: 8, sources: {}, layers: [] };
 
 export default function AdDetails() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { colors } = useTheme();
+  const { user: currentUser } = useProfile();
   const { l } = useLanguage();
-  const { navigate } = useHistory();
+  const { navigate, goBack } = useHistory();
   const queryClient = useQueryClient();
   const [mapModalVisible, setMapModalVisible] = useState(false);
+  const {
+    visible: mediaVisible,
+    uri: mediaUri,
+    mediaType,
+    openPreview,
+    closePreview,
+  } = useMediaPreview();
   const { data: ad, isLoading: isLoading, isError: isError } = useGetAd(id);
   // !!! заменить на ad.reviews
   const { data: reviews = [], isLoading: isReviewsLoading } =
@@ -54,11 +71,17 @@ export default function AdDetails() {
   const productType: ProductType = useMemo(() => {
     if (!ad) return 'product';
     const allCategories = [
-      ...(queryClient.getQueryData<CategoryType[]>(['categories', 'product']) ?? []),
-      ...(queryClient.getQueryData<CategoryType[]>(['categories', 'service']) ?? []),
-      ...(queryClient.getQueryData<CategoryType[]>(['categories', 'space']) ?? []),
+      ...(queryClient.getQueryData<CategoryType[]>(['categories', 'product']) ??
+        []),
+      ...(queryClient.getQueryData<CategoryType[]>(['categories', 'service']) ??
+        []),
+      ...(queryClient.getQueryData<CategoryType[]>(['categories', 'space']) ??
+        []),
     ];
-    return allCategories.find(c => c.id.toString() === ad.categoryId)?.productType ?? 'product';
+    return (
+      allCategories.find(c => c.id.toString() === ad.categoryId)?.productType ??
+      'product'
+    );
   }, [ad?.categoryId]);
 
   const prices: CostType[] = useMemo(() => {
@@ -116,6 +139,8 @@ export default function AdDetails() {
     //   params: { id: ad.landlord.toString() },
     // }
   };
+
+  const isMine = ad.landlord.username == currentUser?.username;
 
   return (
     <ScreenContainer>
@@ -176,15 +201,70 @@ export default function AdDetails() {
             </CustomText>
           </View>
 
-          <Image
-            style={{
-              borderRadius: 16,
-              borderWidth: 1,
-              borderColor: colors.components.card.rent.border,
-            }}
-            source={{ uri: ad.previewImage.url }}
-            height={250}
-          />
+          <Pressable
+            onPress={() =>
+              openPreview(ad.previewImage.url, ad.previewImage.mediaType)
+            }
+          >
+            <Image
+              style={{
+                borderRadius: 16,
+                borderWidth: 1,
+                borderColor: colors.components.card.rent.border,
+              }}
+              source={
+                ad.previewImage.url
+                  ? { uri: ad.previewImage.url }
+                  : images.defaultAd
+              }
+              height={250}
+            />
+          </Pressable>
+
+          {ad.media.length > 1 && (
+            <FlatList
+              horizontal
+              data={ad.media}
+              keyExtractor={(_, i) => i.toString()}
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ gap: 8 }}
+              renderItem={({ item }) => (
+                <Pressable
+                  onPress={() => openPreview(item.url, item.mediaType)}
+                >
+                  <View
+                    style={{
+                      width: 72,
+                      height: 72,
+                      borderRadius: 8,
+                      overflow: 'hidden',
+                    }}
+                  >
+                    {item.mediaType === 'video' ? (
+                      <View
+                        style={{
+                          flex: 1,
+                          backgroundColor: '#111',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <CustomText style={{ color: '#fff', fontSize: 22 }}>
+                          ▶
+                        </CustomText>
+                      </View>
+                    ) : (
+                      <Image
+                        source={{ uri: item.url }}
+                        style={{ width: '100%', height: '100%' }}
+                        resizeMode="cover"
+                      />
+                    )}
+                  </View>
+                </Pressable>
+              )}
+            />
+          )}
 
           <CustomText
             className={'font-bold text-24 ml-4'}
@@ -300,6 +380,7 @@ export default function AdDetails() {
           <View className={'mr-20 ml-20'}>
             <CustomButton
               isSmall
+              disabled={isMine}
               iconSize={20}
               textClassName={'text-18'}
               iconSource={icons.chat}
@@ -324,71 +405,66 @@ export default function AdDetails() {
             </CustomText>
           </GreyBlock>
 
-          {ad.lat !== null && ad.lon !== null ? (
-            <View
-              style={{
-                height: 180,
-                borderRadius: 16,
-                overflow: 'hidden',
-                borderWidth: 1,
-                borderColor: colors.components.card.rent.border,
-              }}
+          <View
+            style={{
+              height: 180,
+              borderRadius: 16,
+              overflow: 'hidden',
+              borderWidth: 1,
+              borderColor: colors.components.card.rent.border,
+            }}
+          >
+            <MapLibreGL.MapView
+              style={{ flex: 1 }}
+              mapStyle={EMPTY_MAP_STYLE}
+              scrollEnabled={false}
+              zoomEnabled={false}
+              rotateEnabled={false}
+              pitchEnabled={false}
             >
-              <MapLibreGL.MapView
-                style={{ flex: 1 }}
-                mapStyle={EMPTY_MAP_STYLE}
-                scrollEnabled={false}
-                zoomEnabled={false}
-                rotateEnabled={false}
-                pitchEnabled={false}
-              >
-                <MapLibreGL.Camera
-                  zoomLevel={14}
-                  centerCoordinate={[ad.lon, ad.lat]}
-                />
-                <MapLibreGL.RasterSource
-                  id="adPreviewOsmSource"
-                  tileUrlTemplates={['https://a.tile.openstreetmap.org/{z}/{x}/{y}.png']}
-                  tileSize={256}
-                >
-                  <MapLibreGL.RasterLayer id="adPreviewOsmLayer" />
-                </MapLibreGL.RasterSource>
-                <MapLibreGL.ShapeSource
-                  id="adPreviewMarkerSource"
-                  shape={{
-                    type: 'Feature',
-                    geometry: { type: 'Point', coordinates: [ad.lon, ad.lat] },
-                    properties: {},
-                  }}
-                >
-                  <MapLibreGL.CircleLayer
-                    id="adPreviewMarkerCircle"
-                    style={{
-                      circleRadius: 10,
-                      circleColor: colors.base.orange.primary,
-                      circleStrokeWidth: 2,
-                      circleStrokeColor: '#ffffff',
-                    }}
-                  />
-                </MapLibreGL.ShapeSource>
-              </MapLibreGL.MapView>
-              <TouchableOpacity
-                style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
-                onPress={() => setMapModalVisible(true)}
+              <MapLibreGL.Camera
+                zoomLevel={14}
+                centerCoordinate={[ad.lon, ad.lat]}
               />
-            </View>
-          ) : (
-            <Image
+              <MapLibreGL.RasterSource
+                id="adPreviewOsmSource"
+                tileUrlTemplates={[
+                  'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                ]}
+                tileSize={256}
+              >
+                <MapLibreGL.RasterLayer id="adPreviewOsmLayer" />
+              </MapLibreGL.RasterSource>
+              <MapLibreGL.ShapeSource
+                id="adPreviewMarkerSource"
+                shape={{
+                  type: 'Feature',
+                  geometry: { type: 'Point', coordinates: [ad.lon, ad.lat] },
+                  properties: {},
+                }}
+              >
+                <MapLibreGL.CircleLayer
+                  id="adPreviewMarkerCircle"
+                  style={{
+                    circleRadius: 10,
+                    circleColor: colors.base.orange.primary,
+                    circleStrokeWidth: 2,
+                    circleStrokeColor: '#ffffff',
+                  }}
+                />
+              </MapLibreGL.ShapeSource>
+            </MapLibreGL.MapView>
+            <TouchableOpacity
               style={{
-                borderRadius: 16,
-                borderWidth: 1,
-                borderColor: colors.components.card.rent.border,
-                width: '100%',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
               }}
-              source={images.mapExample}
-              height={180}
+              onPress={() => setMapModalVisible(true)}
             />
-          )}
+          </View>
 
           {/* ОПИСАНИЕ */}
           <GreyBlock className={'px-4 py-2 gap-4'}>
@@ -450,6 +526,9 @@ export default function AdDetails() {
             <CustomButton
               isSmall
               textClassName="text-19"
+              iconSize={20}
+              iconSource={icons.rent}
+              disabled={isMine}
               onPress={() =>
                 navigate({
                   pathname: '/(tabs)/ads/booking/[id]',
@@ -512,6 +591,13 @@ export default function AdDetails() {
           lon={ad.lon}
         />
       )}
+
+      <PreviewMediaModal
+        visible={mediaVisible}
+        uri={mediaUri}
+        mediaType={mediaType}
+        onClose={closePreview}
+      />
     </ScreenContainer>
   );
 }

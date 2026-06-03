@@ -55,7 +55,7 @@ export default function BigAd({ width, ad }: BigAdProps) {
           source={
             ad.previewImage.url
               ? { uri: ad.previewImage.url }
-              : images.rentCardExample
+              : images.defaultAd
           }
         />
         <View className={'flex-1 pt-2 px-2 pb-1 justify-between'}>

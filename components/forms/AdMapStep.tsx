@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { PermissionsAndroid, Platform, ScrollView, View } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import MapLibreGL from '@maplibre/maplibre-react-native';
@@ -16,7 +16,6 @@ import { useTheme } from '@/hooks/useTheme';
 
 import CustomInput from '@/components/ui/input/CustomInput';
 import { CustomText } from '@/components/ui/text/CustomText';
-
 import { MapService } from '@/services/api/services/mapService';
 
 export const AdMapStep = ({ errors }: { errors: Record<string, string> }) => {
@@ -69,9 +68,16 @@ export const AdMapStep = ({ errors }: { errors: Record<string, string> }) => {
     }
   }, []);
 
+  const skipInitialFetch = useRef(!!form.adCreationFormData.address);
+
   // Обновление адреса при смене координат
   useEffect(() => {
     if (!coords) return;
+
+    if (skipInitialFetch.current) {
+      skipInitialFetch.current = false;
+      return;
+    }
 
     const fetchAddress = async () => {
       try {

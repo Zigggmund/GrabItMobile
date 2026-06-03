@@ -192,7 +192,7 @@ export default function EditProfileModal({ visible, onClose, user }: Props) {
                 />
 
                 <CustomInput
-                  label={l.birthDate}
+                  label={`${l.birthDate} ${l.dateFormat}`}
                   value={birthDate}
                   onChangeText={setBirthDate}
                   placeholder={l.enterBirthDate}

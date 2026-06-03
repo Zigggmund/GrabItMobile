@@ -10,10 +10,11 @@ import { unwrap } from '@/services/api/apiUtils';
 import { api } from '@/services/api/instance';
 import {
   AdResponseDto,
-  CreateListingDto,
+  CreateListingDto, MyAdsRequestDto,
   SearchListingsRequestDto,
   SearchListingsResponseDto,
   SetAvailabilityDto,
+  UpdateListingDto,
 } from '@/services/api/services/dto/ad.dto';
 
 export class AdService {
@@ -56,11 +57,7 @@ export class AdService {
   }
 
   // получение собственных объявлений (с фильтром по статусу)
-  static async getMyListings(params?: {
-    status?: string;
-    page?: number;
-    page_size?: number;
-  }): Promise<SearchListingsResponseDto> {
+  static async getMyAds(params?: MyAdsRequestDto): Promise<SearchListingsResponseDto> {
     return unwrap(
       await api.get<ApiResponse<SearchListingsResponseDto>>('/rent/listings/my', { params }),
     );
@@ -88,6 +85,12 @@ export class AdService {
   static async createAd(dto: CreateListingDto): Promise<AdResponseDto> {
     return unwrap(
       await api.post<ApiResponse<AdResponseDto>>('/rent/listings', dto),
+    );
+  }
+
+  static async updateAd(listingId: string, dto: UpdateListingDto): Promise<void> {
+    await unwrap(
+      await api.put<ApiResponse<null>>(`/rent/listings/${listingId}`, dto),
     );
   }
 
