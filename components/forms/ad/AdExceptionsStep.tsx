@@ -38,7 +38,7 @@ export const AdExceptionsStep = ({
   const { colors } = useTheme();
   const { l } = useLanguage();
 
-  const exceptions = form.adCreationFormData.exceptions || [];
+  const exceptions = form.AdFormData.exceptions || [];
 
   const [selectedDate, setSelectedDate] = useState<string | null>(
     exceptions[0]?.date || null,
@@ -106,14 +106,14 @@ export const AdExceptionsStep = ({
     const weekdayIndex = getWeekDayIndex(dateString);
 
     const defaultTimings =
-      form.adCreationFormData.weekDaysTime[weekdayIndex] || [];
+      form.AdFormData.weekDaysTime[weekdayIndex] || [];
 
     const newException: ExceptionDayType = {
       date: dateString,
       timings: defaultTimings,
     };
 
-    form.changeAdCreationFormData('exceptions', [...exceptions, newException]);
+    form.changeAdFormData('exceptions', [...exceptions, newException]);
 
     setSelectedDate(dateString);
   };
@@ -134,7 +134,7 @@ export const AdExceptionsStep = ({
     if (selectedSet.has(clickedHour)) {
       updatedHours = updatedHours.filter(h => h !== clickedHour);
     } else {
-      const minInterval = form.adCreationFormData.minHoursInterval || 1;
+      const minInterval = form.AdFormData.minHoursInterval || 1;
 
       for (let i = 0; i < minInterval; i++) {
         const nextHour = hourIndex + i;
@@ -163,12 +163,12 @@ export const AdExceptionsStep = ({
   ) => {
     const weekdayIndex = getWeekDayIndex(dateString);
 
-    const defaultTimings = form.adCreationFormData.weekDaysTime[weekdayIndex];
+    const defaultTimings = form.AdFormData.weekDaysTime[weekdayIndex];
 
     const filtered = exceptions.filter(e => e.date !== dateString);
 
     if (areTimingsEqual(timings, defaultTimings)) {
-      form.changeAdCreationFormData('exceptions', filtered);
+      form.changeAdFormData('exceptions', filtered);
 
       if (selectedDate === dateString) {
         setSelectedDate(null);
@@ -177,7 +177,7 @@ export const AdExceptionsStep = ({
       return;
     }
 
-    form.changeAdCreationFormData('exceptions', [
+    form.changeAdFormData('exceptions', [
       ...filtered,
       {
         date: dateString,
@@ -189,7 +189,7 @@ export const AdExceptionsStep = ({
   const removeException = (dateString: string) => {
     const filtered = exceptions.filter(e => e.date !== dateString);
 
-    form.changeAdCreationFormData('exceptions', filtered);
+    form.changeAdFormData('exceptions', filtered);
 
     if (selectedDate === dateString) {
       setSelectedDate(null);
@@ -229,9 +229,9 @@ export const AdExceptionsStep = ({
       {!selectedException && (
         <Calendar
           minDate={
-            form.adCreationFormData.firstDate?.toISOString().split('T')[0]
+            form.AdFormData.firstDate?.toISOString().split('T')[0]
           }
-          maxDate={form.adCreationFormData.endDate?.toISOString().split('T')[0]}
+          maxDate={form.AdFormData.endDate?.toISOString().split('T')[0]}
           markedDates={markedDates}
           onDayPress={handleSelectDay}
         />

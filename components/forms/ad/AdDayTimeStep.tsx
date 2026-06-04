@@ -23,10 +23,10 @@ export const AdDayTimeStep = ({
   const form = useForm();
   const { colors } = useTheme();
   const [weekdaysTimings, setWeekdaysTimings] = useState(
-    form.adCreationFormData.weekDaysTime,
+    form.AdFormData.weekDaysTime,
   );
 
-  const formIndexes = form.adCreationFormData.weekDays;
+  const formIndexes = form.AdFormData.weekDays;
   const justDays = WEEKDAYS.filter((_, index) => formIndexes[index]);
   const menuDays = justDays.map(item => ({ label: item, value: item }));
   const [currentDay, setCurrentDay] = useState<string>(
@@ -55,7 +55,7 @@ export const AdDayTimeStep = ({
     }
 
     // добавляем часы с учетом minInterval
-    const minInterval = form.adCreationFormData.minHoursInterval || 1;
+    const minInterval = form.AdFormData.minHoursInterval || 1;
 
     const updatedHours = [...selectedHours];
 
@@ -83,7 +83,7 @@ export const AdDayTimeStep = ({
 
     setWeekdaysTimings(newWeekdaysTimings);
 
-    form.changeAdCreationFormData('weekDaysTime', newWeekdaysTimings);
+    form.changeAdFormData('weekDaysTime', newWeekdaysTimings);
   };
 
   return (

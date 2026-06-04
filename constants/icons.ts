@@ -26,6 +26,7 @@ import search from '@/assets/icons/search.png';
 import settings from '@/assets/icons/settings.png';
 import trash from '@/assets/icons/minor/trash.png';
 import edit from '@/assets/icons/minor/edit.png';
+import notifications from '@/assets/icons/minor/notifications.png';
 
 export const icons = {
   // pages
@@ -61,4 +62,5 @@ export const icons = {
   warning,
   edit,
   trash,
+  notifications,
 };

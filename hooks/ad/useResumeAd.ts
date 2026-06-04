@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { AdService } from '@/services/api/services/adService';
 
-export const useResumeListing = () => {
+export const useResumeAd = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (listingId: string) => AdService.resumeListing(listingId),

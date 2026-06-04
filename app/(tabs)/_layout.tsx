@@ -37,6 +37,7 @@ export default function TabsLayout() {
 
   // Подсвечивать настройки?
   const isSettingsScreen = segments.includes('settings');
+  const isNotificationsScreen = segments.includes('notifications');
 
   // Показывать back?
   const current = segments[segments.length - 1];
@@ -56,6 +57,7 @@ export default function TabsLayout() {
           isSettingsScreen={isSettingsScreen}
           hasBack={hasBack}
           isUserProfile={isUserProfile}
+          isUserNotifications={isNotificationsScreen}
         />
       )}
       <Tabs
@@ -110,7 +112,7 @@ export default function TabsLayout() {
         <Tabs.Screen name={'ads/[id]'} options={{ href: null }} />
         <Tabs.Screen name={'ads/edit/[id]'} options={{ href: null }} />
         <Tabs.Screen name={'ads/createAd'} options={{ href: null }} />
-        <Tabs.Screen name={'ads/booking/[id]'} options={{ href: null }} />
+        <Tabs.Screen name={'ads/bookings/[id]'} options={{ href: null }} />
         <Tabs.Screen name={'ads/reviews/[id]'} options={{ href: null }} />
         <Tabs.Screen name={'ads/map/[id]'} options={{ href: null }} />
       </Tabs>

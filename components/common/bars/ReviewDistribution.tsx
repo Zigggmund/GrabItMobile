@@ -18,7 +18,7 @@ interface ReviewDistributionProps {
 
 export default function ReviewDistribution({
   reviews,
-  value,
+  value, // рейтинг в звездах
   onSelect,
 }: ReviewDistributionProps) {
   const { colors } = useTheme();

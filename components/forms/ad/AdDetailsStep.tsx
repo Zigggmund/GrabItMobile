@@ -25,15 +25,15 @@ export const AdDetailsStep = ({
   const form = useForm();
 
   // Все хуки — до любого условного возврата
-  const adType = form.adCreationFormData.adType ?? 'product';
+  const adType = form.AdFormData.adType ?? 'product';
   const { data: categories } = useGetProductTypeCategories(adType);
 
   const [category, setCategory] = useState<CategoryType | null>(null);
   const [categoryModalVisible, setCategoryModalVisible] = useState(false);
 
   const [specs, setSpecs] = useState<{ key: string; value: string }[]>(
-    form.adCreationFormData.specifications.length > 0
-      ? form.adCreationFormData.specifications
+    form.AdFormData.specifications.length > 0
+      ? form.AdFormData.specifications
       : [{ key: '', value: '' }],
   );
   const [specErrors, setSpecErrors] = useState<Record<number, string>>({});
@@ -42,11 +42,11 @@ export const AdDetailsStep = ({
   //   (form.adCreationFormData.cost || '').toString(),
   // );
 
-  if (!form.adCreationFormData.adType) return null;
+  if (!form.AdFormData.adType) return null;
 
   const handleCategory = (value: CategoryType | null) => {
     setCategory(value);
-    form.changeAdCreationFormData('categoryId', value?.id.toString() ?? null);
+    form.changeAdFormData('categoryId', value?.id.toString() ?? null);
     if (value) console.log(`Категория ${value?.name} выбрана`);
   };
 
@@ -58,7 +58,7 @@ export const AdDetailsStep = ({
     const newSpecs = [...specs];
     newSpecs[index] = { ...newSpecs[index], [field]: value };
     setSpecs(newSpecs);
-    form.changeAdCreationFormData('specifications', newSpecs);
+    form.changeAdFormData('specifications', newSpecs);
 
     const newErrors = { ...specErrors };
     const keyFilled = newSpecs[index].key.trim().length > 0;
@@ -80,7 +80,7 @@ export const AdDetailsStep = ({
   const removeSpec = (index: number) => {
     const newSpecs = specs.filter((_, i) => i !== index);
     setSpecs(newSpecs);
-    form.changeAdCreationFormData('specifications', newSpecs);
+    form.changeAdFormData('specifications', newSpecs);
 
     const newErrors = { ...specErrors };
     delete newErrors[index];
@@ -91,19 +91,19 @@ export const AdDetailsStep = ({
     <ScrollView>
       <View className="gap-4 flex-1 w-full mb-24">
         <CustomInput
-          value={form.adCreationFormData.title}
+          value={form.AdFormData.title}
           label={l.name}
-          onChangeText={text => form.changeAdCreationFormData('title', text)}
+          onChangeText={text => form.changeAdFormData('title', text)}
           errorMessage={errors.title}
           placeholder={l.requiredToFillIn}
         />
         <CustomInput
-          value={form.adCreationFormData.quantity?.toString()}
+          value={form.AdFormData.quantity?.toString()}
           label={l.quantity}
           keyboardType="numeric"
           onChangeText={text => {
             const numericValue = parseInt(text || '');
-            form.changeAdCreationFormData(
+            form.changeAdFormData(
               'quantity',
               isNaN(numericValue) ? null : numericValue,
             );
@@ -120,22 +120,22 @@ export const AdDetailsStep = ({
           // }}
         />
         <CustomInput
-          value={form.adCreationFormData.description}
+          value={form.AdFormData.description}
           label={l.description}
           multiline
           onChangeText={text =>
-            form.changeAdCreationFormData('description', text)
+            form.changeAdFormData('description', text)
           }
           errorMessage={errors.description}
           placeholder={l.optional}
         />
         <CustomInput
-          value={form.adCreationFormData.cost?.toString()}
+          value={form.AdFormData.cost?.toString()}
           label={`${l.price} (${l.rubPerHour})`}
           keyboardType="numeric"
           onChangeText={text => {
             const numericValue = parseInt(text || '');
-            form.changeAdCreationFormData(
+            form.changeAdFormData(
               'cost',
               isNaN(numericValue) ? null : numericValue,
             );
@@ -153,12 +153,12 @@ export const AdDetailsStep = ({
         />
 
         <CustomInput
-          value={form.adCreationFormData.minHoursInterval?.toString()}
+          value={form.AdFormData.minHoursInterval?.toString()}
           label={`${l.minInterval} (${l.hours})`}
           keyboardType="numeric"
           onChangeText={text => {
             const numericValue = parseInt(text || '');
-            form.changeAdCreationFormData(
+            form.changeAdFormData(
               'minHoursInterval',
               isNaN(numericValue) ? null : numericValue,
             );

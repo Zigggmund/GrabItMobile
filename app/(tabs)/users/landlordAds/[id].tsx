@@ -26,18 +26,19 @@ export default function LandlordAds() {
   const [serverPage, setServerPage] = useState(1);
   const [allAds, setAllAds] = useState<AdPreviewType[]>([]);
   const [sortBy, setSortBy] = useState<SortingAdsType>('new');
+  const [total, setTotal] = useState(0);
 
   const { data, isLoading, isError, isFetching } = useGetUserAds(id, sortBy, serverPage);
-
-  const total = data?.total ?? 0;
 
   useEffect(() => {
     setServerPage(1);
     setAllAds([]);
+    setTotal(0);
   }, [sortBy]);
 
   useEffect(() => {
     if (!data?.items) return;
+    if (data.total > 0) setTotal(data.total);
     setAllAds(prev => {
       if (serverPage === 1) return data.items;
       const existingIds = new Set(prev.map(a => a.id));
@@ -62,7 +63,16 @@ export default function LandlordAds() {
   return (
     <ScreenContainer>
       <View className={'px-4 gap-4'}>
-        <LandlordAdsHeader landlordName={username} adsCount={total} />
+        <View className={'gap-2'}>
+          <LandlordAdsHeader landlordName={username} adsCount={total} />
+          <CustomText
+            className={'self-start text-14'}
+            style={{ color: colors.theme.blue.bright }}
+          >
+            {l.adsFound}: {total}
+          </CustomText>
+        </View>
+
 
         <FlatList
           data={allAds}
@@ -71,7 +81,7 @@ export default function LandlordAds() {
           ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
           contentContainerStyle={{ paddingBottom: 20 }}
           onEndReached={() => {
-            if (allAds.length < total && !isFetching) {
+            if (allAds.length > 0 && allAds.length < total && !isFetching) {
               setServerPage(prev => prev + 1);
             }
           }}

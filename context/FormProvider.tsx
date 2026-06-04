@@ -1,18 +1,19 @@
+import { ActionType } from '@/types/SubscriptionType';
+
 import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 
 import { useHistory } from '@/hooks/useHistory';
 import { useLanguage } from '@/hooks/useLanguage';
 
 import {
-  AdCreationFormDataType,
+  AdFormDataType,
   BookingFormDataType,
   FormContext,
 } from '@/context/FormContext';
 
 import { CustomAlert } from '@/components/modals/CustomAlert';
-import { ActionType } from '@/types/SubscriptionType';
 
-const initialAdCreationData: AdCreationFormDataType = {
+const initialAdData: AdFormDataType = {
   title: '',
   quantity: 1,
   description: '',
@@ -28,8 +29,7 @@ export const FormProvider = ({ children }: { children: ReactNode }) => {
   const history = useHistory();
 
   const [isFilled, setIsFilled] = useState(false);
-  const [adCreationFormData, setAdCreationFormData] =
-    useState<AdCreationFormDataType>(initialAdCreationData);
+  const [AdFormData, setAdFormData] = useState<AdFormDataType>(initialAdData);
   const [bookingFormData, setBookingFormData] = useState<BookingFormDataType>(
     {},
   );
@@ -85,12 +85,12 @@ export const FormProvider = ({ children }: { children: ReactNode }) => {
     return () => history.unsubscribeAttemptLeave(attemptLeave);
   }, [attemptLeave]);
 
-  const changeAdCreationFormData = <K extends keyof AdCreationFormDataType>(
+  const changeAdFormData = <K extends keyof AdFormDataType>(
     key: K,
-    value: AdCreationFormDataType[K],
+    value: AdFormDataType[K],
   ) => {
     if (value && !isFilled) setIsFilled(true);
-    setAdCreationFormData(prev => ({ ...prev, [key]: value }));
+    setAdFormData(prev => ({ ...prev, [key]: value }));
   };
   const changeBookingFormData = <K extends keyof BookingFormDataType>(
     key: K,
@@ -101,7 +101,7 @@ export const FormProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const clear = () => {
-    setAdCreationFormData(initialAdCreationData);
+    setAdFormData(initialAdData);
     setBookingFormData({});
     setCurrentStep(1);
     setIsFilled(false);
@@ -151,9 +151,9 @@ export const FormProvider = ({ children }: { children: ReactNode }) => {
         setTotalSteps,
         // shouldNavigateFromForm,
         formGoBack,
-        adCreationFormData,
+        AdFormData,
         bookingFormData,
-        changeAdCreationFormData,
+        changeAdFormData,
         changeBookingFormData,
       }}
     >

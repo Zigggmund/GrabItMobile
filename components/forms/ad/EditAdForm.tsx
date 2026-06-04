@@ -1,32 +1,31 @@
+import { AdDetailsType } from '@/types/entities/AdType';
+
 import { ComponentType, useEffect, useRef, useState } from 'react';
 import { InteractionManager, View } from 'react-native';
 import { useQueryClient } from '@tanstack/react-query';
-
-import { AdDetailsType } from '@/types/entities/AdType';
 
 import { useForm } from '@/hooks/useForm';
 import { useHistory } from '@/hooks/useHistory';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTheme } from '@/hooks/useTheme';
 
-import { AdService } from '@/services/api/services/adService';
-import { MediaService } from '@/services/api/services/mediaService';
-
 import { ProgressBar } from '@/components/common/bars/ProgressBar';
-import { AdDetailsStep } from '@/components/forms/adCreation/AdDetailsStep';
-import { AdMapStep } from '@/components/forms/AdMapStep';
-import { EditAdMediaStep } from '@/components/forms/adEdit/EditAdMediaStep';
+import { AdDetailsStep } from '@/components/forms/ad/AdDetailsStep';
+import { AdMapStep } from '@/components/forms/ad/AdMapStep';
+import { AdMediaStep } from '@/components/forms/ad/AdMediaStep';
 import { CustomAlert } from '@/components/modals/CustomAlert';
 import { CustomButton } from '@/components/ui/button/CustomButton';
 import { CustomText } from '@/components/ui/text/CustomText';
-import { AdMediaStep } from '@/components/forms/adCreation/AdMediaStep';
+
+import { AdService } from '@/services/api/services/adService';
+import { MediaService } from '@/services/api/services/mediaService';
 
 type StepComponentProps = { errors: Record<string, string> };
 
 const STEPS: { key: string; component: ComponentType<StepComponentProps> }[] = [
   { key: 'adDetailsStep', component: AdDetailsStep },
   { key: 'adMapStep', component: AdMapStep },
-  { key: 'adMediaStep', component: AdMediaStep},
+  { key: 'adMediaStep', component: AdMediaStep },
   // { key: 'adMediaStep', component: EditAdMediaStep },
 ];
 
@@ -48,25 +47,27 @@ export const EditAdForm = ({ ad }: Props) => {
     if (populated.current) return;
     populated.current = true;
 
-    form.changeAdCreationFormData('adType', 'product');
-    form.changeAdCreationFormData('title', ad.title);
-    form.changeAdCreationFormData('description', ad.description ?? '');
-    form.changeAdCreationFormData('cost', ad.rub_per_hour);
-    form.changeAdCreationFormData('categoryId', ad.categoryId);
-    form.changeAdCreationFormData('quantity', ad.quantity);
-    form.changeAdCreationFormData('minHoursInterval', ad.minHoursInterval);
-    form.changeAdCreationFormData('latitude', ad.lat);
-    form.changeAdCreationFormData('longitude', ad.lon);
-    form.changeAdCreationFormData('address', ad.address);
-    form.changeAdCreationFormData('specifications', ad.specifications);
-    form.changeAdCreationFormData('previewImage', ad.previewImage);
-    form.changeAdCreationFormData('uriMedias', ad.media);
+    form.changeAdFormData('adType', 'product');
+    form.changeAdFormData('title', ad.title);
+    form.changeAdFormData('description', ad.description ?? '');
+    form.changeAdFormData('cost', ad.rub_per_hour);
+    form.changeAdFormData('categoryId', ad.categoryId);
+    form.changeAdFormData('quantity', ad.quantity);
+    form.changeAdFormData('minHoursInterval', ad.minHoursInterval);
+    form.changeAdFormData('latitude', ad.lat);
+    form.changeAdFormData('longitude', ad.lon);
+    form.changeAdFormData('address', ad.address);
+    form.changeAdFormData('specifications', ad.specifications);
+    form.changeAdFormData('previewImage', ad.previewImage);
+    form.changeAdFormData('uriMedias', ad.media);
   }, []);
 
   const adId = ad.id;
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errors, setErrors] = useState<Record<string, Record<string, string>>>({});
+  const [errors, setErrors] = useState<Record<string, Record<string, string>>>(
+    {},
+  );
 
   const totalSteps = STEPS.length;
   const step = STEPS[currentStep - 1];
@@ -77,8 +78,8 @@ export const EditAdForm = ({ ad }: Props) => {
 
     switch (stepKey) {
       case 'adDetailsStep': {
-        const title = form.adCreationFormData.title || '';
-        const description = form.adCreationFormData.description || '';
+        const title = form.AdFormData.title || '';
+        const description = form.AdFormData.description || '';
 
         if (!title.trim()) {
           stepErrors.title = l.errorTitleNull;
@@ -88,9 +89,9 @@ export const EditAdForm = ({ ad }: Props) => {
           stepErrors.title = l.errorTitleTooLong;
         }
 
-        if (!form.adCreationFormData.quantity) {
+        if (!form.AdFormData.quantity) {
           stepErrors.quantity = l.errorQuantityNull;
-        } else if (form.adCreationFormData.quantity <= 0) {
+        } else if (form.AdFormData.quantity <= 0) {
           stepErrors.quantity = l.errorQuantityZeroOrLess;
         }
 
@@ -100,7 +101,7 @@ export const EditAdForm = ({ ad }: Props) => {
           stepErrors.description = l.errorDescriptionTooLong;
         }
 
-        form.adCreationFormData.specifications.forEach(item => {
+        form.AdFormData.specifications.forEach(item => {
           const keyFilled = item.key.trim().length > 0;
           const valueFilled = item.value.trim().length > 0;
           if (keyFilled !== valueFilled) {
@@ -108,33 +109,33 @@ export const EditAdForm = ({ ad }: Props) => {
           }
         });
 
-        if (!form.adCreationFormData.categoryId) {
+        if (!form.AdFormData.categoryId) {
           stepErrors.categoryId = l.errorCategoryIdNull;
         }
-        if (!form.adCreationFormData.cost) {
+        if (!form.AdFormData.cost) {
           stepErrors.cost = l.errorCostNull;
-        } else if (form.adCreationFormData.cost <= 0) {
+        } else if (form.AdFormData.cost <= 0) {
           stepErrors.cost = l.errorCostZeroOrLess;
         }
-        if (!form.adCreationFormData.minHoursInterval) {
+        if (!form.AdFormData.minHoursInterval) {
           stepErrors.minInterval = l.errorMinIntervalNull;
-        } else if (form.adCreationFormData.minHoursInterval <= 0) {
+        } else if (form.AdFormData.minHoursInterval <= 0) {
           stepErrors.minInterval = l.errorMinIntervalZeroOrLess;
-        } else if (form.adCreationFormData.minHoursInterval > 24) {
+        } else if (form.AdFormData.minHoursInterval > 24) {
           stepErrors.minInterval = l.errorMinIntervalTooBig;
         }
         break;
       }
       case 'adMapStep':
-        if (!form.adCreationFormData.previewImage) {
+        if (!form.AdFormData.previewImage) {
           stepErrors.previewImage = l.errorPreviewImageNull;
         }
-        if (!form.adCreationFormData.address) {
+        if (!form.AdFormData.address) {
           stepErrors.address = l.errorAddressNull;
         }
         break;
       case 'adMediaStep':
-        if (form.adCreationFormData.uriMedias.length > 10) {
+        if (form.AdFormData.uriMedias.length > 10) {
           stepErrors.uriMedias = l.errorMediaArrayTooLong;
         }
         break;
@@ -144,7 +145,7 @@ export const EditAdForm = ({ ad }: Props) => {
     return Object.keys(stepErrors).length === 0;
   };
 
-  const handleSubmit = async () => {
+  const handleFinish = async () => {
     const confirmed = await CustomAlert({
       message: l.warningFormFinish,
       confirmation: l.confirmation,
@@ -155,8 +156,10 @@ export const EditAdForm = ({ ad }: Props) => {
 
     setIsSubmitting(true);
     try {
-      const data = form.adCreationFormData;
-      const validSpecs = data.specifications.filter(s => s.key.trim() && s.value.trim());
+      const data = form.AdFormData;
+      const validSpecs = data.specifications.filter(
+        s => s.key.trim() && s.value.trim(),
+      );
 
       await AdService.updateAd(adId, {
         title: data.title,
@@ -177,13 +180,21 @@ export const EditAdForm = ({ ad }: Props) => {
       );
       const newLocalMedia = currentMedia.filter(m => !m.url.startsWith('http'));
 
-      await Promise.all(removedMedia.map(m => MediaService.deleteMedia(adId, String(m.id))));
       await Promise.all(
-        newLocalMedia.map(m =>
-          MediaService.uploadMedia(adId, m.url, m.mediaType === 'video' ? 'video/mp4' : 'image/jpeg'),
+        removedMedia.map(m => MediaService.deleteMedia(adId, String(m.id))),
+      );
+      await Promise.all(
+        newLocalMedia.map((m, i) =>
+          MediaService.uploadMedia(
+            adId,
+            m.url,
+            m.mediaType === 'video' ? 'video/mp4' : 'image/jpeg',
+            currentMedia.findIndex(cm => cm.id === m.id),
+          ),
         ),
       );
 
+      form.clear();
       await queryClient.invalidateQueries({ queryKey: ['ad', adId] });
       navigate({ pathname: '/(tabs)/ads/[id]', params: { id: adId } }, false);
     } catch {
@@ -201,7 +212,7 @@ export const EditAdForm = ({ ad }: Props) => {
       if (currentStep < totalSteps) {
         setCurrentStep(s => s + 1);
       } else {
-        handleSubmit();
+        handleFinish();
       }
     });
   };

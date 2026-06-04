@@ -27,6 +27,8 @@ import { useTheme } from '@/hooks/useTheme';
 import { dateFormat } from '@/utils/dateFormat';
 import { getRemainingTime } from '@/utils/getRemainingTime';
 
+import { BookingBlock } from '@/components/calendar/BookingBlock';
+import { ExtendBookingBlock } from '@/components/booking/ExtendBookingBlock';
 import { Category } from '@/components/common/Category';
 import ErrorMessage from '@/components/common/ErrorMessage';
 import GreyBlock from '@/components/common/GreyBlock';
@@ -39,10 +41,6 @@ import { PreviewMediaModal } from '@/components/modals/PreviewMediaModal';
 import { CustomButton } from '@/components/ui/button/CustomButton';
 import { CustomText } from '@/components/ui/text/CustomText';
 
-import { CustomAlert } from '@/components/modals/CustomAlert';
-
-import { AdService } from '@/services/api/services/adService';
-
 import { icons } from '@/constants/icons';
 import { images } from '@/constants/images';
 
@@ -53,9 +51,10 @@ export default function AdDetails() {
   const { colors } = useTheme();
   const { user: currentUser } = useProfile();
   const { l } = useLanguage();
-  const { navigate, goBack } = useHistory();
+  const { navigate } = useHistory();
   const queryClient = useQueryClient();
   const [mapModalVisible, setMapModalVisible] = useState(false);
+  const [showExtend, setShowExtend] = useState(false);
   const {
     visible: mediaVisible,
     uri: mediaUri,
@@ -65,7 +64,7 @@ export default function AdDetails() {
   } = useMediaPreview();
   const { data: ad, isLoading: isLoading, isError: isError } = useGetAd(id);
   // !!! заменить на ad.reviews
-  const { data: reviews = [], isLoading: isReviewsLoading } =
+  const { data: reviewsData, isLoading: isReviewsLoading } =
     useGetAdShortenedReviews(id);
 
   const productType: ProductType = useMemo(() => {
@@ -125,13 +124,7 @@ export default function AdDetails() {
   const finishRent = () => {
     console.log('Rent was finished');
   };
-  const extendRent = () => {
-    // получение информации по myBookingId
-    navigate({
-      pathname: '/(tabs)/ads/booking/[id]',
-      params: { id: ad?.id.toString() },
-    });
-  };
+  const extendRent = () => setShowExtend(prev => !prev);
   const createChat = () => {
     // ЧТО ТО ВРОДЕ ТАКОГО
     // navigate({
@@ -142,10 +135,14 @@ export default function AdDetails() {
 
   const isMine = ad.landlord.username == currentUser?.username;
 
+  const total = reviewsData ? reviewsData.total : 0;
+  const reviews = reviewsData ? reviewsData.items : [];
+
   return (
     <ScreenContainer>
       <ScrollView className={'w-full px-6'}>
         <View className={'gap-4'}>
+          {/* блок текущей аренды */}
           {ad.myBooking && getRemainingTime(ad.myBooking.endTime) > 0 && (
             <GreyBlock className={'px-4 py-2 gap-2 mb-4'}>
               <CustomText
@@ -185,9 +182,33 @@ export default function AdDetails() {
                   onPress={finishRent}
                 />
               </View>
+
+              {showExtend && (
+                <ExtendBookingBlock
+                  adId={id}
+                  currentEndTime={ad.myBooking.endTime}
+                  onClose={() => setShowExtend(false)}
+                />
+              )}
             </GreyBlock>
           )}
 
+          {/* блок просмотра всех бронирований */}
+          {isMine && (
+            <CustomButton
+              type={'highlighted'}
+              textClassName="text-17"
+              text={l.btnViewBookings}
+              onPress={() =>
+                navigate({
+                  pathname: '/(tabs)/ads/bookings/[id]',
+                  params: { id: id },
+                })
+              }
+            />
+          )}
+
+          {/* общее */}
           <View className={'justify-between flex-row'}>
             {/*<Category categoryId={ad.categoryId} productType={ad.produtType} />*/}
             {/* ЗАГЛУШКА */}
@@ -516,28 +537,17 @@ export default function AdDetails() {
           </GreyBlock>
 
           {/* КАЛЕНДАРЬ */}
-          <CustomText
-            style={{ color: colors.theme.blue.primary }}
-            className={'text-22 font-bold'}
-          >
-            {l.bookingCalendar}
-          </CustomText>
-          <View className={'mr-20 ml-20'}>
-            <CustomButton
-              isSmall
-              textClassName="text-19"
-              iconSize={20}
-              iconSource={icons.rent}
-              disabled={isMine}
-              onPress={() =>
-                navigate({
-                  pathname: '/(tabs)/ads/booking/[id]',
-                  params: { id: id },
-                })
-              }
-              text={l.btnSelectTime}
-            />
-          </View>
+          {!isMine && (
+            <>
+              <CustomText
+                style={{ color: colors.theme.blue.primary }}
+                className={'text-22 font-bold'}
+              >
+                {l.bookingCalendar}
+              </CustomText>
+              <BookingBlock adId={id} minHoursInterval={ad.minHoursInterval} />
+            </>
+          )}
 
           {/* ОТЗЫВЫ */}
           <CustomText
@@ -546,6 +556,12 @@ export default function AdDetails() {
           >
             {l.reviews}
           </CustomText>
+          {/*<CustomText*/}
+          {/*  className={'text-14 mb-4'}*/}
+          {/*  style={{ color: colors.theme.blue.bright }}*/}
+          {/*>*/}
+          {/*  {l.reviewsFound}: {total}*/}
+          {/*</CustomText>*/}
           <FlatList
             scrollEnabled={false}
             data={reviews}
@@ -563,20 +579,18 @@ export default function AdDetails() {
               </CustomText>
             )}
           />
-          {ad.reviewCount > 3 && (
+          {total > 3 && (
             <View className={'mr-16 ml-16'}>
-              {reviews.length > 0 && (
-                <CustomButton
-                  textClassName="text-19"
-                  onPress={() =>
-                    navigate({
-                      pathname: '/(tabs)/ads/reviews/[id]',
-                      params: { id: id },
-                    })
-                  }
-                  text={l.btnAllReviews}
-                />
-              )}
+              <CustomButton
+                textClassName="text-19"
+                onPress={() =>
+                  navigate({
+                    pathname: '/(tabs)/ads/reviews/[id]',
+                    params: { id: id },
+                  })
+                }
+                text={l.btnAllReviews}
+              />
             </View>
           )}
           <View style={{ height: 0 }} />

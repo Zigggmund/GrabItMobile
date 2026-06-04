@@ -9,10 +9,9 @@ import { CategoryResponseDto } from '@/services/api/services/dto/category.dto';
 export class CategoryService {
   static async getCategories(
     productType: ProductType,
+    lang: string = 'ru',
   ): Promise<CategoryType[]> {
-    // const res = await api.get(`/${productType}/categories`);
-    // ЗАГЛУШКА, пока нет категорий
-    const res = await api.get('/rent/categories');
+    const res = await api.get('/rent/categories', { params: { lang } });
 
     const { categories } = unwrap<{ categories: CategoryResponseDto[] }>(res);
 

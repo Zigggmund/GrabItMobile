@@ -36,12 +36,12 @@ export default function LandlordAdsHeader({
             {landlordName}
           </CustomText>
         </View>
-        <CustomText
-          className={'font-bold text-18'}
-          style={{ color: colors.theme.blue.dark }}
-        >
-          ({adsCount})
-        </CustomText>
+        {/*<CustomText*/}
+        {/*  className={'font-bold text-18'}*/}
+        {/*  style={{ color: colors.theme.blue.dark }}*/}
+        {/*>*/}
+        {/*  ({adsCount})*/}
+        {/*</CustomText>*/}
       </View>
     </GreyBlock>
   );

@@ -6,7 +6,7 @@ import { useGetAd } from '@/hooks/ad/useGetAd';
 import { FormProvider } from '@/context/FormProvider';
 
 import ErrorMessage from '@/components/common/ErrorMessage';
-import { EditAdForm } from '@/components/forms/adEdit/EditAdForm';
+import { EditAdForm } from '@/components/forms/ad/EditAdForm';
 import ScreenContainer from '@/components/layout/ScreenContainer';
 
 export default function EditAdScreen() {

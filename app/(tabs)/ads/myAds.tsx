@@ -4,10 +4,10 @@ import { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, FlatList, View } from 'react-native';
 
 import { mapAd } from '@/hooks/ad/mapAd';
-import { useDeleteListing } from '@/hooks/ad/useDeleteListing';
+import { useDeleteAd } from '@/hooks/ad/useDeleteAd';
 import { useGetMyAds } from '@/hooks/ad/useGetMyAds';
-import { usePauseListing } from '@/hooks/ad/usePauseListing';
-import { useResumeListing } from '@/hooks/ad/useResumeListing';
+import { usePauseAd } from '@/hooks/ad/usePauseAd';
+import { useResumeAd } from '@/hooks/ad/useResumeAd';
 import { useHistory } from '@/hooks/useHistory';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTheme } from '@/hooks/useTheme';
@@ -33,16 +33,19 @@ export default function MyAdsPage() {
   const [status, setStatus] = useState<MyAdStatus>('active');
   const [page, setPage] = useState(1);
   const [allAds, setAllAds] = useState<AdResponseDto[]>([]);
+  const [total, setTotal] = useState(0);
 
   const { data, isLoading, isError, isFetching } = useGetMyAds(status, page);
 
   useEffect(() => {
     setPage(1);
     setAllAds([]);
+    setTotal(0);
   }, [status]);
 
   useEffect(() => {
     if (!data?.items) return;
+    if (data.total > 0) setTotal(data.total);
     setAllAds(prev => {
       if (page === 1) return data.items;
       const existingIds = new Set(prev.map(a => a.listing_id));
@@ -50,11 +53,9 @@ export default function MyAdsPage() {
     });
   }, [data]);
 
-  const total = data?.total ?? 0;
-
-  const pauseListing = usePauseListing();
-  const resumeListing = useResumeListing();
-  const deleteListing = useDeleteListing();
+  const pauseListing = usePauseAd();
+  const resumeListing = useResumeAd();
+  const deleteListing = useDeleteAd();
 
   const isAnyPending =
     pauseListing.isPending ||
@@ -86,30 +87,8 @@ export default function MyAdsPage() {
     index: number;
   }) => (
     <View>
-      <View
-        className={'gap-x-2 px-2 gap-y-3 flex-row  justify-center flex-wrap'}
-      >
-        <Tag
-          isSmall
-          label={l.active}
-          selected={status == 'active'}
-          onPress={() => setStatus('active')}
-        />
-        <Tag
-          isSmall
-          label={l.paused}
-          selected={status == 'paused'}
-          onPress={() => setStatus('paused')}
-        />
-        <Tag
-          isSmall
-          label={l.deleted}
-          selected={status == 'deleted'}
-          onPress={() => setStatus('deleted')}
-        />
-      </View>
       <CustomText
-        className={'text-14'}
+        className={'text-14 mb-4'}
         style={{ color: colors.theme.blue.bright }}
       >
         {l.adsFound}: {total}
@@ -229,7 +208,7 @@ export default function MyAdsPage() {
           ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
           contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 90 }}
           onEndReached={() => {
-            if (allAds.length < total && !isFetching) {
+            if (allAds.length > 0 && allAds.length < total && !isFetching) {
               setPage(prev => prev + 1);
             }
           }}

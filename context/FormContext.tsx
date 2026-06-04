@@ -4,7 +4,7 @@ import { ExceptionDayType, TimePeriodType } from '@/types/TimeType';
 
 import { createContext } from 'react';
 
-export type AdCreationFormDataType = {
+export type AdFormDataType = {
   adType?: ProductType;
 
   title: string;
@@ -41,10 +41,10 @@ interface FormContext {
   currentStep: number;
 
   bookingFormData: BookingFormDataType;
-  adCreationFormData: AdCreationFormDataType;
-  changeAdCreationFormData: <K extends keyof AdCreationFormDataType>(
+  AdFormData: AdFormDataType;
+  changeAdFormData: <K extends keyof AdFormDataType>(
     key: K,
-    value: AdCreationFormDataType[K],
+    value: AdFormDataType[K],
   ) => void;
   changeBookingFormData: <K extends keyof BookingFormDataType>(
     key: K,

@@ -14,7 +14,7 @@ export const useGetUserAds = (userId: string, sortBy: SortingAdsType = 'new', pa
     queryFn: async () => {
       const res = await AdService.searchListings({
         owner_id: userId,
-        sort_by: sortBy,
+        // sort_by: sortBy, // пока не поддерживается бэкендом
         page,
         page_size: PAGE_SIZE,
       });

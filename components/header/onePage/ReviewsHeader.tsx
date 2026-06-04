@@ -56,12 +56,12 @@ export default function ReviewsHeader({
               {itemName}
             </CustomText>
           </View>
-          <CustomText
-            className={'text-16'}
-            style={{ color: colors.theme.blue.primary }}
-          >
-            ({reviewCount})
-          </CustomText>
+          {/*<CustomText*/}
+          {/*  className={'text-16'}*/}
+          {/*  style={{ color: colors.theme.blue.primary }}*/}
+          {/*>*/}
+          {/*  ({reviewCount})*/}
+          {/*</CustomText>*/}
         </View>
       </View>
     </GreyBlock>

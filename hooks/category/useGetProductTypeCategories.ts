@@ -1,20 +1,21 @@
 import { CategoryType } from '@/types/entities/CategoryType';
+import { ProductType } from '@/types/entities/AdType';
 
 import { useQuery } from '@tanstack/react-query';
 
+import { useLanguage } from '@/hooks/useLanguage';
 import { CategoryService } from '@/services/api/services/categoryService';
-import { ProductType } from '@/types/entities/AdType';
 
 export const useGetProductTypeCategories = (productType: ProductType) => {
+  const { language } = useLanguage();
+
   return useQuery<CategoryType[]>({
-    // productType в ключе - разные типы кешируются отдельно
-    queryKey: ['categories', productType],
+    queryKey: ['categories', productType, language],
     queryFn: async () => {
       if (!productType) return [];
-      return CategoryService.getCategories(productType);
+      return CategoryService.getCategories(productType, language);
     },
     staleTime: Infinity,
-    // \запрос только если slug известен
     enabled: productType != null,
   });
 };

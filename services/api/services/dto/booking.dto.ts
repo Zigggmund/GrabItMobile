@@ -25,6 +25,22 @@ export interface BookingResponseDto {
 
 export type GetBookingsResponseDto = PaginatedResponse<BookingResponseDto>;
 
+export interface BookingAdInfo {
+  listing_id: string;
+  title: string;
+  price_per_hour: number;
+  address: string;
+  cover_url: string | null;
+  avg_rating: number;
+  review_count: number;
+}
+
+export interface BookingWithAdResponseDto extends BookingResponseDto {
+  listing: BookingAdInfo;
+}
+
+export type GetOwnerBookingsResponseDto = PaginatedResponse<BookingWithAdResponseDto>;
+
 // ─── Request DTOs ─────────────────────────────────────────────────────────────
 
 export interface CreateBookingDto {
@@ -44,4 +60,10 @@ export interface RejectBookingDto {
 
 export interface CancelBookingDto {
   reason?: string;
+}
+
+export interface GetBookingsRequestDto {
+  status?: BookingStatus;
+  page?: number;
+  page_size?: number;
 }

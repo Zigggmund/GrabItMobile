@@ -15,7 +15,7 @@ export const AdTypeStep = ({ errors }: { errors: Record<string, string> }) => {
   const { colors } = useTheme();
 
   const selectOption = (option: ProductType | null) => {
-    if (option) form.changeAdCreationFormData('adType', option);
+    if (option) form.changeAdFormData('adType', option);
   };
   return (
     <View className={'gap-2 items-center'}>
@@ -23,19 +23,19 @@ export const AdTypeStep = ({ errors }: { errors: Record<string, string> }) => {
         width={140}
         label={l.product}
         onPress={() => selectOption('product')}
-        selected={form.adCreationFormData.adType == 'product'}
+        selected={form.AdFormData.adType == 'product'}
       />
       <Tag
         width={140}
         label={l.service}
         onPress={() => selectOption('service')}
-        selected={form.adCreationFormData.adType == 'service'}
+        selected={form.AdFormData.adType == 'service'}
       />
       <Tag
         width={140}
         label={l.space}
         onPress={() => selectOption('space')}
-        selected={form.adCreationFormData.adType == 'space'}
+        selected={form.AdFormData.adType == 'space'}
       />
       <CustomText
         style={{ color: colors.base.red.primary }}

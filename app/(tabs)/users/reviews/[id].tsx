@@ -30,15 +30,22 @@ export default function UserReviews() {
   const [serverPage, setServerPage] = useState(1);
   const [allReviews, setAllReviews] = useState<ReviewType[]>([]);
   const [sortBy, setSortBy] = useState<SortingReviewsType>('new');
+  const [rating, setRating] = useState<number | null>(null);
 
-  const { data, isLoading, isFetching } = useGetUserReviews(id, serverPage, sortBy);
+  const { data, isLoading, isFetching } = useGetUserReviews(
+    id,
+    serverPage,
+    sortBy,
+  );
 
   const total = data?.total ?? 0;
 
   useEffect(() => {
     setServerPage(1);
     setAllReviews([]);
-  }, [sortBy]);
+
+    console.log('sortBy', sortBy, 'rating', rating);
+  }, [sortBy, rating]);
 
   useEffect(() => {
     if (!data?.items) return;
@@ -66,11 +73,19 @@ export default function UserReviews() {
   return (
     <ScreenContainer>
       <View className={'px-4 gap-4'}>
-        <ReviewsHeader
-          itemRating={Number(userRating)}
-          reviewCount={Number(reviewCount)}
-          itemName={username}
-        />
+        <View className={'gap-2'}>
+          <ReviewsHeader
+            itemRating={Number(userRating)}
+            reviewCount={Number(reviewCount)}
+            itemName={username}
+          />
+          <CustomText
+            className={'self-start text-14'}
+            style={{ color: colors.theme.blue.bright }}
+          >
+            {l.reviewsFound}: {total}
+          </CustomText>
+        </View>
 
         <FlatList
           keyExtractor={item => item.id}
@@ -86,14 +101,16 @@ export default function UserReviews() {
             }
           }}
           onEndReachedThreshold={0.5}
-          ListFooterComponent={() => (isFetching ? <ActivityIndicator /> : null)}
+          ListFooterComponent={() =>
+            isFetching ? <ActivityIndicator /> : null
+          }
           ListHeaderComponentStyle={{ paddingBottom: 14, zIndex: 10 }}
           ListHeaderComponent={() => (
             <View className={'items-center gap-4'}>
               <ReviewDistribution
                 reviews={allReviews}
-                value={null}
-                onSelect={() => {}}
+                value={rating}
+                onSelect={(v) => setRating(v)}
               />
               <SortingMenu<SortingReviewsType>
                 items={[

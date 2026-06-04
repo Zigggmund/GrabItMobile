@@ -39,18 +39,18 @@ export const AdAllDatesStep = ({
 
   if (!form) return null;
 
-  const { adCreationFormData, changeAdCreationFormData } = form;
+  const { AdFormData, changeAdFormData } = form;
 
   const onDayPress = (day: CalendarDay) => {
     const dateString = day.dateString;
 
     if (
-      !adCreationFormData.firstDate ||
-      (adCreationFormData.firstDate && adCreationFormData.endDate)
+      !AdFormData.firstDate ||
+      (AdFormData.firstDate && AdFormData.endDate)
     ) {
       // Новый диапазон
-      changeAdCreationFormData('firstDate', new Date(dateString));
-      changeAdCreationFormData('endDate', null);
+      changeAdFormData('firstDate', new Date(dateString));
+      changeAdFormData('endDate', null);
       setMarkedDates({
         [dateString]: {
           startingDay: true,
@@ -59,7 +59,7 @@ export const AdAllDatesStep = ({
         },
       });
     } else {
-      const first = adCreationFormData.firstDate;
+      const first = AdFormData.firstDate;
       const second = new Date(dateString);
 
       const start = first < second ? first : second;
@@ -85,8 +85,8 @@ export const AdAllDatesStep = ({
       }
 
       setMarkedDates(range);
-      changeAdCreationFormData('firstDate', start);
-      changeAdCreationFormData('endDate', end);
+      changeAdFormData('firstDate', start);
+      changeAdFormData('endDate', end);
     }
   };
 
@@ -112,16 +112,16 @@ export const AdAllDatesStep = ({
           style={{ color: colors.theme.blue.dark }}
           className={'text-16'}
         >
-          {adCreationFormData.firstDate
-            ? `${l.start}: ${adCreationFormData.firstDate.toLocaleDateString()}`
+          {AdFormData.firstDate
+            ? `${l.start}: ${AdFormData.firstDate.toLocaleDateString()}`
             : `${l.start}: -`}
         </CustomText>
         <CustomText
           style={{ color: colors.theme.blue.dark }}
           className={'text-16'}
         >
-          {adCreationFormData.endDate
-            ? `${l.end}: ${adCreationFormData.endDate.toLocaleDateString()}`
+          {AdFormData.endDate
+            ? `${l.end}: ${AdFormData.endDate.toLocaleDateString()}`
             : `${l.end}: -`}
         </CustomText>
       </View>

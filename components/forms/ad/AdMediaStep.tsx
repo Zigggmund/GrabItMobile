@@ -31,11 +31,11 @@ export const AdMediaStep = ({ errors }: { errors: Record<string, string> }) => {
   const { visible, uri, mediaType, openPreview, closePreview } =
     useMediaPreview();
   const [preview, setPreview] = useState<MediaType | null>(
-    form.adCreationFormData.previewImage || null,
+    form.AdFormData.previewImage || null,
   );
 
   const [media, setMedia] = useState<MediaType[]>(
-    form.adCreationFormData.uriMedias || [],
+    form.AdFormData.uriMedias || [],
   );
 
   // сжатие
@@ -97,7 +97,7 @@ export const AdMediaStep = ({ errors }: { errors: Record<string, string> }) => {
 
     const mediaObj: MediaType = { id: String(Date.now()), url: uri };
     setPreview(mediaObj);
-    form.changeAdCreationFormData('previewImage', mediaObj);
+    form.changeAdFormData('previewImage', mediaObj);
   };
 
   const handleAddMedia = async () => {
@@ -137,13 +137,13 @@ export const AdMediaStep = ({ errors }: { errors: Record<string, string> }) => {
 
     const updatedMedia = [...media, ...newMedia];
     setMedia(updatedMedia);
-    form.changeAdCreationFormData('uriMedias', updatedMedia);
+    form.changeAdFormData('uriMedias', updatedMedia);
   };
 
   const handleRemoveMedia = (id: string) => {
     const updatedMedia = media.filter(m => m.id !== id);
     setMedia(updatedMedia);
-    form.changeAdCreationFormData('uriMedias', updatedMedia);
+    form.changeAdFormData('uriMedias', updatedMedia);
   };
 
   return (

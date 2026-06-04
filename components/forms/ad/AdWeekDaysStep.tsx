@@ -20,10 +20,10 @@ export const AdWeekDaysStep = ({
   const { colors } = useTheme();
 
   const selectDay = (index: number) => {
-    const weekdays = form.adCreationFormData.weekDays;
+    const weekdays = form.AdFormData.weekDays;
     weekdays[index] = !weekdays[index];
 
-    form.changeAdCreationFormData('weekDays', weekdays);
+    form.changeAdFormData('weekDays', weekdays);
   };
 
   return (
@@ -34,7 +34,7 @@ export const AdWeekDaysStep = ({
         renderItem={({ item, index }) => (
           <Tag
             label={l[item as TranslationKey]}
-            selected={form.adCreationFormData.weekDays[index]}
+            selected={form.AdFormData.weekDays[index]}
             onPress={() => selectDay(index)}
           />
         )}

@@ -23,8 +23,8 @@ export const AdMapStep = ({ errors }: { errors: Record<string, string> }) => {
   const { colors } = useTheme();
   const form = useForm();
   const [coords, setCoords] = useState<[number, number] | null>(
-    form.adCreationFormData.latitude && form.adCreationFormData.longitude
-      ? [form.adCreationFormData.latitude, form.adCreationFormData.longitude]
+    form.AdFormData.latitude && form.AdFormData.longitude
+      ? [form.AdFormData.latitude, form.AdFormData.longitude]
       : null,
   );
 
@@ -57,8 +57,8 @@ export const AdMapStep = ({ errors }: { errors: Record<string, string> }) => {
           pos => {
             const { latitude, longitude } = pos.coords;
             setCoords([latitude, longitude]);
-            form.changeAdCreationFormData('latitude', latitude);
-            form.changeAdCreationFormData('longitude', longitude);
+            form.changeAdFormData('latitude', latitude);
+            form.changeAdFormData('longitude', longitude);
           },
           err => console.error(err),
           { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
@@ -68,7 +68,7 @@ export const AdMapStep = ({ errors }: { errors: Record<string, string> }) => {
     }
   }, []);
 
-  const skipInitialFetch = useRef(!!form.adCreationFormData.address);
+  const skipInitialFetch = useRef(!!form.AdFormData.address);
 
   // Обновление адреса при смене координат
   useEffect(() => {
@@ -82,9 +82,9 @@ export const AdMapStep = ({ errors }: { errors: Record<string, string> }) => {
     const fetchAddress = async () => {
       try {
         const addr = await MapService.getAddress(coords[0], coords[1]);
-        form.changeAdCreationFormData('address', addr);
+        form.changeAdFormData('address', addr);
       } catch {
-        form.changeAdCreationFormData('address', '');
+        form.changeAdFormData('address', '');
       }
     };
 
@@ -117,8 +117,8 @@ export const AdMapStep = ({ errors }: { errors: Record<string, string> }) => {
                 const [lon, lat] = coordsArr;
                 if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
                   setCoords([lat, lon]);
-                  form.changeAdCreationFormData('latitude', lat);
-                  form.changeAdCreationFormData('longitude', lon);
+                  form.changeAdFormData('latitude', lat);
+                  form.changeAdFormData('longitude', lon);
                 } else {
                   console.warn('Invalid coordinates:', lat, lon);
                 }
@@ -217,7 +217,7 @@ export const AdMapStep = ({ errors }: { errors: Record<string, string> }) => {
           multiline
           label={l.address}
           placeholder={l.addressWillAppearHere}
-          value={form.adCreationFormData.address || ''}
+          value={form.AdFormData.address || ''}
           errorMessage={errors.address}
           disable
         />
