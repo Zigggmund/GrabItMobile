@@ -8,6 +8,14 @@ import { PAGE_SIZE } from '@/constants/sizes';
 import { ReviewService } from '@/services/api/services/reviewService';
 import { UserService } from '@/services/api/services/userService';
 
+const UNKNOWN_AUTHOR = {
+  id: '',
+  username: '?',
+  avatar_url: null as null,
+  avg_rating_as_owner: 0,
+  review_count_as_owner: 0,
+};
+
 export const useGetUserReviews = (userId: string, page = 1, sortBy: SortingReviewsType = 'new') => {
   return useQuery<{ items: ReviewType[]; total: number }>({
     queryKey: ['userReviews', userId, page, sortBy],
@@ -19,7 +27,7 @@ export const useGetUserReviews = (userId: string, page = 1, sortBy: SortingRevie
       });
       const items = await Promise.all(
         res.items.map(async dto => {
-          const author = await UserService.getUserById(dto.author_id);
+          const author = await UserService.getUserById(dto.author_id).catch(() => UNKNOWN_AUTHOR);
           return {
             id: dto.review_id,
             adName: '',

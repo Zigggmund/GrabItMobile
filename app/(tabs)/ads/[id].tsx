@@ -17,6 +17,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams } from 'expo-router';
 
 import { useGetAd } from '@/hooks/ad/useGetAd';
+import { useCreateConversation } from '@/hooks/chat/useCreateConversation';
 import { useGetAdShortenedReviews } from '@/hooks/review/useGetAdShortenedReviews';
 import { useHistory } from '@/hooks/useHistory';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -28,7 +29,7 @@ import { dateFormat } from '@/utils/dateFormat';
 import { getRemainingTime } from '@/utils/getRemainingTime';
 
 import { BookingBlock } from '@/components/calendar/BookingBlock';
-import { ExtendBookingBlock } from '@/components/booking/ExtendBookingBlock';
+import { ExtendBookingBlock } from '@/components/calendar/ExtendBookingBlock';
 import { Category } from '@/components/common/Category';
 import ErrorMessage from '@/components/common/ErrorMessage';
 import GreyBlock from '@/components/common/GreyBlock';
@@ -121,16 +122,22 @@ export default function AdDetails() {
       </ScreenContainer>
     );
 
+  const { mutate: createConversation, isPending: isCreatingChat } =
+    useCreateConversation();
+
   const finishRent = () => {
     console.log('Rent was finished');
   };
   const extendRent = () => setShowExtend(prev => !prev);
   const createChat = () => {
-    // ЧТО ТО ВРОДЕ ТАКОГО
-    // navigate({
-    //   pathname: '/(tabs)/chats/[id]',
-    //   params: { id: ad.landlord.toString() },
-    // }
+    createConversation(id, {
+      onSuccess: conv => {
+        navigate({
+          pathname: '/(tabs)/chats/[id]',
+          params: { id: conv.id },
+        });
+      },
+    });
   };
 
   const isMine = ad.landlord.username == currentUser?.username;
@@ -245,7 +252,7 @@ export default function AdDetails() {
           {ad.media.length > 1 && (
             <FlatList
               horizontal
-              data={ad.media}
+              data={ad.media.filter(m => m.id !== ad.previewImage.id)}
               keyExtractor={(_, i) => i.toString()}
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={{ gap: 8 }}
@@ -401,7 +408,7 @@ export default function AdDetails() {
           <View className={'mr-20 ml-20'}>
             <CustomButton
               isSmall
-              disabled={isMine}
+              disabled={isMine || isCreatingChat}
               iconSize={20}
               textClassName={'text-18'}
               iconSource={icons.chat}
@@ -500,7 +507,7 @@ export default function AdDetails() {
                 style={{ color: colors.theme.blue.bright }}
                 className={'text-14'}
               >
-                {ad.description}
+                {ad.description == '' ? '-' : ad.description}
               </CustomText>
             </View>
             {ad.specifications && (
@@ -531,6 +538,9 @@ export default function AdDetails() {
                       </CustomText>
                     </View>
                   )}
+                  ListEmptyComponent={() => (
+                    <CustomText style={{ color: colors.theme.blue.bright }}>{l.emptySpecificationsList}</CustomText>
+                  )}
                 />
               </View>
             )}
@@ -541,18 +551,22 @@ export default function AdDetails() {
             <>
               <CustomText
                 style={{ color: colors.theme.blue.primary }}
-                className={'text-22 font-bold'}
+                className={'text-22 font-bold text-center'}
               >
                 {l.bookingCalendar}
               </CustomText>
-              <BookingBlock adId={id} minHoursInterval={ad.minHoursInterval} />
+              <BookingBlock
+                adId={id}
+                minHoursInterval={ad.minHoursInterval}
+                rubPerHour={ad.rub_per_hour}
+              />
             </>
           )}
 
           {/* ОТЗЫВЫ */}
           <CustomText
             style={{ color: colors.theme.blue.primary }}
-            className={'text-22 font-bold'}
+            className={'text-22 font-bold text-center'}
           >
             {l.reviews}
           </CustomText>

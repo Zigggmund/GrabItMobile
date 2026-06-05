@@ -1,8 +1,13 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, FlatList, View } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
+import { useQueryClient } from '@tanstack/react-query';
 
-import { useGetChat } from '@/hooks/chat/useGetChat';
+import { useChatWebSocket } from '@/hooks/chat/useChatWebSocket';
+import { useGetMessages } from '@/hooks/chat/useGetMessages';
+import { useMarkRead } from '@/hooks/chat/useMarkRead';
+import { useSendMessage } from '@/hooks/chat/useSendMessage';
+import { mapMessage } from '@/hooks/chat/mapChat';
 import { useKeyboard } from '@/hooks/useKeyboard';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useProfile } from '@/hooks/user/useProfile';
@@ -16,59 +21,114 @@ import ScreenContainer from '@/components/layout/ScreenContainer';
 import { CustomText } from '@/components/ui/text/CustomText';
 
 import { FOOTER_HEIGHT } from '@/constants/sizes';
-import { MessageType } from '@/types/entities/ChatType';
+import { ChatService } from '@/services/api/services/chatService';
+import { ConversationEntity, MessageEntity } from '@/types/entities/ChatType';
 
-export default function Chat() {
+export default function ChatScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { user } = useProfile();
   const { l } = useLanguage();
   const { colors } = useTheme();
   const listRef = useRef<FlatList>(null);
   const { isKeyboardOpen, keyboardHeight } = useKeyboard();
-  const messageWidth = 220;
-  const { data: chat, isLoading: isLoading, isError: isError } = useGetChat(id);
+  const qc = useQueryClient();
 
-  const [messages, setMessages] = useState<MessageType[] | undefined>(chat?.messages);
-  const [message, setMessage] = useState('');
+  const [messages, setMessages] = useState<MessageEntity[]>([]);
+  const [text, setText] = useState('');
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(false);
 
-  const handleSendMessage = () => {
-    if (!message.trim() || !user) return;
+  // REST: initial message load
+  const { data: initialData, isLoading, isError } = useGetMessages(id);
 
-    const newMessage = {
-      id:
-        messages && messages.length > 0
-          ? String(Number(messages[messages.length - 1].id) + 1)
-          : '1',
-      userId: user.id,
-      text: message,
-      date: new Date().toISOString(),
-      isRead: false,
-      isReceive: false,
-    };
-
-    setMessages(prev => (prev ? [...prev, newMessage] : [newMessage]));
-
-    console.log('Message was sent:', newMessage);
-    setMessage('');
-  };
-
-  // добавление медиа
-  const handleAddMedia = () => {
-    console.log('Media was added');
-  };
-
-  // изменение сообщений при переходе в другой чат
   useEffect(() => {
-    setMessages(chat?.messages);
-  }, [chat]);
+    if (initialData) {
+      setMessages(initialData.items);
+      setHasMore(initialData.hasMore);
+    }
+  }, [initialData]);
 
-  // автоскролл вниз при отправке
+  // Mutations
+  const { mutate: sendMsg } = useSendMessage(id);
+  const { mutate: markRead } = useMarkRead(id);
+
+  const appendMessage = useCallback((msg: MessageEntity) => {
+    setMessages(prev => {
+      if (prev.some(m => m.id === msg.id)) return prev;
+      return [...prev, msg];
+    });
+    if (msg.senderId !== user?.id) {
+      markRead(msg.id);
+    }
+  }, [user?.id, markRead]);
+
+  // WebSocket
+  useChatWebSocket({
+    conversationId: id,
+    onMessage: appendMessage,
+    onReconnect: async lastId => {
+      if (!lastId) return;
+      try {
+        const res = await ChatService.getMessages(id, { after: lastId });
+        const newMsgs = [...res.items].reverse().map(mapMessage);
+        setMessages(prev => {
+          const existing = new Set(prev.map(m => m.id));
+          return [...prev, ...newMsgs.filter(m => !existing.has(m.id))];
+        });
+      } catch {
+        // reconnect catch-up failed silently
+      }
+    },
+  });
+
+  // Auto-scroll on new messages
   useEffect(() => {
-    if (!messages || messages.length == 0) return;
+    if (messages.length === 0) return;
     requestAnimationFrame(() => {
       listRef.current?.scrollToEnd({ animated: true });
     });
-  }, [messages?.length]);
+  }, [messages.length]);
+
+  // Mark read on open when we have initial messages
+  useEffect(() => {
+    const last = messages[messages.length - 1];
+    if (last && last.senderId !== user?.id) {
+      markRead(last.id);
+    }
+  }, [initialData]);
+
+  // Load older messages (scroll to top)
+  const handleLoadMore = async () => {
+    if (loadingMore || !hasMore || messages.length === 0) return;
+    setLoadingMore(true);
+    try {
+      const oldest = messages[0]?.id;
+      const res = await ChatService.getMessages(id, { before: oldest });
+      const older = [...res.items].reverse().map(mapMessage);
+      setMessages(prev => {
+        const existing = new Set(prev.map(m => m.id));
+        return [...older.filter(m => !existing.has(m.id)), ...prev];
+      });
+      setHasMore(res.has_more);
+    } catch {
+      // silent
+    } finally {
+      setLoadingMore(false);
+    }
+  };
+
+  const handleSend = () => {
+    const content = text.trim();
+    if (!content) return;
+    setText('');
+    sendMsg(content);
+  };
+
+  // Conversation metadata from cache (set by myChats screen)
+  const cachedConversations = qc.getQueryData<{
+    items: ConversationEntity[];
+  }>(['conversations', 1, 20]);
+  const conversation = cachedConversations?.items.find(c => c.id === id);
 
   if (isLoading)
     return (
@@ -84,42 +144,46 @@ export default function Chat() {
       </ScreenContainer>
     );
 
-  if (!chat) {
-    return (
-      <ScreenContainer>
-        <ErrorMessage text={l.errorChatNotFound} />
-      </ScreenContainer>
-    );
-  }
+  const messageWidth = 220;
 
   return (
     <ScreenContainer>
-      <View className={'px-4 flex-1 w-full'}>
-        <View className={'mb-10'}>
-          {/* isOnline изменить */}
-          <ChatHeader isOnline={false} userCard={chat.talker} />
+      <View className="px-4 flex-1 w-full">
+        <View className="mb-3">
+          <ChatHeader
+            username={conversation?.otherUsername ?? ''}
+            avatarUrl={conversation?.otherAvatarUrl ?? ''}
+            listingTitle={conversation?.listingTitle ?? ''}
+          />
         </View>
+
+        {loadingMore && <ActivityIndicator size="small" />}
+
         <FlatList
           ref={listRef}
           data={messages}
-          keyExtractor={(_, index) => index.toString()}
-          ItemSeparatorComponent={() => <View style={{ height: 30 }} />}
+          keyExtractor={item => item.id}
+          ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
+          contentContainerStyle={{ paddingBottom: 12 }}
+          onScrollBeginDrag={({ nativeEvent }) => {
+            if (nativeEvent.contentOffset.y < 60) {
+              handleLoadMore();
+            }
+          }}
           renderItem={({ item }) => (
             <Message width={messageWidth} message={item} />
           )}
-          contentContainerStyle={{
-            paddingBottom: 12,
-          }}
           ListEmptyComponent={() => (
             <CustomText
               highlight
-              className={'text-22 text-center'}
+              className="text-22 text-center"
               style={{ color: colors.theme.blue.primary }}
             >
               {l.emptyMessageList}
             </CustomText>
           )}
         />
+
         <View
           style={{
             paddingBottom: isKeyboardOpen ? keyboardHeight - FOOTER_HEIGHT : 12,
@@ -127,10 +191,10 @@ export default function Chat() {
           className="mt-2"
         >
           <TypingBar
-            onAddMedia={handleAddMedia}
-            onSend={handleSendMessage}
-            value={message}
-            onChangeText={setMessage}
+            onAddMedia={() => {}}
+            onSend={handleSend}
+            value={text}
+            onChangeText={setText}
             placeholder={l.writeSomething}
           />
         </View>

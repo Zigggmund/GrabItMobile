@@ -8,6 +8,17 @@ export const translations = {
     dark: 'Темная',
     light: 'Светлая',
 
+    // Уведомления
+    notifications: 'Уведомления',
+    markAllRead: 'Все прочитаны',
+    emptyNotificationList: 'Нет уведомлений',
+    onlyUnread: 'Непрочитанные',
+    notifSettings: 'Настройки уведомлений',
+    notifEmailEnabled: 'Email-уведомления',
+    notifPushEnabled: 'Push-уведомления',
+    notifBrowserEnabled: 'Уведомления браузера',
+    notifInboxEnabled: 'Входящие уведомления',
+
     // Описание приложения
     welcome: 'Добро пожаловать!',
     slogan: 'Арендуйте вещи и услуги быстро и легко!',
@@ -66,8 +77,8 @@ export const translations = {
     everywhere: 'Везде',
     searchRadius: 'Радиус поиска, км',
     clearLocation: 'Сбросить геолокацию',
-    priceFrom: 'от',
-    priceTo: 'до',
+    from: 'от',
+    to: 'до',
     adsFound: 'Найдено объявлений',
     reviewsFound: 'Найдено отзывов',
     priceRange: 'Ценовой диапозон',
@@ -83,6 +94,7 @@ export const translations = {
     rentEndSoon: 'До конца аренды',
     hour: 'час(а)',
     hours: 'часы',
+    hoursAbbr: 'ч',
     rentEnded: 'Аренда завершена',
     current: 'Текущие',
     paused: 'Приостановленные',
@@ -144,12 +156,11 @@ export const translations = {
     adDayTimeStep: 'Выбор временных промежутков',
     adExceptionsStep: 'Настройка исключений',
     addressWillAppearHere: 'Здесь появится адрес',
+    editAdTitle: 'Редактирование объявления',
 
-    // Reviews
+    // Отзывы
     byHigh: 'Сначала положительные',
     byLow: 'Сначала отрицательные',
-
-    editAdTitle: 'Редактирование объявления',
 
     // Модалки профиля
     editProfileTitle: 'Редактирование профиля',
@@ -162,6 +173,28 @@ export const translations = {
     usernameUnavailable: 'Занято',
     checkingUsername: 'Проверка...',
 
+    // Бронирования
+    bookingSuccess: 'Бронирование создано',
+    noSlotsAvailable: 'Нет доступных слотов',
+    iRent: 'Снимаю',
+    iLend: 'Сдаю',
+    btnApprove: 'Одобрить',
+    btnReject: 'Отклонить',
+    bookingAll: 'Все',
+    bookingPending: 'Ожидает',
+    bookingApproved: 'Одобрено',
+    bookingActive: 'Активно',
+    bookingCompleted: 'Завершено',
+    bookingRejected: 'Отклонено',
+    bookingCancelled: 'Отменено',
+    listingBookings: 'Бронирования',
+    btnLeaveReview: 'Оставить отзыв',
+    reviewAboutListing: 'Отзыв об объявлении',
+    reviewAboutRenter: 'Отзыв об арендаторе',
+    reviewCommentLabel: 'Комментарий',
+    reviewCommentPlaceholder: 'Необязательно',
+    reviewAlreadyLeft: 'Вы уже оставили отзыв на это бронирование',
+
     // Другое
     success: 'Успех',
     loading: 'Загрузка',
@@ -172,6 +205,10 @@ export const translations = {
     end: 'Конец',
     km: 'км',
     geolocation: 'Геолокация',
+    startTime: 'Начало',
+    endTime: 'Конец',
+    on: 'Вкл',
+    off: 'Выкл',
 
     // ОплатаПоПериоду
     rubPerHour: '₽/час',
@@ -258,6 +295,7 @@ export const translations = {
     btnStart: 'Начать',
     btnCancel: 'Отменить',
     btnSave: 'Сохранить',
+    btnSend: 'Отправить',
     btnDelete: 'Удалить',
     btnConfirm: 'Подтвердить',
     btnCreateAccount: 'Создать аккаунт',
@@ -271,7 +309,10 @@ export const translations = {
     btnUpload: 'Загрузить',
     btnLogout: 'Выйти из аккаунта',
     btnToReviews: 'Посмотреть отзывы',
+    btnToOwnerReviews: 'Отзывы арендодателя',
     btnAllReviews: 'Все отзывы',
+    ownerReviewsTitle: 'Отзывы арендодателя',
+    renterReviewsTitle: 'Отзывы арендатора',
     btnSelectTime: 'Выбрать время',
     btnToOffers: 'Посмотреть предложения',
     btnFinish: 'Завершить',
@@ -288,23 +329,7 @@ export const translations = {
     btnResume: 'Возобновить',
     btnViewBookings: 'Посмотреть все бронирования',
     btnBook: 'Забронировать',
-    startTime: 'Начало',
-    endTime: 'Конец',
-    bookingSuccess: 'Бронирование создано',
-    noSlotsAvailable: 'Нет доступных слотов',
-    iRent: 'Снимаю',
-    iLend: 'Сдаю',
-    btnApprove: 'Одобрить',
-    btnReject: 'Отклонить',
-    bookingAll: 'Все',
-    bookingPending: 'Ожидает',
-    bookingApproved: 'Одобрено',
-    bookingActive: 'Активно',
-    bookingCompleted: 'Завершено',
-    bookingRejected: 'Отклонено',
-    bookingCancelled: 'Отменено',
-    emptyBookingList: 'Нет бронирований',
-    listingBookings: 'Бронирования',
+    btnMarkAllReadConfirm: 'Пометить все уведомления как прочитанные?',
 
     // Ошибки
     error: 'Ошибка',
@@ -314,6 +339,7 @@ export const translations = {
     errorChatNotFound: 'Чат не найден',
     errorAdNotFound: 'Объявление не найдено',
     errorLanguage: 'Некорректный язык',
+
     // Формы
     errorAdTypeNull: 'Не выбран тип объявления',
     errorTitleNull: 'Не заполнено название объявления',
@@ -331,9 +357,7 @@ export const translations = {
     //   'Слишком короткие характеристики; не менее 5 символов',
     errorSpecificationIncomplete: 'Заполните ключ и значение характеристики',
     errorPreviewImageNull: 'Не выбрано превью-изображение',
-    errorImageTooBig: 'Изображение слишком большого размера (>200Кб)',
-    errorBigImageTooBig: 'Изображение слишком большого размера (>1000Кб)',
-    errorVideoTooBig: 'Видео слишком большое (>3.5МБ). Увеличьте лимит на сервере',
+    errorPhotoTooBig: 'Фото слишком большое (максимум 20МБ)',
     errorCategoryIdNull: 'Не выбрана категория',
     errorCostNull: 'Не указана стоимость/некорректное число',
     errorCostZeroOrLess: 'Стоимость должна быть больше 0',
@@ -361,6 +385,8 @@ export const translations = {
     emptyChatList: 'Пока нет чатов',
     emptyMessageList: 'Пока нет сообщений',
     emptyAdList: 'Пока нет объявлений',
+    emptyBookingList: 'Нет бронирований',
+    emptySpecificationsList: 'Характеристики не указаны',
 
     // Предупреждения
     confirmation: 'Подтверждение',
@@ -385,6 +411,13 @@ export const translations = {
     validationUsername:
       'Имя пользователя должно быть не менее 6 символов и не более 20 символов, а также не должно содержать пробелов',
     validationUsernameAlreadyTaken: 'Это имя пользователя уже занято',
+
+    // Чаты — системные сообщения
+    systemBookingCreated: 'Создано бронирование',
+    systemBookingConfirmed: 'Бронирование подтверждено',
+    systemBookingRejected: 'Бронирование отклонено',
+    systemBookingCancelled: 'Бронирование отменено',
+    messageDeleted: 'Сообщение удалено',
   },
   en: {
     // Settings
@@ -394,6 +427,17 @@ export const translations = {
     designTheme: 'Design theme',
     dark: 'Dark',
     light: 'Light',
+
+    // Notifications
+    notifications: 'Notifications',
+    markAllRead: 'Mark all read',
+    emptyNotificationList: 'No notifications',
+    onlyUnread: 'Unread',
+    notifSettings: 'Notification settings',
+    notifEmailEnabled: 'Email notifications',
+    notifPushEnabled: 'Push notifications',
+    notifBrowserEnabled: 'Browser notifications',
+    notifInboxEnabled: 'In-app notifications',
 
     // App description
     welcome: "You're welcome!",
@@ -452,8 +496,8 @@ export const translations = {
     everywhere: 'Everywhere',
     searchRadius: 'Search radius, km',
     clearLocation: 'Clear location',
-    priceFrom: 'from',
-    priceTo: 'to',
+    from: 'from',
+    to: 'to',
     adsFound: 'Ads found',
     reviewsFound: 'Reviews found',
     priceRange: 'Price range',
@@ -469,6 +513,7 @@ export const translations = {
     rentEndSoon: 'Until the end of the lease',
     hour: 'hour(s)',
     hours: 'hours',
+    hoursAbbr: 'h',
     rentEnded: 'The lease has ended',
     current: 'Current',
     paused: 'Paused',
@@ -530,6 +575,7 @@ export const translations = {
     adDayTimeStep: 'Select time slots',
     adExceptionsStep: 'Configure exceptions',
     addressWillAppearHere: 'The address will appear here',
+    editAdTitle: 'Edit Listing',
 
     // Reviews
     byHigh: 'Positive first',
@@ -546,6 +592,28 @@ export const translations = {
     usernameUnavailable: 'Taken',
     checkingUsername: 'Checking...',
 
+    // Bookings
+    bookingSuccess: 'Booking created',
+    noSlotsAvailable: 'No slots available',
+    iRent: 'Renting',
+    iLend: 'Lending',
+    btnApprove: 'Approve',
+    btnReject: 'Reject',
+    bookingAll: 'All',
+    bookingPending: 'Pending',
+    bookingApproved: 'Approved',
+    bookingActive: 'Active',
+    bookingCompleted: 'Completed',
+    bookingRejected: 'Rejected',
+    bookingCancelled: 'Cancelled',
+    listingBookings: 'Bookings',
+    btnLeaveReview: 'Leave a review',
+    reviewAboutListing: 'Review about listing',
+    reviewAboutRenter: 'Review about renter',
+    reviewCommentLabel: 'Comment',
+    reviewCommentPlaceholder: 'Optional',
+    reviewAlreadyLeft: 'You have already reviewed this booking',
+
     // Other
     success: 'Success',
     loading: 'Loading',
@@ -556,6 +624,10 @@ export const translations = {
     end: 'End',
     km: 'km',
     geolocation: 'Geolocation',
+    startTime: 'Start',
+    endTime: 'End',
+    on: 'On',
+    off: 'Off',
 
     // priceUnits
     rubPerHour: '₽/hour',
@@ -642,6 +714,7 @@ export const translations = {
     btnStart: 'Start',
     btnCancel: 'Cancel',
     btnSave: 'Save',
+    btnSend: 'Send',
     btnDelete: 'Delete',
     btnConfirm: 'Confirm',
     btnFillProfile: 'Fill out a profile',
@@ -655,7 +728,10 @@ export const translations = {
     btnUpload: 'Upload',
     btnLogout: 'Log out',
     btnToReviews: 'View reviews',
+    btnToOwnerReviews: 'Landlord reviews',
     btnAllReviews: 'All reviews',
+    ownerReviewsTitle: 'Landlord reviews',
+    renterReviewsTitle: 'Renter reviews',
     btnSelectTime: 'Select time',
     btnToOffers: 'View offers',
     btnFinish: 'Finish',
@@ -672,23 +748,7 @@ export const translations = {
     btnResume: 'Resume',
     btnViewBookings: 'View all bookings',
     btnBook: 'Book',
-    startTime: 'Start',
-    endTime: 'End',
-    bookingSuccess: 'Booking created',
-    noSlotsAvailable: 'No slots available',
-    iRent: 'Renting',
-    iLend: 'Lending',
-    btnApprove: 'Approve',
-    btnReject: 'Reject',
-    bookingAll: 'All',
-    bookingPending: 'Pending',
-    bookingApproved: 'Approved',
-    bookingActive: 'Active',
-    bookingCompleted: 'Completed',
-    bookingRejected: 'Rejected',
-    bookingCancelled: 'Cancelled',
-    emptyBookingList: 'No bookings',
-    listingBookings: 'Bookings',
+    markAllReadConfirm: 'Mark all notifications as read?',
 
     // Errors
     error: 'Error',
@@ -698,6 +758,7 @@ export const translations = {
     errorChatNotFound: 'The chat was not found',
     errorAdNotFound: 'The ad was not found',
     errorLanguage: 'Invalid language',
+
     // Forms
     errorAdTypeNull: 'Ad type is not selected',
     errorTitleNull: 'Ad name is not filled in',
@@ -714,7 +775,8 @@ export const translations = {
     //   'Specifications is too long; no more than 100 characters allowed',
     // errorSpecificationTooShort:
     //   'Specifications are too short; no less than 5 characters allowed',
-    errorSpecificationIncomplete: 'Fill in both the key and value of the specification',
+    errorSpecificationIncomplete:
+      'Fill in both the key and value of the specification',
     errorPreviewImageNull: 'Preview image is not selected',
     errorCategoryIdNull: 'Category is not selected',
     errorCostNull: 'Cost is not specified/an incorrect number',
@@ -726,9 +788,7 @@ export const translations = {
     errorMinIntervalTooBig:
       'The minimum booking interval must be no more than 24 hours',
     errorMediaArrayTooLong: 'Too many media files; no more than 10 allowed',
-    errorImageTooBig: 'The image is too large (>200Kb)',
-    errorBigImageTooBig: 'The image is too large (>1000Kb)',
-    errorVideoTooBig: 'Video is too large (>3.5MB). Increase the server limit',
+    errorPhotoTooBig: 'Photo is too large (max 20MB)',
     errorAddressNull: 'Error uploading the address',
     errorDatePeriodNull: 'Start/end dates of the period is not specified',
     errorEndDateStartDateComparison:
@@ -745,6 +805,8 @@ export const translations = {
     emptyChatList: 'No chats yet',
     emptyMessageList: 'No messages yet',
     emptyAdList: 'No ads yet',
+    emptyBookingList: 'No bookings',
+    emptySpecificationsList: 'No specifications yet',
 
     // Warnings
     confirmation: 'Confirmation',
@@ -770,6 +832,11 @@ export const translations = {
       'Username must be at least 6 characters and no more than 20 characters long, and must not contain spaces',
     validationUsernameAlreadyTaken: 'This username is already taken',
 
-    editAdTitle: 'Edit Listing',
+    // Chat — system messages
+    systemBookingCreated: 'Booking created',
+    systemBookingConfirmed: 'Booking confirmed',
+    systemBookingRejected: 'Booking rejected',
+    systemBookingCancelled: 'Booking cancelled',
+    messageDeleted: 'Message deleted',
   },
 };

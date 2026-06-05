@@ -170,18 +170,14 @@ export default function Search() {
 
     setPage(1);
 
-    // Конвертация в ₽/час
-    setAppliedFilters({
-      categoryId: draftFilters.category?.id.toString(),
-
+    setAppliedFilters(prev => ({
+      ...prev, // сохраняем categoryId — он управляется отдельно
       minPrice: minInt != null ? minInt / displayMultiplier : undefined,
-
       maxPrice: maxInt != null ? maxInt / displayMultiplier : undefined,
-
       lat: draftFilters.location?.lat,
       lon: draftFilters.location?.lon,
       radiusKm: draftFilters.location?.radiusKm,
-    });
+    }));
 
     console.log('Фильтры применены');
   };
@@ -205,12 +201,12 @@ export default function Search() {
   };
 
   const handleCategory = (value: CategoryType | null) => {
-    setDraftFilters(prev => ({
+    setDraftFilters(prev => ({ ...prev, category: value }));
+    setAppliedFilters(prev => ({
       ...prev,
-      category: value,
+      categoryId: value?.id.toString(),
     }));
-
-    console.log(`Категория ${value?.name ?? 'all'} выбрана`);
+    setPage(1);
   };
 
   const handleTag = (value: ProductType | null) => {
@@ -446,7 +442,7 @@ export default function Search() {
                         setPriceError(null);
                       }}
                       keyboardType={'number-pad'}
-                      placeholder={`${l.priceFrom}, ${priceUnit}`}
+                      placeholder={`${l.from}, ${priceUnit}`}
                     />
                   </View>
                   <View className={'flex-1'}>
@@ -462,7 +458,7 @@ export default function Search() {
                         setPriceError(null);
                       }}
                       keyboardType={'number-pad'}
-                      placeholder={`${l.priceTo}, ${priceUnit}`}
+                      placeholder={`${l.to}, ${priceUnit}`}
                     />
                   </View>
                 </View>

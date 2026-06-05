@@ -1,20 +1,36 @@
-import { MediaType } from '@/types/MediaType';
-import { UserCardType } from '@/types/entities/UserType';
+export type BookingEventType =
+  | 'booking_created'
+  | 'booking_confirmed'
+  | 'booking_rejected'
+  | 'booking_cancelled'
+  | '';
 
-export interface MessageType {
+export interface MessageEntity {
   id: string;
-  text: string;
-  userId: string;
-  date: string;
-  isReceive: boolean;
-  isRead: boolean;
-  media?: MediaType[];
+  conversationId: string;
+  senderId: string;
+  isSystem: boolean;
+  eventType: BookingEventType;
+  content: string;
+  referenceId: string;
+  isDeleted: boolean;
+  isEdited: boolean;
+  sentAt: string;
+  readAt: string | null;
 }
 
-export interface ChatType {
+export interface ConversationEntity {
   id: string;
-  talker: UserCardType;
-  adName: string;
-  lastMessageDate: string;
-  messages: MessageType[];
+  listingId: string;
+  listingTitle: string;
+  listingCoverUrl: string;
+  listingDeleted: boolean;
+  otherUsername: string;
+  otherAvatarUrl: string;
+  unreadCount: number;
+  lastMessage: MessageEntity | null;
+  isMuted: boolean;
+  blockedByMe: boolean;
+  blockedByThem: boolean;
+  lastMessageAt: string;
 }

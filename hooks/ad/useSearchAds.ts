@@ -11,6 +11,7 @@ import {
   AdService,
 } from '@/services/api/services/adService';
 import { SearchListingsRequestDto } from '@/services/api/services/dto/ad.dto';
+import { useGetAllCategories } from '@/notUsable/mock-server/hooks/category/useGetAllCategories';
 
 export interface UseSearchAdsParams {
   query?: string;

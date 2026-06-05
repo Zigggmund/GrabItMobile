@@ -7,7 +7,8 @@ import { PublicUserResponseDto } from '@/services/api/services/dto/user.dto';
 const PLACEHOLDER_IMAGE: MediaType = { id: '', url: '' };
 
 export const mapAd = (dto: AdResponseDto): AdPreviewType => {
-  const firstMedia = dto.media?.[0];
+  const sortedMedia = [...(dto.media ?? [])].sort((a, b) => a.sort_order - b.sort_order);
+  const firstMedia = sortedMedia[0];
 
   return {
     id: dto.listing_id,
@@ -17,16 +18,14 @@ export const mapAd = (dto: AdResponseDto): AdPreviewType => {
     rating: dto.review_count === 0 ? null : dto.avg_rating,
     reviewCount: dto.review_count,
     address: dto.address ?? '',
-    // productType: 'product',
     categoryId: String(dto.category_id),
     previewImage: firstMedia
       ? {
           id: firstMedia.id,
           url: firstMedia.url,
-          mediaType: 'photo',
+          mediaType: firstMedia.media_type === 'video' ? 'video' : 'photo',
         }
       : PLACEHOLDER_IMAGE,
-    // createdDate: dto.created_at,
   };
 };
 
@@ -35,17 +34,13 @@ export const mapFullAd = (
   owner: PublicUserResponseDto,
 ): AdDetailsType => {
   const mappedAd = mapAd(dto);
-  const allMedia = (dto.media ?? []).map(m => ({
-    id: m.id,
-    url: m.url,
-    mediaType:
-      m.media_type === 'video' ? ('video' as const) : ('photo' as const),
-  }));
-
-  // в Media убираем previewImage
-  const filteredMedia = allMedia.filter(
-    item => item.id !== mappedAd.previewImage.id,
-  );
+  const allMedia = [...(dto.media ?? [])]
+    .sort((a, b) => a.sort_order - b.sort_order)
+    .map(m => ({
+      id: m.id,
+      url: m.url,
+      mediaType: m.media_type === 'video' ? ('video' as const) : ('photo' as const),
+    }));
 
   return {
     ...mapAd(dto),
@@ -53,7 +48,7 @@ export const mapFullAd = (
     lon: dto.lon,
     quantity: dto.quantity,
     minHoursInterval: dto.buffer_hours,
-    media: filteredMedia,
+    media: allMedia,
     createdDate: dto.created_at,
     specifications: dto.attributes,
     landlord: {

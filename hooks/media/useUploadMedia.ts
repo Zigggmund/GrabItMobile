@@ -5,8 +5,8 @@ import { MediaService } from '@/services/api/services/mediaService';
 
 export const useUploadMedia = () => {
   return useMutation({
-    mutationFn: async ({ id, file }: MediaUploadDTO) => {
-      return await MediaService.uploadMedia(id, file);
+    mutationFn: async ({ id, file, mimeType = 'image/jpeg', sort_order }: MediaUploadDTO) => {
+      return await MediaService.uploadMedia(id, file, mimeType, sort_order);
     },
   });
 };

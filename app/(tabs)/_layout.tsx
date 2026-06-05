@@ -45,7 +45,7 @@ export default function TabsLayout() {
     p => p.link.split('/')[p.link.split('/').length - 1],
   );
   const isRootTabScreen = ROOT_TAB_SCREENS.includes(current);
-  const hasBack = !isRootTabScreen && !isUserProfile;
+  const hasBack = !isRootTabScreen && !isUserProfile && !isNotificationsScreen;
 
   return (
     // SafeAreaView для предотвращения наложения системных панелей на footer/header
@@ -105,6 +105,7 @@ export default function TabsLayout() {
         ))}
         {/* Второстепенные страницы */}
         <Tabs.Screen name={'users/settings'} options={{ href: null }} />
+        <Tabs.Screen name={'users/notifications'} options={{ href: null }} />
         <Tabs.Screen name={'users/landlordAds/[id]'} options={{ href: null }} />
         <Tabs.Screen name={'users/[username]'} options={{ href: null }} />
         <Tabs.Screen name={'users/reviews/[id]'} options={{ href: null }} />

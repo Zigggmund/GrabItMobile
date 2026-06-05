@@ -1,26 +1,55 @@
-import { MessageType } from '@/types/entities/ChatType';
-
 import { View } from 'react-native';
 
+import { useLanguage } from '@/hooks/useLanguage';
 import { useProfile } from '@/hooks/user/useProfile';
 import { useTheme } from '@/hooks/useTheme';
-
-import { timeFormat } from '@/utils/timeFormat';
 
 import { CustomIcon } from '@/components/ui/icon/CustomIcon';
 import { CustomText } from '@/components/ui/text/CustomText';
 
 import { icons } from '@/constants/icons';
+import { timeFormat } from '@/utils/timeFormat';
+import { BookingEventType, MessageEntity } from '@/types/entities/ChatType';
 
 interface MessageProps {
-  message: MessageType;
+  message: MessageEntity;
   width: number;
+}
+
+function getSystemLabel(eventType: BookingEventType, l: ReturnType<typeof useLanguage>['l']): string {
+  switch (eventType) {
+    case 'booking_created':   return l.systemBookingCreated;
+    case 'booking_confirmed': return l.systemBookingConfirmed;
+    case 'booking_rejected':  return l.systemBookingRejected;
+    case 'booking_cancelled': return l.systemBookingCancelled;
+    default:                  return '';
+  }
 }
 
 export function Message({ message, width }: MessageProps) {
   const { user } = useProfile();
   const { colors } = useTheme();
-  const isMine = user?.id == message.userId;
+  const { l } = useLanguage();
+  const isMine = user?.id === message.senderId;
+  const isRead = message.readAt !== null;
+
+  if (message.isSystem) {
+    return (
+      <View className="items-center py-1">
+        <View
+          className="rounded-xl px-4 py-1.5"
+          style={{ backgroundColor: colors.base.grey.bright }}
+        >
+          <CustomText
+            className="text-12 text-center"
+            style={{ color: colors.theme.blue.bright }}
+          >
+            {getSystemLabel(message.eventType, l)}
+          </CustomText>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View
@@ -28,36 +57,33 @@ export function Message({ message, width }: MessageProps) {
         justifyContent: 'flex-end',
         flexDirection: isMine ? 'row' : 'row-reverse',
       }}
-      className={'flex-row gap-4'}
+      className="flex-row gap-4"
     >
-      <View style={{ width: 36 }} className={'flex-col justify-end gap-2 w-6'}>
-        <View
-          style={{ justifyContent: isMine ? 'flex-end' : 'flex-start' }}
-          className={'relative flex-row'}
-        >
-          {message.isReceive && (
+      <View style={{ width: 36 }} className="flex-col justify-end gap-2">
+        {isMine && (
+          <View
+            style={{ justifyContent: 'flex-end' }}
+            className="relative flex-row"
+          >
             <CustomIcon
               source={icons.check}
               size={12}
               color={colors.theme.blue.bright}
             />
-          )}
-
-          {message.isRead && (
-            <CustomIcon
-              source={icons.check}
-              size={12}
-              color={colors.theme.blue.bright}
-            />
-          )}
-        </View>
-        <CustomText
-          style={{ color: colors.theme.blue.bright }}
-          className={'text-13'}
-        >
-          {timeFormat(message.date)}
+            {isRead && (
+              <CustomIcon
+                source={icons.check}
+                size={12}
+                color={colors.theme.blue.bright}
+              />
+            )}
+          </View>
+        )}
+        <CustomText style={{ color: colors.theme.blue.bright }} className="text-12">
+          {timeFormat(message.sentAt)}
         </CustomText>
       </View>
+
       <View
         style={{
           borderRadius: 12,
@@ -71,64 +97,33 @@ export function Message({ message, width }: MessageProps) {
           width: width,
           paddingVertical: 8,
         }}
-        className={'px-4'}
+        className="px-4"
       >
-        <CustomText
-          style={{
-            color: isMine
-              ? colors.base.neutral.whitePrimary
-              : colors.theme.black.primary,
-          }}
-          className={'text-16'}
-        >
-          {message.text}
-        </CustomText>
+        {message.isDeleted ? (
+          <CustomText
+            style={{
+              color: isMine
+                ? colors.base.neutral.whitePrimary
+                : colors.theme.grey.dark,
+              fontStyle: 'italic',
+            }}
+            className="text-15"
+          >
+            {l.messageDeleted}
+          </CustomText>
+        ) : (
+          <CustomText
+            style={{
+              color: isMine
+                ? colors.base.neutral.whitePrimary
+                : colors.theme.black.primary,
+            }}
+            className="text-15"
+          >
+            {message.content}
+          </CustomText>
+        )}
       </View>
     </View>
   );
-
-  // return (
-  //   <View
-  //     style={{
-  //       borderRadius: 10,
-  //       borderWidth: 1,
-  //       borderColor: colors.theme.grey.dark,
-  //       backgroundColor: colors.theme.white.primary,
-  //       justifyContent: 'flex-start',
-  //     }}
-  //     className={'gap-2 flex-row'}
-  //   >
-  //     <CustomText
-  //       style={{
-  //         color: isMine
-  //           ? colors.base.neutral.whitePrimary
-  //           : colors.theme.black.primary,
-  //       }}
-  //       className={'text-16'}
-  //     >
-  //       {message.text}
-  //     </CustomText>
-  //     <View className={'flex-col justify-end gap-2'}>
-  //       <View>
-  //         <CustomIcon
-  //           style={{
-  //             tintColor: colors.theme.blue.bright,
-  //             display: message.isReceive ? 'flex' : 'none',
-  //           }}
-  //           source={icons.check}
-  //           size={10}
-  //         />
-  //         <CustomIcon
-  //           style={{
-  //             tintColor: colors.theme.blue.bright,
-  //             display: message.isRead ? 'flex' : 'none',
-  //           }}
-  //           source={icons.check}
-  //           size={10}
-  //         />
-  //       </View>
-  //       <CustomText>{timeFormat(message.date)}</CustomText>
-  //     </View>
-  //   </View>
-  // );
 }

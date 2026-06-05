@@ -58,25 +58,20 @@ export default function BigAd({ width, ad }: BigAdProps) {
               : images.defaultAd
           }
         />
-        <View className={'flex-1 pt-2 px-2 pb-1 justify-between'}>
-          <View className={'gap-1'}>
-            <CustomText
-              highlight
-              style={{ color: colors.theme.blue.primary }}
-              className={'text-15 font-bold pb-1'}
-              numberOfLines={2}
-            >
-              {ad.title}
-            </CustomText>
-            <CustomText
-              highlight
-              style={{ color: colors.theme.blue.primary }}
-              className={'text-11'}
-              numberOfLines={3}
-            >
-              {ad.description}
-            </CustomText>
-          </View>
+        <View className={'flex-1 pt-3 px-2 pb-2 justify-between'}>
+          <CustomText
+            highlight
+            style={{ color: colors.theme.blue.primary }}
+            className={'text-18 font-bold pb-1'}
+            numberOfLines={2}
+          >
+            {ad.title} asdasdasasdasd
+          </CustomText>
+          <Category
+            categoryId={ad.categoryId}
+            // isSmall
+            productType={'product'}
+          />
           <View className={'gap-1'}>
             <View
               style={{ width: '90%' }}
@@ -86,31 +81,21 @@ export default function BigAd({ width, ad }: BigAdProps) {
               <CustomText
                 style={{ color: colors.theme.blue.dark }}
                 numberOfLines={1}
-                className={'text-10'}
+                className={'text-13'}
               >
                 {l.revs}: {ad.reviewCount}
               </CustomText>
             </View>
-            <View
-              className={'gap-2 pt-1 flex-row justify-between items-center'}
+            <CustomText
+              style={{ color: colors.theme.blue.dark }}
+              className={'text-14 font-bold'}
             >
-              <CustomText
-                style={{ color: colors.theme.blue.dark }}
-                className={'text-11 font-bold'}
-              >
-                {price} {rubPer}
-              </CustomText>
-              {/* ЗАГЛУШКА */}
-              <Category
-                categoryId={ad.categoryId}
-                isSmall
-                productType={'product'}
-              />
-            </View>
+              {price} {rubPer}
+            </CustomText>
             <CustomText
               style={{ color: colors.theme.blue.bright }}
-              className={'text-11'}
-              numberOfLines={1}
+              className={'text-13'}
+              numberOfLines={2}
             >
               {ad.address}
             </CustomText>

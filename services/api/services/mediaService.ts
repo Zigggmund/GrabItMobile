@@ -14,10 +14,10 @@ export class MediaService {
     listingId: string,
     fileUri: string,
     mimeType: string = 'image/jpeg',
-    sortOrder: number = 0,
+    sortOrder: number,
   ): Promise<{ id: string; url: string }> {
     if (mimeType.startsWith('video')) {
-      return MediaService.uploadVideo(listingId, fileUri, sortOrder);
+      return MediaService.uploadVideo(listingId, fileUri);
     }
     return MediaService.uploadPhoto(listingId, fileUri, sortOrder);
   }
@@ -48,16 +48,14 @@ export class MediaService {
   private static async uploadVideo(
     listingId: string,
     fileUri: string,
-    sortOrder: number,
   ): Promise<{ id: string; url: string }> {
-    // Step 1: get presigned upload URL
     const { upload_url, object_key } = await unwrap(
       await api.post<ApiResponse<{ upload_url: string; object_key: string }>>(
         `/rent/listings/${listingId}/media/video/upload-url`,
+        { sort_order: 1 },
       ),
     );
 
-    // Step 2: upload binary directly to S3 presigned URL
     const fileResponse = await fetch(fileUri);
     const blob = await fileResponse.blob();
     const uploadResp = await fetch(upload_url, {
@@ -69,11 +67,10 @@ export class MediaService {
       throw new Error(`Video upload failed: ${uploadResp.status}`);
     }
 
-    // Step 3: confirm upload
     const res = await unwrap(
       await api.post<ApiResponse<UploadMediaResp>>(
         `/rent/listings/${listingId}/media/video/confirm`,
-        { object_key, sort_order: sortOrder },
+        { object_key, sort_order: 1 },
       ),
     );
     return { id: res.media_id, url: res.url };

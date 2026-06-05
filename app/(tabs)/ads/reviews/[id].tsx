@@ -27,6 +27,7 @@ export default function AdReviews() {
   const [allReviews, setAllReviews] = useState<ReviewType[]>([]);
   const [sortBy, setSortBy] = useState<SortingReviewsType>('new');
   const [rating, setRating] = useState<number | null>(null);
+  const [total, setTotal] = useState(0);
 
   const { data, isLoading, isFetching } = useGetAdReviews(
     id,
@@ -35,17 +36,15 @@ export default function AdReviews() {
   );
   const { data: ad, isLoading: isLoadingAd, isError: isErrorAd } = useGetAd(id);
 
-  const total = data?.total ?? 0;
-
   useEffect(() => {
     setServerPage(1);
     setAllReviews([]);
-
-    console.log('sortBy', sortBy, 'rating', rating);
+    setTotal(0);
   }, [sortBy, rating]);
 
   useEffect(() => {
     if (!data?.items) return;
+    if (data.total > 0) setTotal(data.total);
     setAllReviews(prev => {
       if (serverPage === 1) return data.items;
       const existingIds = new Set(prev.map(r => r.id));

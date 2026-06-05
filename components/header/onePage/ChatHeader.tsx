@@ -1,8 +1,5 @@
-import { UserCardType } from '@/types/entities/UserType';
-
 import { View } from 'react-native';
 
-import { useLanguage } from '@/hooks/useLanguage';
 import { useTheme } from '@/hooks/useTheme';
 
 import GreyBlock from '@/components/common/GreyBlock';
@@ -10,41 +7,39 @@ import { ProfileAvatar } from '@/components/common/ProfileAvatar';
 import { CustomText } from '@/components/ui/text/CustomText';
 
 interface ChatHeaderProps {
-  userCard: UserCardType;
-  isOnline: boolean;
+  username: string;
+  avatarUrl: string;
+  listingTitle: string;
 }
 
-export default function ChatHeader({ userCard, isOnline }: ChatHeaderProps) {
-  const { l } = useLanguage();
+export default function ChatHeader({
+  username,
+  avatarUrl,
+  listingTitle,
+}: ChatHeaderProps) {
   const { colors } = useTheme();
 
   return (
     <GreyBlock>
-      <View className={`flex-row justify-between px-2 items-center`}>
-        <View className={'gap-4 flex-row items-center'}>
-          <ProfileAvatar
-            size={54}
-            source={userCard.avatar}
-            username={userCard.username}
-          />
+      <View className="flex-row gap-4 items-center px-2">
+        <ProfileAvatar size={50} source={avatarUrl || null} username={username} />
+        <View className="flex-1">
           <CustomText
             highlight
             style={{ color: colors.theme.blue.dark }}
-            className={'font-bold text-20'}
+            className="font-bold text-18"
+            numberOfLines={1}
           >
-            {userCard.username}
+            {username}
+          </CustomText>
+          <CustomText
+            style={{ color: colors.theme.blue.bright }}
+            className="text-13"
+            numberOfLines={1}
+          >
+            {listingTitle}
           </CustomText>
         </View>
-        <CustomText
-          className={'text-14'}
-          style={{
-            color: isOnline
-              ? colors.base.green.primary
-              : colors.base.red.primary,
-          }}
-        >
-          {isOnline ? l.online : l.offline}
-        </CustomText>
       </View>
     </GreyBlock>
   );

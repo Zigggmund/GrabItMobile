@@ -18,11 +18,12 @@ import ScreenContainer from '@/components/layout/ScreenContainer';
 import { CustomText } from '@/components/ui/text/CustomText';
 
 export default function UserReviews() {
-  const { id, username, reviewCount, userRating } = useLocalSearchParams<{
+  const { id, username, reviewCount, userRating, role } = useLocalSearchParams<{
     id: string;
     username: string;
     reviewCount: string;
     userRating: string;
+    role?: 'owner' | 'renter';
   }>();
   const { colors } = useTheme();
   const { l } = useLanguage();
@@ -31,6 +32,7 @@ export default function UserReviews() {
   const [allReviews, setAllReviews] = useState<ReviewType[]>([]);
   const [sortBy, setSortBy] = useState<SortingReviewsType>('new');
   const [rating, setRating] = useState<number | null>(null);
+  const [total, setTotal] = useState(0);
 
   const { data, isLoading, isFetching } = useGetUserReviews(
     id,
@@ -38,17 +40,15 @@ export default function UserReviews() {
     sortBy,
   );
 
-  const total = data?.total ?? 0;
-
   useEffect(() => {
     setServerPage(1);
     setAllReviews([]);
-
-    console.log('sortBy', sortBy, 'rating', rating);
+    setTotal(0);
   }, [sortBy, rating]);
 
   useEffect(() => {
     if (!data?.items) return;
+    if (data.total > 0) setTotal(data.total);
     setAllReviews(prev => {
       if (serverPage === 1) return data.items;
       const existingIds = new Set(prev.map(r => r.id));
@@ -78,6 +78,7 @@ export default function UserReviews() {
             itemRating={Number(userRating)}
             reviewCount={Number(reviewCount)}
             itemName={username}
+            role={role ?? 'owner'}
           />
           <CustomText
             className={'self-start text-14'}

@@ -27,6 +27,8 @@ export function Category({
   const { data: categories = [] } = useGetProductTypeCategories(productType);
   const category = categories.find(c => c.id === Number(categoryId));
 
+  if (!category) return null;
+
   return (
     <Pressable onPress={onPress}>
       <View
@@ -44,8 +46,7 @@ export function Category({
           style={{ color: colors.base.orange.primary }}
           numberOfLines={2}
         >
-          {category?.name}
-          {/*{l[category?.name as TranslationKey]}*/}
+          {category?.name || category?.slug || ''}
         </CustomText>
       </View>
     </Pressable>

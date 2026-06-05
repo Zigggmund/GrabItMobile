@@ -13,7 +13,7 @@ import {
 
 import { CustomAlert } from '@/components/modals/CustomAlert';
 
-const initialAdData: AdFormDataType = {
+const makeInitialAdData = (): AdFormDataType => ({
   title: '',
   quantity: 1,
   description: '',
@@ -22,14 +22,14 @@ const initialAdData: AdFormDataType = {
   weekDays: [false, false, false, false, false, false, false],
   weekDaysTime: [[], [], [], [], [], [], []],
   minHoursInterval: 1,
-};
+});
 
 export const FormProvider = ({ children }: { children: ReactNode }) => {
   const { l } = useLanguage();
   const history = useHistory();
 
   const [isFilled, setIsFilled] = useState(false);
-  const [AdFormData, setAdFormData] = useState<AdFormDataType>(initialAdData);
+  const [AdFormData, setAdFormData] = useState<AdFormDataType>(makeInitialAdData);
   const [bookingFormData, setBookingFormData] = useState<BookingFormDataType>(
     {},
   );
@@ -101,7 +101,7 @@ export const FormProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const clear = () => {
-    setAdFormData(initialAdData);
+    setAdFormData(makeInitialAdData());
     setBookingFormData({});
     setCurrentStep(1);
     setIsFilled(false);
@@ -124,7 +124,6 @@ export const FormProvider = ({ children }: { children: ReactNode }) => {
   // };
 
   const formGoBack = async () => {
-    console.log(1);
     if (currentStep == 1) {
       history.goBack();
     } else {

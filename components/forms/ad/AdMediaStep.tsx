@@ -19,11 +19,10 @@ import { icons } from '@/constants/icons';
 import { toastService } from '@/services/toastService';
 
 export const AdMediaStep = ({ errors }: { errors: Record<string, string> }) => {
-  const maxPreviewSize = 200 * 1024;
-  const maxMediaSize = 1000 * 1024;
-  // пока размер как на бэкенде 3.5 мб
-  const maxVideoSize = 3.5 * 1024 * 1024; // заменить 3.5 на 50/100
-  const maxMediaCount = 10;
+  const MAX_PHOTO_SIZE = 20 * 1024 * 1024; // 20MB — лимит бэкенда
+  const COMPRESS_THRESHOLD = 2 * 1024 * 1024; // сжимаем если > 2MB для оптимизации загрузки
+  const maxPhotoCount = 10;
+  const maxVideoCount = 1;
 
   const { l } = useLanguage();
   const { colors } = useTheme();
@@ -41,38 +40,14 @@ export const AdMediaStep = ({ errors }: { errors: Record<string, string> }) => {
   // сжатие
   const compressImage = async (uri: string, maxSize: number) => {
     try {
-      const resized = await ImageResizer.createResizedImage(
-        uri,
-        1080, // ширина
-        1080, // высота
-        'JPEG',
-        80, // качество (%)
-      );
-
-      console.log('Original URI:', uri);
-      console.log('Resized size (Kb):', (resized.size / 1024).toFixed(2));
-      console.log('Resized URI:', resized.uri);
-
-      // Размер всё ещё больше - пробуем снизить качество
+      const resized = await ImageResizer.createResizedImage(uri, 1080, 1080, 'JPEG', 80);
       if (resized.size && resized.size > maxSize) {
-        const quality = Math.max(10, (maxSize / resized.size) * 80); // динамическое качество
-        const resizedAgain = await ImageResizer.createResizedImage(
-          resized.uri,
-          1080,
-          1080,
-          'JPEG',
-          quality,
-        );
-        console.log(
-          'Second compression size (Kb):',
-          (resizedAgain.size / 1024).toFixed(2),
-        );
+        const quality = Math.max(10, (maxSize / resized.size) * 80);
+        const resizedAgain = await ImageResizer.createResizedImage(resized.uri, 1080, 1080, 'JPEG', quality);
         return resizedAgain.uri;
       }
-
       return resized.uri;
-    } catch (e) {
-      console.error('Ошибка сжатия изображения:', e);
+    } catch {
       return uri;
     }
   };
@@ -89,10 +64,12 @@ export const AdMediaStep = ({ errors }: { errors: Record<string, string> }) => {
 
     let uri = asset.uri;
 
-    // Сжимаем, если файл слишком большой
-    if (asset.fileSize && asset.fileSize > maxPreviewSize) {
-      console.log('Preview-image was compressed');
-      uri = await compressImage(asset.uri, maxPreviewSize);
+    if (asset.fileSize && asset.fileSize > MAX_PHOTO_SIZE) {
+      toastService.error(l.errorPhotoTooBig);
+      return;
+    }
+    if (asset.fileSize && asset.fileSize > COMPRESS_THRESHOLD) {
+      uri = await compressImage(asset.uri, COMPRESS_THRESHOLD);
     }
 
     const mediaObj: MediaType = { id: String(Date.now()), url: uri };
@@ -100,39 +77,46 @@ export const AdMediaStep = ({ errors }: { errors: Record<string, string> }) => {
     form.changeAdFormData('previewImage', mediaObj);
   };
 
+  const currentPhotos = media.filter(m => m.mediaType !== 'video').length;
+  const currentVideos = media.filter(m => m.mediaType === 'video').length;
+  const remainingPhotos = maxPhotoCount - 1 - currentPhotos; // -1 для preview
+  const remainingVideos = maxVideoCount - currentVideos;
+  const canAddMore = remainingPhotos > 0 || remainingVideos > 0;
+
   const handleAddMedia = async () => {
-    const remaining = maxMediaCount - media.length;
-    if (remaining <= 0) return;
+    if (!canAddMore) return;
 
     const result = await launchImageLibrary({
-      selectionLimit: remaining,
-      mediaType: 'mixed',
+      selectionLimit: remainingPhotos + remainingVideos,
+      mediaType: remainingVideos > 0 ? 'mixed' : 'photo',
     });
     if (!result.assets?.length) return;
 
     const newMedia: MediaType[] = [];
+    let addedPhotos = 0;
+    let addedVideos = 0;
 
     for (const asset of result.assets) {
       if (!asset.uri) continue;
-
       const isVideo = asset.type?.startsWith('video') ?? false;
-      let uri = asset.uri;
 
       if (isVideo) {
-        if (asset.fileSize && asset.fileSize > maxVideoSize) {
-          toastService.error(l.errorVideoTooBig);
+        if (currentVideos + addedVideos >= maxVideoCount) continue;
+        newMedia.push({ id: String(Date.now() + Math.random()), url: asset.uri, mediaType: 'video' });
+        addedVideos++;
+      } else {
+        if (currentPhotos + addedPhotos >= maxPhotoCount - 1) continue;
+        if (asset.fileSize && asset.fileSize > MAX_PHOTO_SIZE) {
+          toastService.error(l.errorPhotoTooBig);
           continue;
         }
-      } else if (asset.fileSize && asset.fileSize > maxMediaSize) {
-        console.log('Media was compressed');
-        uri = await compressImage(asset.uri, maxMediaSize);
+        let uri = asset.uri;
+        if (asset.fileSize && asset.fileSize > COMPRESS_THRESHOLD) {
+          uri = await compressImage(asset.uri, COMPRESS_THRESHOLD);
+        }
+        newMedia.push({ id: String(Date.now() + Math.random()), url: uri, mediaType: 'photo' });
+        addedPhotos++;
       }
-
-      newMedia.push({
-        id: String(Date.now() + Math.random()),
-        url: uri,
-        mediaType: isVideo ? 'video' : 'photo',
-      });
     }
 
     const updatedMedia = [...media, ...newMedia];
@@ -256,7 +240,7 @@ export const AdMediaStep = ({ errors }: { errors: Record<string, string> }) => {
               </View>
             ))}
 
-            {media.length < maxMediaCount && (
+            {canAddMore && (
               <CustomIcon
                 source={icons.add}
                 className={'mt-10'}

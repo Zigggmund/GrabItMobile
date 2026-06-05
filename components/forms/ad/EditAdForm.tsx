@@ -40,13 +40,14 @@ export const EditAdForm = ({ ad }: Props) => {
   const form = useForm();
   const queryClient = useQueryClient();
 
-  const originalMediaRef = useRef(ad.media);
+  const originalMediaRef = useRef(ad.media.filter(m => m.id !== ad.previewImage?.id));
   const populated = useRef(false);
 
   useEffect(() => {
     if (populated.current) return;
     populated.current = true;
 
+    form.clear();
     form.changeAdFormData('adType', 'product');
     form.changeAdFormData('title', ad.title);
     form.changeAdFormData('description', ad.description ?? '');
@@ -59,7 +60,7 @@ export const EditAdForm = ({ ad }: Props) => {
     form.changeAdFormData('address', ad.address);
     form.changeAdFormData('specifications', ad.specifications);
     form.changeAdFormData('previewImage', ad.previewImage);
-    form.changeAdFormData('uriMedias', ad.media);
+    form.changeAdFormData('uriMedias', ad.media.filter(m => m.id !== ad.previewImage?.id));
   }, []);
 
   const adId = ad.id;
@@ -180,16 +181,17 @@ export const EditAdForm = ({ ad }: Props) => {
       );
       const newLocalMedia = currentMedia.filter(m => !m.url.startsWith('http'));
 
-      await Promise.all(
+      await Promise.allSettled(
         removedMedia.map(m => MediaService.deleteMedia(adId, String(m.id))),
       );
-      await Promise.all(
+      const existingOnServer = currentMedia.filter(m => m.url.startsWith('http'));
+      await Promise.allSettled(
         newLocalMedia.map((m, i) =>
           MediaService.uploadMedia(
             adId,
             m.url,
             m.mediaType === 'video' ? 'video/mp4' : 'image/jpeg',
-            currentMedia.findIndex(cm => cm.id === m.id),
+            existingOnServer.length + 2 + i, // +1 preview + после существующих
           ),
         ),
       );

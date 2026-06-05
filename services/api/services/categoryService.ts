@@ -18,6 +18,7 @@ export class CategoryService {
     return categories.map(dto => ({
       id: dto.id,
       name: dto.name,
+      slug: dto.slug,
       productType: productType,
       parentId: dto.parent_id ?? null,
       sortOrder: dto.sort_order,

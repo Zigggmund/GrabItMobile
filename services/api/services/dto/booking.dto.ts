@@ -66,4 +66,5 @@ export interface GetBookingsRequestDto {
   status?: BookingStatus;
   page?: number;
   page_size?: number;
+  // day?: string; // TODO: filter by overlap with day (backend pending)
 }

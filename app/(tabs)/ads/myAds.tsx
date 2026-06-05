@@ -49,8 +49,12 @@ export default function MyAdsPage() {
     setAllAds(prev => {
       if (page === 1) return data.items;
       const existingIds = new Set(prev.map(a => a.listing_id));
-      return [...prev, ...data.items.filter(a => !existingIds.has(a.listing_id))];
+      return [
+        ...prev,
+        ...data.items.filter(a => !existingIds.has(a.listing_id)),
+      ];
     });
+    // console.log(data);
   }, [data]);
 
   const pauseListing = usePauseAd();
@@ -87,12 +91,6 @@ export default function MyAdsPage() {
     index: number;
   }) => (
     <View>
-      <CustomText
-        className={'text-14 mb-4'}
-        style={{ color: colors.theme.blue.bright }}
-      >
-        {l.adsFound}: {total}
-      </CustomText>
       <GreyBlock index={index} className={'gap-4'}>
         <BigAd width={BIG_AD_WIDTH} ad={mapAd(item)} />
         {item.status !== 'deleted' && (
@@ -145,7 +143,9 @@ export default function MyAdsPage() {
   return (
     <ScreenContainer>
       <View
-        className={'gap-x-2 px-2 gap-y-3 flex-row  justify-center flex-wrap mb-4'}
+        className={
+          'gap-x-2 px-2 gap-y-3 flex-row  justify-center flex-wrap mb-4'
+        }
       >
         <Tag
           isSmall
@@ -213,7 +213,17 @@ export default function MyAdsPage() {
             }
           }}
           onEndReachedThreshold={0.5}
-          ListFooterComponent={() => (isFetching ? <ActivityIndicator /> : null)}
+          ListFooterComponent={() =>
+            isFetching ? <ActivityIndicator /> : null
+          }
+          ListHeaderComponent={() => (
+            <CustomText
+              className={'text-14 mb-4'}
+              style={{ color: colors.theme.blue.bright }}
+            >
+              {l.adsFound}: {total}
+            </CustomText>
+          )}
           ListEmptyComponent={() => (
             <CustomText
               highlight

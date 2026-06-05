@@ -1,6 +1,7 @@
 import { View } from 'react-native';
 
 import { useHistory } from '@/hooks/useHistory';
+import { useGetUnreadCount } from '@/hooks/notification/useGetUnreadCount';
 import { useProfile } from '@/hooks/user/useProfile';
 import { useTheme } from '@/hooks/useTheme';
 
@@ -26,10 +27,10 @@ export default function CustomHeader({
   const { colors } = useTheme();
   const { user } = useProfile();
   const { goBack, navigate } = useHistory();
+  const { data: unreadCount } = useGetUnreadCount();
   const hasSettings = isSettingsScreen || isUserProfile;
   const hasArrow = hasBack && !isUserProfile && !isSettingsScreen;
   const hasNotifications = !hasSettings && !hasArrow;
-  const notifications = { count: 5 };
 
   // console.log(
   //   'hasback:',
@@ -89,13 +90,14 @@ export default function CustomHeader({
               className={'mr-3'}
               onPress={() =>
                 navigate({
-                  pathname: '/(tabs)/users/[username]',
-                  params: { username: user?.username },
+                  pathname: '/users/notifications',
                 })
               }
             >
             </CustomIcon>
-            <CustomText className={'text-15 absolute right-4 top-2s px-1'} style={{ borderRadius: 10, color: colors.base.neutral.whitePrimary, backgroundColor: colors.base.red.primary }}>{notifications.count}</CustomText>
+            {!!unreadCount && unreadCount > 0 && (
+              <CustomText className={'text-11 absolute right-2 top-1 px-1'} style={{ borderRadius: 10, color: colors.base.neutral.whitePrimary, backgroundColor: colors.base.red.primary }}>{unreadCount}</CustomText>
+            )}
           </View>
         )}
         <View

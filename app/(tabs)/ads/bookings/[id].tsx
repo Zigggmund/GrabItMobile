@@ -12,7 +12,7 @@ import { useRejectBooking } from '@/hooks/booking/useRejectBooking';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTheme } from '@/hooks/useTheme';
 
-import { BookingItem } from '@/components/booking/BookingItem';
+import { BookingItem } from '@/components/items/bookings/BookingItem';
 import { Tag } from '@/components/common/Tag';
 import ErrorMessage from '@/components/common/ErrorMessage';
 import ScreenContainer from '@/components/layout/ScreenContainer';
@@ -38,7 +38,12 @@ export default function AdBookingsPage() {
   const [allBookings, setAllBookings] = useState<BookingResponseDto[]>([]);
   const [calendarDate, setCalendarDate] = useState<string | null>(null);
 
-  const { data, isError, isFetching } = useGetAdBookings(id, status, serverPage);
+  const { data, isError, isFetching } = useGetAdBookings(
+    id,
+    status,
+    serverPage,
+    calendarDate ?? undefined,
+  );
 
   const approve = useApproveBooking();
   const reject = useRejectBooking();
@@ -47,8 +52,7 @@ export default function AdBookingsPage() {
   useEffect(() => {
     setServerPage(1);
     setAllBookings([]);
-    setCalendarDate(null);
-  }, [status]);
+  }, [status, calendarDate]);
 
   useEffect(() => {
     if (!data?.items) return;
@@ -61,25 +65,33 @@ export default function AdBookingsPage() {
 
   const total = data?.total ?? 0;
 
+  // client-side day filter (range check) — remove when backend `day` param is ready
+  const displayedBookings = calendarDate
+    ? allBookings.filter(b => {
+        const start = b.start_time.split('T')[0];
+        const end = b.end_time.split('T')[0];
+        return start <= calendarDate && calendarDate <= end;
+      })
+    : allBookings;
+
   const markedDates = useMemo(() => {
-    const marks: Record<string, { marked: boolean; dotColor: string }> = {};
+    const marks: Record<string, object> = {};
+
     allBookings.forEach(b => {
       const date = b.start_time.split('T')[0];
       marks[date] = { marked: true, dotColor: colors.base.orange.primary };
     });
+
     if (calendarDate) {
       marks[calendarDate] = {
-        ...marks[calendarDate],
-        marked: true,
-        dotColor: colors.base.orange.primary,
+        ...(marks[calendarDate] ?? {}),
+        selected: true,
+        selectedColor: colors.base.orange.primary,
       };
     }
-    return marks;
-  }, [allBookings, calendarDate]);
 
-  const displayedBookings = calendarDate
-    ? allBookings.filter(b => b.start_time.startsWith(calendarDate))
-    : allBookings;
+    return marks;
+  }, [allBookings, calendarDate, colors]);
 
   const statusLabel = useCallback(
     (s: BookingStatus | undefined) => {
@@ -139,7 +151,9 @@ export default function AdBookingsPage() {
             <Calendar
               markedDates={markedDates}
               onDayPress={day =>
-                setCalendarDate(prev => (prev === day.dateString ? null : day.dateString))
+                setCalendarDate(prev =>
+                  prev === day.dateString ? null : day.dateString,
+                )
               }
               theme={{
                 backgroundColor: colors.theme.white.primary,
@@ -168,7 +182,9 @@ export default function AdBookingsPage() {
             </View>
           </View>
         )}
-        ListFooterComponent={() => (isFetching ? <ActivityIndicator className="py-4" /> : null)}
+        ListFooterComponent={() =>
+          isFetching ? <ActivityIndicator className="py-4" /> : null
+        }
         ListEmptyComponent={() =>
           !isFetching ? (
             <CustomText

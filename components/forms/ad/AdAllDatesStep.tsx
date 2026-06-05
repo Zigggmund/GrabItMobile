@@ -33,28 +33,65 @@ export const AdAllDatesStep = ({
   errors: Record<string, string>;
 }) => {
   const form = useContext(FormContext);
-  const [markedDates, setMarkedDates] = useState<MarkedDates>({});
   const { l } = useLanguage();
   const { colors } = useTheme();
+
+  const buildRange = (start: Date, end: Date): MarkedDates => {
+    const range: MarkedDates = {};
+    for (
+      let cur = new Date(start);
+      cur <= end;
+      cur.setDate(cur.getDate() + 1)
+    ) {
+      const key = cur.toISOString().split('T')[0];
+      const isEdge =
+        key === start.toISOString().split('T')[0] ||
+        key === end.toISOString().split('T')[0];
+      range[key] = {
+        color: isEdge
+          ? colors.base.orange.primary
+          : colors.base.orange.brightest,
+        textColor: 'white',
+        startingDay: key === start.toISOString().split('T')[0],
+        endingDay: key === end.toISOString().split('T')[0],
+      };
+    }
+    return range;
+  };
+
+  const [markedDates, setMarkedDates] = useState<MarkedDates>(() => {
+    if (!form) return {};
+    const { firstDate, endDate } = form.AdFormData;
+    if (!firstDate) return {};
+    if (!endDate) {
+      const dateStr = firstDate.toISOString().split('T')[0];
+      return {
+        [dateStr]: {
+          startingDay: true,
+          color: colors.base.orange.primary,
+          textColor: 'white',
+        },
+      };
+    }
+    return buildRange(firstDate, endDate);
+  });
 
   if (!form) return null;
 
   const { AdFormData, changeAdFormData } = form;
+  const today = new Date().toISOString().split('T')[0];
 
   const onDayPress = (day: CalendarDay) => {
     const dateString = day.dateString;
 
-    if (
-      !AdFormData.firstDate ||
-      (AdFormData.firstDate && AdFormData.endDate)
-    ) {
+    if (!AdFormData.firstDate || (AdFormData.firstDate && AdFormData.endDate)) {
       // Новый диапазон
       changeAdFormData('firstDate', new Date(dateString));
       changeAdFormData('endDate', null);
       setMarkedDates({
         [dateString]: {
           startingDay: true,
-          color: '#00B0FF',
+          color: colors.base.orange.primary,
           textColor: 'white',
         },
       });
@@ -65,26 +102,7 @@ export const AdAllDatesStep = ({
       const start = first < second ? first : second;
       const end = first < second ? second : first;
 
-      const range: MarkedDates = {};
-      for (
-        let current = new Date(start);
-        current <= end;
-        current.setDate(current.getDate() + 1)
-      ) {
-        const key = current.toISOString().split('T')[0];
-        range[key] = {
-          color:
-            key === start.toISOString().split('T')[0] ||
-            key === end.toISOString().split('T')[0]
-              ? '#00B0FF'
-              : '#80D6FF',
-          textColor: 'white',
-          startingDay: key === start.toISOString().split('T')[0],
-          endingDay: key === end.toISOString().split('T')[0],
-        };
-      }
-
-      setMarkedDates(range);
+      setMarkedDates(buildRange(start, end));
       changeAdFormData('firstDate', start);
       changeAdFormData('endDate', end);
     }
@@ -94,6 +112,7 @@ export const AdAllDatesStep = ({
     <ScrollView>
       <Calendar
         markingType="period"
+        minDate={today}
         markedDates={markedDates}
         onDayPress={onDayPress}
       />

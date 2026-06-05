@@ -11,26 +11,32 @@ interface ReviewsProps {
   itemRating: number | null;
   itemName: string;
   reviewCount: number;
+  role?: 'owner' | 'renter' | 'ad';
 }
 
 export default function ReviewsHeader({
   itemRating,
   reviewCount,
   itemName,
+  role,
 }: ReviewsProps) {
   const { l } = useLanguage();
   const { colors } = useTheme();
 
+  const title =
+    role === 'owner' ? l.ownerReviewsTitle :
+    role === 'renter' ? l.renterReviewsTitle :
+    l.reviews;
+
   return (
     <GreyBlock>
       <View className={`gap-1.5 px-2`}>
-        <View className={'flex-row justify-between'}>
-          {/*<View className={'flex-1 items-center'}>*/}
+        <View className={'flex-row justify-between gap-4'}>
           <CustomText
             className={'text-18 font-medium'}
             style={{ color: colors.theme.blue.bright }}
           >
-            {l.reviews}
+            {title}
           </CustomText>
           {/*</View>*/}
           <View className={'flex-row gap-2 items-center'}>

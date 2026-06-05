@@ -51,11 +51,15 @@ const buildAvailabilityPayload = (
       weekdayHours[i.toString()] = Array.from({ length: 24 }, (_, h) => h);
     }
   }
+  // valid_until is exclusive (backend: valid_until > valid_from), so add 1 day to endDate
+  const endPlusOne = new Date(data.endDate!);
+  endPlusOne.setDate(endPlusOne.getDate() + 1);
+
   return {
     periods: [
       {
         valid_from: fmt(data.firstDate!),
-        valid_until: fmt(data.endDate!),
+        valid_until: fmt(endPlusOne),
         weekday_hours: weekdayHours,
       },
     ],
@@ -249,7 +253,6 @@ export const CreateAdForm = () => {
       }
     }
 
-    console.log(stepErrors, stepKey);
     setErrors(prev => ({ ...prev, [stepKey]: stepErrors }));
     return Object.keys(stepErrors).length === 0;
   };
@@ -275,15 +278,20 @@ export const CreateAdForm = () => {
   // };
 
   const finish = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
     const response = await CustomAlert({
       message: l.warningFormFinish,
       confirmation: l.confirmation,
       btnCancel: l.btnCancel,
       btnConfirm: l.btnConfirm,
     });
-    if (!response) return;
+    if (!response) {
+      setIsSubmitting(false);
+      return;
+    }
 
-    setIsSubmitting(true);
     try {
       const data = form.AdFormData;
       const validSpecs = data.specifications.filter(
@@ -305,17 +313,17 @@ export const CreateAdForm = () => {
       const listingId = listing.listing_id;
 
       if (data.previewImage?.url) {
-        await MediaService.uploadMedia(listingId, data.previewImage.url, 'image/jpeg', 0);
+        await MediaService.uploadMedia(listingId, data.previewImage.url, 'image/jpeg', 1);
       }
 
       if (data.uriMedias.length > 0) {
-        await Promise.all(
+        await Promise.allSettled(
           data.uriMedias.map((m, i) =>
             MediaService.uploadMedia(
               listingId,
               m.url,
               m.mediaType === 'video' ? 'video/mp4' : 'image/jpeg',
-              i + 1,
+              i + 2,
             ),
           ),
         );
@@ -327,10 +335,7 @@ export const CreateAdForm = () => {
       );
 
       form.clear();
-      navigate(
-        { pathname: '/(tabs)/ads/[id]', params: { id: listingId } },
-        false,
-      );
+      navigate('/(tabs)/ads/myAds', false);
     } catch {
       // global MutationCache.onError показывает тост
     } finally {

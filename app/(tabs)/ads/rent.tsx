@@ -1,9 +1,3 @@
-import {
-  BookingResponseDto,
-  BookingStatus,
-  BookingWithAdResponseDto,
-} from '@/services/api/services/dto/booking.dto';
-
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, View } from 'react-native';
 
@@ -15,11 +9,18 @@ import { useRejectBooking } from '@/hooks/booking/useRejectBooking';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTheme } from '@/hooks/useTheme';
 
-import { BookingItem } from '@/components/booking/BookingItem';
-import { Tag } from '@/components/common/Tag';
+import { BookingItem } from '@/components/items/bookings/BookingItem';
 import ErrorMessage from '@/components/common/ErrorMessage';
+import { Tag } from '@/components/common/Tag';
 import ScreenContainer from '@/components/layout/ScreenContainer';
+import { CustomButton } from '@/components/ui/button/CustomButton';
 import { CustomText } from '@/components/ui/text/CustomText';
+
+import {
+  BookingResponseDto,
+  BookingStatus,
+  BookingWithAdResponseDto,
+} from '@/services/api/services/dto/booking.dto';
 
 type Mode = 'renter' | 'owner';
 
@@ -44,8 +45,14 @@ export default function RentPage() {
     (BookingResponseDto | BookingWithAdResponseDto)[]
   >([]);
 
-  const renterQuery = useGetMyBookings(mode === 'renter' ? status : undefined, mode === 'renter' ? serverPage : 1);
-  const ownerQuery = useGetMyOwnerBookings(mode === 'owner' ? status : undefined, mode === 'owner' ? serverPage : 1);
+  const renterQuery = useGetMyBookings(
+    mode === 'renter' ? status : undefined,
+    mode === 'renter' ? serverPage : 1,
+  );
+  const ownerQuery = useGetMyOwnerBookings(
+    mode === 'owner' ? status : undefined,
+    mode === 'owner' ? serverPage : 1,
+  );
 
   const approve = useApproveBooking();
   const reject = useRejectBooking();
@@ -103,10 +110,14 @@ export default function RentPage() {
               role={mode === 'renter' ? 'renter' : 'landlord'}
               ad={withAd.listing ?? undefined}
               onApprove={
-                mode === 'owner' ? () => approve.mutate(item.booking_id) : undefined
+                mode === 'owner'
+                  ? () => approve.mutate(item.booking_id)
+                  : undefined
               }
               onReject={
-                mode === 'owner' ? () => reject.mutate(item.booking_id) : undefined
+                mode === 'owner'
+                  ? () => reject.mutate(item.booking_id)
+                  : undefined
               }
               onCancel={() => cancel.mutate(item.booking_id)}
             />
@@ -122,20 +133,20 @@ export default function RentPage() {
         }}
         ListHeaderComponent={() => (
           <View className="gap-3 mb-4">
-            <View className="flex-row gap-3 justify-center">
-              <Tag
-                label={l.iRent}
-                selected={mode === 'renter'}
+            <View className="flex-row gap-3 justify-center mb-4">
+              <CustomButton
+                text={l.iRent}
+                type={mode == 'renter' ? 'highlighted' : 'secondary'}
                 onPress={() => setMode('renter')}
               />
-              <Tag
-                label={l.iLend}
-                selected={mode === 'owner'}
+              <CustomButton
+                text={l.iLend}
+                type={mode == 'owner' ? 'highlighted' : 'secondary'}
                 onPress={() => setMode('owner')}
               />
             </View>
 
-            <View className="flex-row flex-wrap gap-2 px-1">
+            <View className="flex-row flex-wrap gap-2 px-1 justify-center">
               {STATUS_FILTERS.map(s => (
                 <Tag
                   key={s ?? 'all'}
@@ -148,7 +159,9 @@ export default function RentPage() {
             </View>
           </View>
         )}
-        ListFooterComponent={() => (isFetching ? <ActivityIndicator className="py-4" /> : null)}
+        ListFooterComponent={() =>
+          isFetching ? <ActivityIndicator className="py-4" /> : null
+        }
         ListEmptyComponent={() =>
           !isFetching ? (
             <CustomText

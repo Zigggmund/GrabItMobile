@@ -4,6 +4,7 @@ export const baseColors = {
     primary: '#FF8104',
     semibright: '#E68B22',
     bright: '#EA9432',
+    brightest: '#ffb663',
   },
   green: {
     primary: '#0BB31F',
@@ -15,6 +16,7 @@ export const baseColors = {
   },
   yellow: {
     primary: '#FFCE1B',
+    dark: '#d4ac1c',
   },
   // некоторый серый неизменен
   grey: {

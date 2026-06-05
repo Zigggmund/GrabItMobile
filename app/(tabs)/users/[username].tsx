@@ -400,7 +400,7 @@ export default function UserProfile() {
               <CustomButton
                 textClassName={'text-18 font-medium'}
                 className={'mb-6'}
-                text={l.btnToReviews}
+                text={l.btnToOwnerReviews}
                 onPress={() =>
                   navigate({
                     pathname: '/(tabs)/users/reviews/[id]',
@@ -409,6 +409,7 @@ export default function UserProfile() {
                       username: user?.username,
                       reviewCount: user?.stats.landlordReviews,
                       userRating: user?.stats.landlordRating,
+                      role: 'owner',
                     },
                   })
                 }
