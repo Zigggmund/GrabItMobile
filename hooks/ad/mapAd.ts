@@ -18,6 +18,8 @@ export const mapAd = (dto: AdResponseDto): AdPreviewType => {
     rating: dto.review_count === 0 ? null : dto.avg_rating,
     reviewCount: dto.review_count,
     address: dto.address ?? '',
+    lat: dto.lat || undefined,
+    lon: dto.lon || undefined,
     categoryId: String(dto.category_id),
     previewImage: firstMedia
       ? {

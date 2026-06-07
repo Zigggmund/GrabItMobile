@@ -412,12 +412,23 @@ export const translations = {
       'Имя пользователя должно быть не менее 6 символов и не более 20 символов, а также не должно содержать пробелов',
     validationUsernameAlreadyTaken: 'Это имя пользователя уже занято',
 
-    // Чаты — системные сообщения
+    // Чаты — системные сообщения и действия
     systemBookingCreated: 'Создано бронирование',
     systemBookingConfirmed: 'Бронирование подтверждено',
     systemBookingRejected: 'Бронирование отклонено',
     systemBookingCancelled: 'Бронирование отменено',
     messageDeleted: 'Сообщение удалено',
+    editingMessage: 'Редактирование сообщения',
+    warningDeleteMessage: 'Удалить сообщение? Это действие необратимо.',
+    messageActions: 'Действия',
+    muteConversation: 'Заглушить',
+    unmuteConversation: 'Включить звук',
+    blockUser: 'Заблокировать пользователя',
+    unblockUser: 'Разблокировать пользователя',
+    warningBlockUser: 'Заблокировать этого пользователя? Вы не сможете обмениваться сообщениями.',
+    blockedByMe: 'Вы заблокировали этого пользователя',
+    blockedByThem: 'Этот пользователь заблокировал вас',
+    chatSettings: 'Настройки чата',
   },
   en: {
     // Settings
@@ -832,11 +843,22 @@ export const translations = {
       'Username must be at least 6 characters and no more than 20 characters long, and must not contain spaces',
     validationUsernameAlreadyTaken: 'This username is already taken',
 
-    // Chat — system messages
+    // Chat — system messages and actions
     systemBookingCreated: 'Booking created',
     systemBookingConfirmed: 'Booking confirmed',
     systemBookingRejected: 'Booking rejected',
     systemBookingCancelled: 'Booking cancelled',
     messageDeleted: 'Message deleted',
+    editingMessage: 'Editing message',
+    warningDeleteMessage: 'Delete message? This action is irreversible.',
+    messageActions: 'Message actions',
+    muteConversation: 'Mute',
+    unmuteConversation: 'Unmute',
+    blockUser: 'Block user',
+    unblockUser: 'Unblock user',
+    warningBlockUser: "Block this user? You won't be able to exchange messages.",
+    blockedByMe: 'You have blocked this user',
+    blockedByThem: 'This user has blocked you',
+    chatSettings: 'Chat settings',
   },
 };

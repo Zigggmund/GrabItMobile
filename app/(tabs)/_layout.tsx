@@ -115,7 +115,7 @@ export default function TabsLayout() {
         <Tabs.Screen name={'ads/createAd'} options={{ href: null }} />
         <Tabs.Screen name={'ads/bookings/[id]'} options={{ href: null }} />
         <Tabs.Screen name={'ads/reviews/[id]'} options={{ href: null }} />
-        <Tabs.Screen name={'ads/map/[id]'} options={{ href: null }} />
+        <Tabs.Screen name={'ads/map'} options={{ href: null }} />
       </Tabs>
 
       {/*<Stack screenOptions={{ headerShown: false }} />*/}

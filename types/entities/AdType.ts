@@ -19,6 +19,8 @@ export interface AdPreviewType {
   description: string;
   reviewCount: number;
   address: string;
+  lat?: number;
+  lon?: number;
   // productType: ProductType;
   categoryId: string;
   previewImage: MediaType;

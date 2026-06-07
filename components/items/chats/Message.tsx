@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 
 import { useLanguage } from '@/hooks/useLanguage';
 import { useProfile } from '@/hooks/user/useProfile';
@@ -14,6 +14,7 @@ import { BookingEventType, MessageEntity } from '@/types/entities/ChatType';
 interface MessageProps {
   message: MessageEntity;
   width: number;
+  onLongPress?: () => void;
 }
 
 function getSystemLabel(eventType: BookingEventType, l: ReturnType<typeof useLanguage>['l']): string {
@@ -26,7 +27,7 @@ function getSystemLabel(eventType: BookingEventType, l: ReturnType<typeof useLan
   }
 }
 
-export function Message({ message, width }: MessageProps) {
+export function Message({ message, width, onLongPress }: MessageProps) {
   const { user } = useProfile();
   const { colors } = useTheme();
   const { l } = useLanguage();
@@ -84,7 +85,10 @@ export function Message({ message, width }: MessageProps) {
         </CustomText>
       </View>
 
-      <View
+      <TouchableOpacity
+        activeOpacity={0.85}
+        onLongPress={onLongPress}
+        delayLongPress={350}
         style={{
           borderRadius: 12,
           borderWidth: 1,
@@ -123,7 +127,7 @@ export function Message({ message, width }: MessageProps) {
             {message.content}
           </CustomText>
         )}
-      </View>
+      </TouchableOpacity>
     </View>
   );
 }

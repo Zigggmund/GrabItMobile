@@ -1,5 +1,6 @@
-import { View } from 'react-native';
+import { Alert, TouchableOpacity, View } from 'react-native';
 
+import { useLanguage } from '@/hooks/useLanguage';
 import { useTheme } from '@/hooks/useTheme';
 
 import GreyBlock from '@/components/common/GreyBlock';
@@ -10,14 +11,38 @@ interface ChatHeaderProps {
   username: string;
   avatarUrl: string;
   listingTitle: string;
+  isMuted: boolean;
+  blockedByMe: boolean;
+  onMuteToggle: () => void;
+  onBlockToggle: () => void;
 }
 
 export default function ChatHeader({
   username,
   avatarUrl,
   listingTitle,
+  isMuted,
+  blockedByMe,
+  onMuteToggle,
+  onBlockToggle,
 }: ChatHeaderProps) {
   const { colors } = useTheme();
+  const { l } = useLanguage();
+
+  const openMenu = () => {
+    Alert.alert(l.chatSettings, undefined, [
+      {
+        text: isMuted ? l.unmuteConversation : l.muteConversation,
+        onPress: onMuteToggle,
+      },
+      {
+        text: blockedByMe ? l.unblockUser : l.blockUser,
+        style: blockedByMe ? undefined : 'destructive',
+        onPress: onBlockToggle,
+      },
+      { text: l.btnCancel, style: 'cancel' },
+    ]);
+  };
 
   return (
     <GreyBlock>
@@ -40,6 +65,14 @@ export default function ChatHeader({
             {listingTitle}
           </CustomText>
         </View>
+        <TouchableOpacity onPress={openMenu} hitSlop={8} className="p-2">
+          <CustomText
+            style={{ color: colors.theme.blue.bright }}
+            className="text-20 font-bold"
+          >
+            ···
+          </CustomText>
+        </TouchableOpacity>
       </View>
     </GreyBlock>
   );

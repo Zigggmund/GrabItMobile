@@ -28,6 +28,7 @@ export interface UseSearchAdsParams {
   // productType: string;
 
   page?: number;
+  pageSize?: number;
 }
 
 export const useSearchAds = (params: UseSearchAdsParams) => {
@@ -42,12 +43,13 @@ export const useSearchAds = (params: UseSearchAdsParams) => {
     // sort_by,
     // productType,
     page = 1,
+    pageSize = PAGE_SIZE,
   } = params;
 
   const apiParams: SearchListingsRequestDto = {
     page,
     // sort_by,
-    page_size: PAGE_SIZE,
+    page_size: pageSize,
   };
   if (query) apiParams.query = query;
   if (categoryId) apiParams.category_id = categoryId;

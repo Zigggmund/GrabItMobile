@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 
-import { useExtendBooking } from '@/hooks/booking/useExtendBooking';
+import { useRequestExtension } from '@/hooks/booking/useRequestExtension';
 import { useGetMyBookings } from '@/hooks/booking/useGetMyBookings';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTheme } from '@/hooks/useTheme';
@@ -26,7 +26,7 @@ export function ExtendBookingBlock({ adId, currentEndTime, onClose }: Props) {
   const { data: myBookingsData, isLoading } = useGetMyBookings('active', 1);
   const booking = myBookingsData?.items?.find(b => b.listing_id === adId);
 
-  const extend = useExtendBooking(adId);
+  const extend = useRequestExtension(adId);
 
   const minDate = currentEndTime.split('T')[0];
 

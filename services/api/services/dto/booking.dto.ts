@@ -8,7 +8,17 @@ export type BookingStatus =
   | 'active'
   | 'completed'
   | 'rejected'
-  | 'cancelled';
+  | 'cancelled'
+  | 'no_show';
+
+export interface BookingExtensionDto {
+  id: string;
+  booking_id: string;
+  new_end_time: string;
+  status: 'pending' | 'approved' | 'rejected';
+  created_at: string;
+  updated_at: string;
+}
 
 export interface BookingResponseDto {
   booking_id: string;
@@ -18,9 +28,11 @@ export interface BookingResponseDto {
   start_time: string;
   end_time: string;
   status: BookingStatus;
+  cancelled_by?: 'owner' | 'renter' | 'system';
   total_price: number;
   created_at: string;
   updated_at: string;
+  pending_extension?: BookingExtensionDto;
 }
 
 export type GetBookingsResponseDto = PaginatedResponse<BookingResponseDto>;
@@ -50,7 +62,7 @@ export interface CreateBookingDto {
   end_time: string;
 }
 
-export interface ExtendBookingDto {
+export interface RequestExtensionDto {
   new_end_time: string;
 }
 

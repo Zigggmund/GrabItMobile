@@ -1,7 +1,7 @@
 import {
+  ActionType,
   AttemptLeaveCallbackType,
   AttemptLeaveResultType,
-  ActionType,
 } from '@/types/SubscriptionType';
 
 import React, { ReactNode, useEffect, useRef, useState } from 'react';
@@ -12,6 +12,7 @@ import { HistoryContext } from '@/context/HistoryContext';
 
 const formPages: Href[] = [
   '/ads/createAd',
+  '/ads/edit/',
   '/login',
   '/loginFinish',
   // '/registration',
@@ -36,7 +37,9 @@ export const HistoryProvider = ({ children }: { children: ReactNode }) => {
   // !Паттерн Mediator (HistoryProvider - Посредник, передает управление FormProvider)
   // !Паттерн Observer (FormProvider подписывается на History и реагирует на GoBack события)
   // Попытка покинуть текущую страницу
-  const tryLeave = async (action: ActionType): Promise<AttemptLeaveResultType> => {
+  const tryLeave = async (
+    action: ActionType,
+  ): Promise<AttemptLeaveResultType> => {
     // если хоть один подписчик вернул false - переход отменяется
     for (const cb of attemptLeaveSubscribers.current) {
       const canLeave = await cb(action);

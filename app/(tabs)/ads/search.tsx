@@ -83,7 +83,6 @@ export default function Search() {
   const [selectedTag, setSelectedTag] = useState<ProductType | null>(null);
 
   // без указания categorySlug useGetProductTypeCategories ничего не возвращает
-
   const categorySlug = 'product';
   const categories = useGetProductTypeCategories(categorySlug).data;
   const [sortBy, setSortBy] = useState<SortingAdsType>('new');

@@ -5,6 +5,7 @@ import {
   ConversationDto,
   ConversationsPageDto,
   CreateConversationDto,
+  EditMessageDto,
   GetMessagesParams,
   MarkReadDto,
   MessageDto,
@@ -60,6 +61,28 @@ export class ChatService {
     );
   }
 
+  static async editMessage(
+    conversationId: string,
+    messageId: string,
+    dto: EditMessageDto,
+  ): Promise<MessageDto> {
+    return unwrap(
+      await api.patch<ApiResponse<MessageDto>>(
+        `/chat/conversations/${conversationId}/messages/${messageId}`,
+        dto,
+      ),
+    );
+  }
+
+  static async deleteMessage(
+    conversationId: string,
+    messageId: string,
+  ): Promise<void> {
+    await api.delete(
+      `/chat/conversations/${conversationId}/messages/${messageId}`,
+    );
+  }
+
   static async markRead(
     conversationId: string,
     dto: MarkReadDto,
@@ -74,8 +97,33 @@ export class ChatService {
     return res.count;
   }
 
+  static async muteConversation(conversationId: string): Promise<void> {
+    await api.post(`/chat/conversations/${conversationId}/mute`);
+  }
+
+  static async unmuteConversation(conversationId: string): Promise<void> {
+    await api.delete(`/chat/conversations/${conversationId}/mute`);
+  }
+
+  static async blockUser(userId: string): Promise<void> {
+    await api.post(`/chat/users/${userId}/block`);
+  }
+
+  static async unblockUser(userId: string): Promise<void> {
+    await api.delete(`/chat/users/${userId}/block`);
+  }
+
+  static async getBlockedUsers(): Promise<string[]> {
+    const res = await unwrap(
+      await api.get<ApiResponse<{ user_ids: string[] }>>('/chat/users/blocked'),
+    );
+    return res.user_ids;
+  }
+
   static getWsUrl(conversationId: string): string {
-    return API_URL.replace(/^https?/, m => (m === 'https' ? 'wss' : 'ws')) +
-      `/chat/conversations/${conversationId}/ws`;
+    return (
+      API_URL.replace(/^https?/, m => (m === 'https' ? 'wss' : 'ws')) +
+      `/chat/conversations/${conversationId}/ws`
+    );
   }
 }

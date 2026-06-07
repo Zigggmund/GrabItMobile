@@ -85,6 +85,10 @@ export interface SendMessageDto {
   content: string;
 }
 
+export interface EditMessageDto {
+  content: string;
+}
+
 export interface GetMessagesParams {
   before?: string; // cursor: load messages older than this id
   after?: string; // cursor: catch-up after reconnect

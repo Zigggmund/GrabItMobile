@@ -35,3 +35,8 @@ export interface MarkAsReadDto {
 export interface UnreadCountDto {
   count: number;
 }
+
+export interface RegisterDeviceTokenDto {
+  token: string;
+  platform: 'android' | 'ios';
+}

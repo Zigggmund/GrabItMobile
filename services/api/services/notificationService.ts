@@ -5,6 +5,7 @@ import {
   GetNotificationsResponseDto,
   MarkAsReadDto,
   NotificationPreferencesDto,
+  RegisterDeviceTokenDto,
   UnreadCountDto,
   UpdatePreferencesDto,
 } from '@/services/api/services/dto/notification.dto';
@@ -46,5 +47,13 @@ export class NotificationService {
     return unwrap(
       await api.put<ApiResponse<NotificationPreferencesDto>>('/notifications/preferences', dto),
     );
+  }
+
+  static async registerDeviceToken(dto: RegisterDeviceTokenDto): Promise<void> {
+    await api.post('/notifications/devices', dto);
+  }
+
+  static async unregisterDeviceToken(token: string): Promise<void> {
+    await api.delete(`/notifications/devices/${token}`);
   }
 }

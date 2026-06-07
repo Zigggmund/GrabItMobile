@@ -149,7 +149,6 @@ export default function AdDetails() {
     <ScreenContainer>
       <ScrollView className={'w-full px-6'}>
         <View className={'gap-4'}>
-          {/* блок текущей аренды */}
           {ad.myBooking && getRemainingTime(ad.myBooking.endTime) > 0 && (
             <GreyBlock className={'px-4 py-2 gap-2 mb-4'}>
               <CustomText
@@ -570,12 +569,6 @@ export default function AdDetails() {
           >
             {l.reviews}
           </CustomText>
-          {/*<CustomText*/}
-          {/*  className={'text-14 mb-4'}*/}
-          {/*  style={{ color: colors.theme.blue.bright }}*/}
-          {/*>*/}
-          {/*  {l.reviewsFound}: {total}*/}
-          {/*</CustomText>*/}
           <FlatList
             scrollEnabled={false}
             data={reviews}

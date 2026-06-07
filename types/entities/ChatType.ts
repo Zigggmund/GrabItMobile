@@ -25,6 +25,8 @@ export interface ConversationEntity {
   listingTitle: string;
   listingCoverUrl: string;
   listingDeleted: boolean;
+  renterId: string;
+  ownerId: string;
   otherUsername: string;
   otherAvatarUrl: string;
   unreadCount: number;

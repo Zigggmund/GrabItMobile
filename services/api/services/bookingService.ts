@@ -4,6 +4,7 @@ import { ApiResponse } from '@/services/api/apiResponse';
 import { unwrap } from '@/services/api/apiUtils';
 import { api } from '@/services/api/instance';
 import {
+  BookingExtensionDto,
   BookingResponseDto,
   BookingWithAdResponseDto,
   CancelBookingDto,
@@ -77,11 +78,29 @@ export class BookingService {
     );
   }
 
-  static async extendBooking(id: string, newEndTime: string): Promise<BookingResponseDto> {
+  static async requestExtension(id: string, newEndTime: string): Promise<BookingExtensionDto> {
     return unwrap(
-      await api.post<ApiResponse<BookingResponseDto>>(`/rent/bookings/${id}/extend`, {
+      await api.post<ApiResponse<BookingExtensionDto>>(`/rent/bookings/${id}/extension`, {
         new_end_time: newEndTime,
       }),
+    );
+  }
+
+  static async approveExtension(id: string): Promise<BookingResponseDto> {
+    return unwrap(
+      await api.post<ApiResponse<BookingResponseDto>>(`/rent/bookings/${id}/extension/approve`),
+    );
+  }
+
+  static async rejectExtension(id: string): Promise<BookingExtensionDto> {
+    return unwrap(
+      await api.post<ApiResponse<BookingExtensionDto>>(`/rent/bookings/${id}/extension/reject`),
+    );
+  }
+
+  static async markNoShow(id: string): Promise<BookingResponseDto> {
+    return unwrap(
+      await api.post<ApiResponse<BookingResponseDto>>(`/rent/bookings/${id}/no-show`),
     );
   }
 }

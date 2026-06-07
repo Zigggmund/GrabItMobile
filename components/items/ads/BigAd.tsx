@@ -21,11 +21,8 @@ export default function BigAd({ width, ad }: BigAdProps) {
   const { l } = useLanguage();
   const { colors } = useTheme();
   const { navigate } = useHistory();
-  // const isSpace = ad.productType == 'space';
-  // заглушка
-  const isSpace = false;
-  const price = isSpace ? ad.rub_per_hour * 24 : ad.rub_per_hour;
-  const rubPer = isSpace ? l.rubPerDay : l.rubPerHour;
+  const price = ad.rub_per_hour;
+  const rubPer = l.rubPerDay;
 
   return (
     <TouchableOpacity
