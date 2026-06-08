@@ -180,6 +180,7 @@ export const translations = {
     iLend: 'Сдаю',
     btnApprove: 'Одобрить',
     btnReject: 'Отклонить',
+    btnNoShow: 'Отметить неявку',
     bookingAll: 'Все',
     bookingPending: 'Ожидает',
     bookingApproved: 'Одобрено',
@@ -187,6 +188,7 @@ export const translations = {
     bookingCompleted: 'Завершено',
     bookingRejected: 'Отклонено',
     bookingCancelled: 'Отменено',
+    bookingNoShow: 'Неявка',
     listingBookings: 'Бронирования',
     btnLeaveReview: 'Оставить отзыв',
     reviewAboutListing: 'Отзыв об объявлении',
@@ -194,6 +196,25 @@ export const translations = {
     reviewCommentLabel: 'Комментарий',
     reviewCommentPlaceholder: 'Необязательно',
     reviewAlreadyLeft: 'Вы уже оставили отзыв на это бронирование',
+
+    // Чаты — системные сообщения и действия
+    systemBookingCreated: 'Создано бронирование',
+    systemBookingConfirmed: 'Бронирование подтверждено',
+    systemBookingRejected: 'Бронирование отклонено',
+    systemBookingCancelled: 'Бронирование отменено',
+    messageDeleted: 'Сообщение удалено',
+    editingMessage: 'Редактирование сообщения',
+    warningDeleteMessage: 'Удалить сообщение? Это действие необратимо.',
+    messageActions: 'Действия',
+    muteConversation: 'Заглушить',
+    unmuteConversation: 'Включить звук',
+    blockUser: 'Заблокировать пользователя',
+    unblockUser: 'Разблокировать пользователя',
+    warningBlockUser:
+      'Заблокировать этого пользователя? Вы не сможете обмениваться сообщениями.',
+    blockedByMe: 'Вы заблокировали этого пользователя',
+    blockedByThem: 'Этот пользователь заблокировал вас',
+    chatSettings: 'Настройки чата',
 
     // Другое
     success: 'Успех',
@@ -411,24 +432,6 @@ export const translations = {
     validationUsername:
       'Имя пользователя должно быть не менее 6 символов и не более 20 символов, а также не должно содержать пробелов',
     validationUsernameAlreadyTaken: 'Это имя пользователя уже занято',
-
-    // Чаты — системные сообщения и действия
-    systemBookingCreated: 'Создано бронирование',
-    systemBookingConfirmed: 'Бронирование подтверждено',
-    systemBookingRejected: 'Бронирование отклонено',
-    systemBookingCancelled: 'Бронирование отменено',
-    messageDeleted: 'Сообщение удалено',
-    editingMessage: 'Редактирование сообщения',
-    warningDeleteMessage: 'Удалить сообщение? Это действие необратимо.',
-    messageActions: 'Действия',
-    muteConversation: 'Заглушить',
-    unmuteConversation: 'Включить звук',
-    blockUser: 'Заблокировать пользователя',
-    unblockUser: 'Разблокировать пользователя',
-    warningBlockUser: 'Заблокировать этого пользователя? Вы не сможете обмениваться сообщениями.',
-    blockedByMe: 'Вы заблокировали этого пользователя',
-    blockedByThem: 'Этот пользователь заблокировал вас',
-    chatSettings: 'Настройки чата',
   },
   en: {
     // Settings
@@ -610,6 +613,7 @@ export const translations = {
     iLend: 'Lending',
     btnApprove: 'Approve',
     btnReject: 'Reject',
+    btnNoShow: 'Mark no-show',
     bookingAll: 'All',
     bookingPending: 'Pending',
     bookingApproved: 'Approved',
@@ -617,6 +621,7 @@ export const translations = {
     bookingCompleted: 'Completed',
     bookingRejected: 'Rejected',
     bookingCancelled: 'Cancelled',
+    bookingNoShow: 'No-show',
     listingBookings: 'Bookings',
     btnLeaveReview: 'Leave a review',
     reviewAboutListing: 'Review about listing',
@@ -624,6 +629,25 @@ export const translations = {
     reviewCommentLabel: 'Comment',
     reviewCommentPlaceholder: 'Optional',
     reviewAlreadyLeft: 'You have already reviewed this booking',
+
+    // Chat — system messages and actions
+    systemBookingCreated: 'Booking created',
+    systemBookingConfirmed: 'Booking confirmed',
+    systemBookingRejected: 'Booking rejected',
+    systemBookingCancelled: 'Booking cancelled',
+    messageDeleted: 'Message deleted',
+    editingMessage: 'Editing message',
+    warningDeleteMessage: 'Delete message? This action is irreversible.',
+    messageActions: 'Message actions',
+    muteConversation: 'Mute',
+    unmuteConversation: 'Unmute',
+    blockUser: 'Block user',
+    unblockUser: 'Unblock user',
+    warningBlockUser:
+      "Block this user? You won't be able to exchange messages.",
+    blockedByMe: 'You have blocked this user',
+    blockedByThem: 'This user has blocked you',
+    chatSettings: 'Chat settings',
 
     // Other
     success: 'Success',
@@ -760,6 +784,7 @@ export const translations = {
     btnViewBookings: 'View all bookings',
     btnBook: 'Book',
     markAllReadConfirm: 'Mark all notifications as read?',
+    btnMarkAllReadConfirm: 'Mark all notifications as read?',
 
     // Errors
     error: 'Error',
@@ -842,23 +867,5 @@ export const translations = {
     validationUsername:
       'Username must be at least 6 characters and no more than 20 characters long, and must not contain spaces',
     validationUsernameAlreadyTaken: 'This username is already taken',
-
-    // Chat — system messages and actions
-    systemBookingCreated: 'Booking created',
-    systemBookingConfirmed: 'Booking confirmed',
-    systemBookingRejected: 'Booking rejected',
-    systemBookingCancelled: 'Booking cancelled',
-    messageDeleted: 'Message deleted',
-    editingMessage: 'Editing message',
-    warningDeleteMessage: 'Delete message? This action is irreversible.',
-    messageActions: 'Message actions',
-    muteConversation: 'Mute',
-    unmuteConversation: 'Unmute',
-    blockUser: 'Block user',
-    unblockUser: 'Unblock user',
-    warningBlockUser: "Block this user? You won't be able to exchange messages.",
-    blockedByMe: 'You have blocked this user',
-    blockedByThem: 'This user has blocked you',
-    chatSettings: 'Chat settings',
   },
 };

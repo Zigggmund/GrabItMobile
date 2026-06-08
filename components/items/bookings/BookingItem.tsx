@@ -24,6 +24,7 @@ interface Props {
   onApprove?: () => void;
   onReject?: () => void;
   onCancel?: () => void;
+  onMarkNoShow?: () => void;
 }
 
 function formatDateTime(iso: string): string {
@@ -38,6 +39,7 @@ export function BookingItem({
   onApprove,
   onReject,
   onCancel,
+  onMarkNoShow,
 }: Props) {
   const { colors } = useTheme();
   const { l } = useLanguage();
@@ -49,8 +51,9 @@ export function BookingItem({
     approved: colors.base.green.primary,
     active: colors.base.orange.primary,
     completed: colors.theme.blue.primary,
-    rejected: colors.base.red.primary,
+    rejected: colors.base.red.bright,
     cancelled: colors.theme.grey.dark,
+    no_show: colors.base.red.primary,
   };
 
   const statusColor = statusColors[booking.status];
@@ -62,6 +65,7 @@ export function BookingItem({
     completed: l.bookingCompleted,
     rejected: l.bookingRejected,
     cancelled: l.bookingCancelled,
+    no_show: l.bookingNoShow,
   };
 
   const showApproveReject = role === 'landlord' && booking.status === 'pending';
@@ -69,6 +73,7 @@ export function BookingItem({
     (role === 'landlord' && booking.status === 'approved') ||
     (role === 'renter' &&
       (booking.status === 'pending' || booking.status === 'approved'));
+  const showNoShow = role === 'landlord' && booking.status === 'active';
   const showReview = booking.status === 'completed';
 
   const reviewType =
@@ -153,7 +158,7 @@ export function BookingItem({
             </View>
           </View>
 
-          {(showApproveReject || showCancel) && (
+          {(showApproveReject || showCancel || showNoShow) && (
             <View className="flex-row gap-1.5">
               {showApproveReject && (
                 <>
@@ -182,6 +187,16 @@ export function BookingItem({
                   className="flex-1"
                   text={l.btnCancel}
                   onPress={onCancel}
+                />
+              )}
+              {showNoShow && (
+                <CustomButton
+                  isSmall
+                  type="red"
+                  className="flex-1"
+                  textClassName="text-11"
+                  text={l.btnNoShow}
+                  onPress={onMarkNoShow}
                 />
               )}
             </View>

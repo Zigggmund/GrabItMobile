@@ -1,5 +1,3 @@
-import { BookingResponseDto, BookingStatus } from '@/services/api/services/dto/booking.dto';
-
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, FlatList, View } from 'react-native';
 import { Calendar } from 'react-native-calendars';
@@ -8,15 +6,21 @@ import { useLocalSearchParams } from 'expo-router';
 import { useApproveBooking } from '@/hooks/booking/useApproveBooking';
 import { useCancelBooking } from '@/hooks/booking/useCancelBooking';
 import { useGetAdBookings } from '@/hooks/booking/useGetAdBookings';
+import { useMarkNoShow } from '@/hooks/booking/useMarkNoShow';
 import { useRejectBooking } from '@/hooks/booking/useRejectBooking';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTheme } from '@/hooks/useTheme';
 
-import { BookingItem } from '@/components/items/bookings/BookingItem';
-import { Tag } from '@/components/common/Tag';
 import ErrorMessage from '@/components/common/ErrorMessage';
+import { Tag } from '@/components/common/Tag';
+import { BookingItem } from '@/components/items/bookings/BookingItem';
 import ScreenContainer from '@/components/layout/ScreenContainer';
 import { CustomText } from '@/components/ui/text/CustomText';
+
+import {
+  BookingResponseDto,
+  BookingStatus,
+} from '@/services/api/services/dto/booking.dto';
 
 const STATUS_FILTERS: Array<BookingStatus | undefined> = [
   undefined,
@@ -26,6 +30,7 @@ const STATUS_FILTERS: Array<BookingStatus | undefined> = [
   'completed',
   'rejected',
   'cancelled',
+  'no_show',
 ];
 
 export default function AdBookingsPage() {
@@ -48,6 +53,7 @@ export default function AdBookingsPage() {
   const approve = useApproveBooking();
   const reject = useRejectBooking();
   const cancel = useCancelBooking();
+  const noShow = useMarkNoShow();
 
   useEffect(() => {
     setServerPage(1);
@@ -103,6 +109,7 @@ export default function AdBookingsPage() {
         completed: l.bookingCompleted,
         rejected: l.bookingRejected,
         cancelled: l.bookingCancelled,
+        no_show: l.bookingNoShow,
       };
       return map[s];
     },
@@ -128,6 +135,7 @@ export default function AdBookingsPage() {
             onApprove={() => approve.mutate(item.booking_id)}
             onReject={() => reject.mutate(item.booking_id)}
             onCancel={() => cancel.mutate(item.booking_id)}
+            onMarkNoShow={() => noShow.mutate(item.booking_id)}
           />
         )}
         ItemSeparatorComponent={() => <View style={{ height: 10 }} />}

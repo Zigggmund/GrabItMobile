@@ -5,13 +5,14 @@ import { useApproveBooking } from '@/hooks/booking/useApproveBooking';
 import { useCancelBooking } from '@/hooks/booking/useCancelBooking';
 import { useGetMyBookings } from '@/hooks/booking/useGetMyBookings';
 import { useGetMyOwnerBookings } from '@/hooks/booking/useGetMyOwnerBookings';
+import { useMarkNoShow } from '@/hooks/booking/useMarkNoShow';
 import { useRejectBooking } from '@/hooks/booking/useRejectBooking';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTheme } from '@/hooks/useTheme';
 
-import { BookingItem } from '@/components/items/bookings/BookingItem';
 import ErrorMessage from '@/components/common/ErrorMessage';
 import { Tag } from '@/components/common/Tag';
+import { BookingItem } from '@/components/items/bookings/BookingItem';
 import ScreenContainer from '@/components/layout/ScreenContainer';
 import { CustomButton } from '@/components/ui/button/CustomButton';
 import { CustomText } from '@/components/ui/text/CustomText';
@@ -32,6 +33,7 @@ const STATUS_FILTERS: Array<BookingStatus | undefined> = [
   'completed',
   'rejected',
   'cancelled',
+  'no_show',
 ];
 
 export default function RentPage() {
@@ -57,6 +59,7 @@ export default function RentPage() {
   const approve = useApproveBooking();
   const reject = useRejectBooking();
   const cancel = useCancelBooking();
+  const noShow = useMarkNoShow();
 
   const activeQuery = mode === 'renter' ? renterQuery : ownerQuery;
   const { data, isError, isFetching } = activeQuery;
@@ -86,6 +89,7 @@ export default function RentPage() {
       completed: l.bookingCompleted,
       rejected: l.bookingRejected,
       cancelled: l.bookingCancelled,
+      no_show: l.bookingNoShow,
     };
     return map[s];
   };
@@ -120,6 +124,11 @@ export default function RentPage() {
                   : undefined
               }
               onCancel={() => cancel.mutate(item.booking_id)}
+              onMarkNoShow={
+                mode === 'owner'
+                  ? () => noShow.mutate(item.booking_id)
+                  : undefined
+              }
             />
           );
         }}

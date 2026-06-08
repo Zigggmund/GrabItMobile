@@ -114,7 +114,7 @@ export default function NotificationsPage() {
   const prefRows: { label: string; key: keyof NotificationPreferencesDto }[] = [
     { label: l.notifEmailEnabled, key: 'email_enabled' },
     { label: l.notifPushEnabled, key: 'mobile_push_enabled' },
-    { label: l.notifBrowserEnabled, key: 'browser_push_enabled' },
+    // { label: l.notifBrowserEnabled, key: 'browser_push_enabled' },
     { label: l.notifInboxEnabled, key: 'inbox_enabled' },
   ];
 
@@ -125,7 +125,10 @@ export default function NotificationsPage() {
         keyExtractor={item => item.id}
         renderItem={({ item, index }) => (
           <NotificationItem
-            notification={{ ...item, isRead: item.isRead || localReadIds.has(item.id) }}
+            notification={{
+              ...item,
+              isRead: item.isRead || localReadIds.has(item.id),
+            }}
             index={index}
             onRead={handleRead}
           />

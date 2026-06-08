@@ -73,7 +73,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     setLanguageError('');
   };
 
-  // Оптимизация производительности. пересчет объекта l когда меняется language
+  // Оптимизация производительности. пересчет l когда меняется language
   const l: LType = useMemo(
     () => translations[language] || translations[defaultLang],
     [language],
