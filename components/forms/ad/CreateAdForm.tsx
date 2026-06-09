@@ -16,10 +16,10 @@ import { ProgressBar } from '@/components/common/bars/ProgressBar';
 import { AdAllDatesStep } from '@/components/forms/ad/AdAllDatesStep';
 import { AdDayTimeStep } from '@/components/forms/ad/AdDayTimeStep';
 import { AdDetailsStep } from '@/components/forms/ad/AdDetailsStep';
-import { AdExceptionsStep } from '@/components/forms/ad/AdExceptionsStep';
+// import { AdExceptionsStep } from '@/components/forms/ad/AdExceptionsStep';
 import { AdMapStep } from '@/components/forms/ad/AdMapStep';
 import { AdMediaStep } from '@/components/forms/ad/AdMediaStep';
-import { AdTypeStep } from '@/components/forms/ad/AdTypeStep';
+// import { AdTypeStep } from '@/components/forms/ad/AdTypeStep';
 import { AdWeekDaysStep } from '@/components/forms/ad/AdWeekDaysStep';
 import { CustomAlert } from '@/components/modals/CustomAlert';
 import { CustomButton } from '@/components/ui/button/CustomButton';
@@ -79,34 +79,25 @@ export const CreateAdForm = () => {
     component: ComponentType<StepComponentProps>;
   }[] = useMemo(() => {
     const baseSteps = [
-      { key: 'adTypeStep', component: AdTypeStep },
+      // { key: 'adTypeStep', component: AdTypeStep },
       { key: 'adDetailsStep', component: AdDetailsStep },
       { key: 'adMediaStep', component: AdMediaStep },
       { key: 'adMapStep', component: AdMapStep },
       { key: 'adAllDatesStep', component: AdAllDatesStep },
     ] as const;
 
-    let productSteps: {
-      key: TranslationKey;
-      component: ComponentType<StepComponentProps>;
-    }[] = [];
-    if (form.AdFormData.adType == 'product') {
-      productSteps = [
-        {
-          key: 'adWeekDaysStep',
-          component: AdWeekDaysStep,
-        },
-        { key: 'adDayTimeStep', component: AdDayTimeStep },
-      ] as const;
-    }
+    const productSteps = [
+      { key: 'adWeekDaysStep', component: AdWeekDaysStep },
+      { key: 'adDayTimeStep', component: AdDayTimeStep },
+    ] as const;
 
-    const exceptionStep = {
-      key: 'adExceptionsStep',
-      component: AdExceptionsStep,
-    } as const;
+    // const exceptionStep = {
+    //   key: 'adExceptionsStep',
+    //   component: AdExceptionsStep,
+    // } as const;
 
-    return [...baseSteps, ...productSteps, exceptionStep];
-  }, [form.AdFormData.adType]);
+    return [...baseSteps, ...productSteps];
+  }, []);
 
   const currentStepIndex = Math.min(form.currentStep - 1, steps.length - 1);
   const CurrentStepKey = steps[currentStepIndex].key;
@@ -137,11 +128,11 @@ export const CreateAdForm = () => {
           stepErrors.title = l.errorTitleTooLong;
         }
 
-        if (!form.AdFormData.quantity) {
-          stepErrors.quantity = l.errorQuantityNull;
-        } else if (form.AdFormData.quantity <= 0) {
-          stepErrors.quantity = l.errorQuantityZeroOrLess;
-        }
+        // if (!form.AdFormData.quantity) {
+        //   stepErrors.quantity = l.errorQuantityNull;
+        // } else if (form.AdFormData.quantity <= 0) {
+        //   stepErrors.quantity = l.errorQuantityZeroOrLess;
+        // }
 
         if (description && description.length < 10) {
           stepErrors.description = l.errorDescriptionTooShort;
@@ -167,13 +158,6 @@ export const CreateAdForm = () => {
           stepErrors.cost = l.errorCostZeroOrLess;
         }
 
-        if (!form.AdFormData.minHoursInterval) {
-          stepErrors.minInterval = l.errorMinIntervalNull;
-        } else if (form.AdFormData.minHoursInterval <= 0) {
-          stepErrors.minInterval = l.errorMinIntervalZeroOrLess;
-        } else if (form.AdFormData.minHoursInterval > 24) {
-          stepErrors.minInterval = l.errorMinIntervalTooBig;
-        }
         // if (
         //   !form.adCreationFormData.cost ||
         //   form.adCreationFormData.cost.length === 0
@@ -216,7 +200,7 @@ export const CreateAdForm = () => {
         break;
 
       case 'adDayTimeStep': {
-        const minHours = form.AdFormData.minHoursInterval ?? 1;
+        const minHours = form.AdFormData.bufferHours ?? 1;
         form.AdFormData.weekDaysTime.forEach((weekDay, index) => {
           if (weekDay.length === 0 && form.AdFormData.weekDays[index]) {
             stepErrors.weekDaysTime = l.errorDayTimeNull;
@@ -238,7 +222,7 @@ export const CreateAdForm = () => {
       }
 
       case 'adExceptionsStep': {
-        const minHours = form.AdFormData.minHoursInterval ?? 1;
+        const minHours = form.AdFormData.bufferHours ?? 1;
         const hasShortExceptionPeriod = (form.AdFormData.exceptions ?? []).some(ex =>
           ex.timings.some(period => {
             const startH = parseInt(period.startTime.split('-')[0]);
@@ -303,8 +287,8 @@ export const CreateAdForm = () => {
         description: data.description,
         category_id: parseInt(data.categoryId!),
         price_per_hour: data.cost!,
-        quantity: data.quantity!,
-        buffer_hours: data.minHoursInterval ?? undefined,
+        quantity: data.quantity ?? 1,
+        buffer_hours: data.bufferHours ?? undefined,
         lat: data.latitude ?? undefined,
         lon: data.longitude ?? undefined,
         address: data.address ?? undefined,

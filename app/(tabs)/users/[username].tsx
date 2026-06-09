@@ -12,10 +12,13 @@ import { useGetUserByUsername } from '@/hooks/user/useGetUserByUsername';
 import { useProfile } from '@/hooks/user/useProfile';
 import { useTheme } from '@/hooks/useTheme';
 
+import SubscriptionModal from '@/components/modals/SubscriptionModal';
+
 import { dateFormat } from '@/utils/dateFormat';
 
 import ErrorMessage from '@/components/common/ErrorMessage';
 import GreyBlock from '@/components/common/GreyBlock';
+import { PremiumBadge } from '@/components/common/PremiumBadge';
 import { ProfileAvatar } from '@/components/common/ProfileAvatar';
 import RatingStars from '@/components/common/RatingStars';
 import ScreenContainer from '@/components/layout/ScreenContainer';
@@ -42,6 +45,7 @@ export default function UserProfile() {
 
   const [avatarModalVisible, setAvatarModalVisible] = useState(false);
   const [editProfileModalVisible, setEditProfileModalVisible] = useState(false);
+  const [subscriptionModalVisible, setSubscriptionModalVisible] = useState(false);
   const [avatarVersion, setAvatarVersion] = useState(Date.now());
   // const [completeProfileModalVisible, setCompleteProfileModalVisible] =
   //   useState(false);
@@ -90,13 +94,16 @@ export default function UserProfile() {
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <View className={'flex-col h-full px-4 justify-between gap-8'}>
           <View>
-            <CustomText
-              style={{ color: colors.theme.blue.dark }}
-              className={'text-center text-33 font-bold pb-2'}
-              highlight
-            >
-              {user?.username}
-            </CustomText>
+            <View className="flex-row items-center justify-center gap-2 pb-2">
+              <CustomText
+                style={{ color: colors.theme.blue.dark }}
+                className={'text-33 font-bold'}
+                highlight
+              >
+                {user?.username}
+              </CustomText>
+              {user?.isPremium && <PremiumBadge size="medium" />}
+            </View>
 
             <GreyBlock className={'items-center w-full gap-2 relative'}>
               <ProfileAvatar
@@ -369,6 +376,46 @@ export default function UserProfile() {
             </GreyBlock>
           </View>
 
+          {isMine && (
+            <GreyBlock className="gap-2 px-2 my-2">
+              <View className="flex-row items-center justify-between">
+                <CustomText
+                  className="text-17"
+                  style={{ color: colors.theme.blue.bright }}
+                >
+                  {l.premiumStatus}:
+                </CustomText>
+                {user.isPremium ? (
+                  <View className="flex-row items-center gap-2">
+                    <CustomText
+                      className="text-14"
+                      style={{ color: colors.theme.blue.bright }}
+                    >
+                      {l.premiumActive}{' '}
+                      {user.subscriptionExpiresAt
+                        ? new Date(user.subscriptionExpiresAt).toLocaleDateString()
+                        : ''}
+                    </CustomText>
+                  </View>
+                ) : (
+                  <CustomText
+                    className="text-14"
+                    style={{ color: colors.theme.grey.dark }}
+                  >
+                    {l.premiumInactive}
+                  </CustomText>
+                )}
+              </View>
+              <CustomButton
+                isSmall
+                text={l.btnGetPremium}
+                onPress={() => setSubscriptionModalVisible(true)}
+                style={{ backgroundColor: colors.base.yellow.darkSoft }}
+                textClassName="text-16 font-bold"
+              />
+            </GreyBlock>
+          )}
+
           <View className={'px-8'}>
             {isMine ? (
               <CustomButton
@@ -439,6 +486,12 @@ export default function UserProfile() {
             visible={editProfileModalVisible}
             onClose={() => setEditProfileModalVisible(false)}
             user={user}
+          />
+          <SubscriptionModal
+            visible={subscriptionModalVisible}
+            onClose={() => setSubscriptionModalVisible(false)}
+            currentTier={user.subscriptionTier}
+            expiresAt={user.subscriptionExpiresAt}
           />
           {/*<CompleteProfileModal*/}
           {/*  visible={completeProfileModalVisible}*/}

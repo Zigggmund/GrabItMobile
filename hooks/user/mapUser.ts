@@ -19,6 +19,9 @@ export const mapUser = (dto: UserResponseDto): UserType => {
 
     avatar: dto.avatar_url,
     language: dto.language,
+    isPremium: dto.is_premium,
+    subscriptionTier: dto.subscription_tier,
+    subscriptionExpiresAt: dto.subscription_expires_at,
 
     stats: {
       landlordReviews: dto.review_count_as_owner,

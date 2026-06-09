@@ -134,7 +134,7 @@ export const AdExceptionsStep = ({
     if (selectedSet.has(clickedHour)) {
       updatedHours = updatedHours.filter(h => h !== clickedHour);
     } else {
-      const minInterval = form.AdFormData.minHoursInterval || 1;
+      const minInterval = form.AdFormData.bufferHours ?? 1;
 
       for (let i = 0; i < minInterval; i++) {
         const nextHour = hourIndex + i;

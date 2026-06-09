@@ -9,16 +9,48 @@ import { useHistory } from '@/hooks/useHistory';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTheme } from '@/hooks/useTheme';
 
+import { periodsToHours } from '@/utils/periodsToHours';
+
+import { AdFormDataType } from '@/context/FormContext';
+
 import { ProgressBar } from '@/components/common/bars/ProgressBar';
+import { AdAllDatesStep } from '@/components/forms/ad/AdAllDatesStep';
+import { AdDayTimeStep } from '@/components/forms/ad/AdDayTimeStep';
 import { AdDetailsStep } from '@/components/forms/ad/AdDetailsStep';
+// import { AdExceptionsStep } from '@/components/forms/ad/AdExceptionsStep';
 import { AdMapStep } from '@/components/forms/ad/AdMapStep';
 import { AdMediaStep } from '@/components/forms/ad/AdMediaStep';
+import { AdWeekDaysStep } from '@/components/forms/ad/AdWeekDaysStep';
 import { CustomAlert } from '@/components/modals/CustomAlert';
 import { CustomButton } from '@/components/ui/button/CustomButton';
 import { CustomText } from '@/components/ui/text/CustomText';
 
 import { AdService } from '@/services/api/services/adService';
+import { SetAvailabilityDto } from '@/services/api/services/dto/ad.dto';
 import { MediaService } from '@/services/api/services/mediaService';
+
+const buildAvailabilityPayload = (data: AdFormDataType): SetAvailabilityDto => {
+  const fmt = (d: Date) => d.toISOString().split('T')[0];
+  const weekdayHours: Record<string, number[]> = {};
+  data.weekDays.forEach((selected, idx) => {
+    if (!selected) return;
+    const hours = periodsToHours(data.weekDaysTime[idx]).map(h =>
+      parseInt(h.split('-')[0]),
+    );
+    weekdayHours[(idx + 1).toString()] = hours;
+  });
+  const endPlusOne = new Date(data.endDate!);
+  endPlusOne.setDate(endPlusOne.getDate() + 1);
+  return {
+    periods: [
+      {
+        valid_from: fmt(data.firstDate!),
+        valid_until: fmt(endPlusOne),
+        weekday_hours: weekdayHours,
+      },
+    ],
+  };
+};
 
 type StepComponentProps = { errors: Record<string, string> };
 
@@ -26,7 +58,9 @@ const STEPS: { key: string; component: ComponentType<StepComponentProps> }[] = [
   { key: 'adDetailsStep', component: AdDetailsStep },
   { key: 'adMapStep', component: AdMapStep },
   { key: 'adMediaStep', component: AdMediaStep },
-  // { key: 'adMediaStep', component: EditAdMediaStep },
+  { key: 'adAllDatesStep', component: AdAllDatesStep },
+  { key: 'adWeekDaysStep', component: AdWeekDaysStep },
+  { key: 'adDayTimeStep', component: AdDayTimeStep },
 ];
 
 interface Props {
@@ -53,8 +87,8 @@ export const EditAdForm = ({ ad }: Props) => {
     form.changeAdFormData('description', ad.description ?? '');
     form.changeAdFormData('cost', ad.rub_per_hour);
     form.changeAdFormData('categoryId', ad.categoryId);
-    form.changeAdFormData('quantity', ad.quantity);
-    form.changeAdFormData('minHoursInterval', ad.minHoursInterval);
+    // form.changeAdFormData('quantity', ad.quantity);
+    form.changeAdFormData('bufferHours', ad.bufferHours);
     form.changeAdFormData('latitude', ad.lat);
     form.changeAdFormData('longitude', ad.lon);
     form.changeAdFormData('address', ad.address);
@@ -90,11 +124,11 @@ export const EditAdForm = ({ ad }: Props) => {
           stepErrors.title = l.errorTitleTooLong;
         }
 
-        if (!form.AdFormData.quantity) {
-          stepErrors.quantity = l.errorQuantityNull;
-        } else if (form.AdFormData.quantity <= 0) {
-          stepErrors.quantity = l.errorQuantityZeroOrLess;
-        }
+        // if (!form.AdFormData.quantity) {
+        //   stepErrors.quantity = l.errorQuantityNull;
+        // } else if (form.AdFormData.quantity <= 0) {
+        //   stepErrors.quantity = l.errorQuantityZeroOrLess;
+        // }
 
         if (description && description.length < 10) {
           stepErrors.description = l.errorDescriptionTooShort;
@@ -118,13 +152,6 @@ export const EditAdForm = ({ ad }: Props) => {
         } else if (form.AdFormData.cost <= 0) {
           stepErrors.cost = l.errorCostZeroOrLess;
         }
-        if (!form.AdFormData.minHoursInterval) {
-          stepErrors.minInterval = l.errorMinIntervalNull;
-        } else if (form.AdFormData.minHoursInterval <= 0) {
-          stepErrors.minInterval = l.errorMinIntervalZeroOrLess;
-        } else if (form.AdFormData.minHoursInterval > 24) {
-          stepErrors.minInterval = l.errorMinIntervalTooBig;
-        }
         break;
       }
       case 'adMapStep':
@@ -140,6 +167,43 @@ export const EditAdForm = ({ ad }: Props) => {
           stepErrors.uriMedias = l.errorMediaArrayTooLong;
         }
         break;
+
+      case 'adAllDatesStep': {
+        const { firstDate, endDate } = form.AdFormData;
+        if (!firstDate || !endDate) {
+          stepErrors.endDate = l.errorDatePeriodNull;
+        } else if (endDate < firstDate) {
+          stepErrors.endDate = l.errorEndDateStartDateComparison;
+        }
+        break;
+      }
+
+      case 'adWeekDaysStep':
+        if (!form.AdFormData.weekDays.some(item => item)) {
+          stepErrors.weekDays = l.errorWeekDaysNull;
+        }
+        break;
+
+      case 'adDayTimeStep': {
+        const minHours = form.AdFormData.bufferHours ?? 1;
+        form.AdFormData.weekDaysTime.forEach((weekDay, index) => {
+          if (weekDay.length === 0 && form.AdFormData.weekDays[index]) {
+            stepErrors.weekDaysTime = l.errorDayTimeNull;
+          }
+        });
+        const hasShort = form.AdFormData.weekDaysTime.some(
+          (weekDay, index) =>
+            form.AdFormData.weekDays[index] &&
+            weekDay.some(period => {
+              const startH = parseInt(period.startTime.split('-')[0]);
+              const endH = period.endTime === '24' ? 24 : parseInt(period.endTime.split('-')[0]);
+              return endH - startH < minHours;
+            }),
+        );
+        if (hasShort) stepErrors.weekDaysTime = l.errorTimePeriodMinInterval;
+        break;
+      }
+
     }
 
     setErrors(prev => ({ ...prev, [stepKey]: stepErrors }));
@@ -167,8 +231,8 @@ export const EditAdForm = ({ ad }: Props) => {
         description: data.description,
         category_id: parseInt(data.categoryId!),
         price_per_hour: data.cost!,
-        quantity: data.quantity!,
-        buffer_hours: data.minHoursInterval ?? undefined,
+        quantity: data.quantity ?? 1,
+        buffer_hours: data.bufferHours ?? undefined,
         lat: data.latitude ?? undefined,
         lon: data.longitude ?? undefined,
         address: data.address ?? undefined,
@@ -195,6 +259,8 @@ export const EditAdForm = ({ ad }: Props) => {
           ),
         ),
       );
+
+      await AdService.setAvailability(adId, buildAvailabilityPayload(data));
 
       form.clear();
       await queryClient.invalidateQueries({ queryKey: ['ad', adId] });

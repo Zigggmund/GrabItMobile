@@ -1,6 +1,6 @@
-﻿import { CostType } from '@/types/CostType';
-import { ProductType } from '@/types/entities/AdType';
-import { CategoryType } from '@/types/entities/CategoryType';
+import { CostType } from '@/types/CostType';
+// import { ProductType } from '@/types/entities/AdType';
+// import { CategoryType } from '@/types/entities/CategoryType';
 
 import { useMemo, useState } from 'react';
 import {
@@ -13,7 +13,7 @@ import {
   View,
 } from 'react-native';
 import MapLibreGL from '@maplibre/maplibre-react-native';
-import { useQueryClient } from '@tanstack/react-query';
+// import { useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams } from 'expo-router';
 
 import { useGetAd } from '@/hooks/ad/useGetAd';
@@ -53,7 +53,7 @@ export default function AdDetails() {
   const { user: currentUser } = useProfile();
   const { l } = useLanguage();
   const { navigate } = useHistory();
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
   const [mapModalVisible, setMapModalVisible] = useState(false);
   const [showExtend, setShowExtend] = useState(false);
   const {
@@ -68,38 +68,36 @@ export default function AdDetails() {
   const { data: reviewsData, isLoading: isReviewsLoading } =
     useGetAdShortenedReviews(id);
 
-  const productType: ProductType = useMemo(() => {
-    if (!ad) return 'product';
-    const allCategories = [
-      ...(queryClient.getQueryData<CategoryType[]>(['categories', 'product']) ??
-        []),
-      ...(queryClient.getQueryData<CategoryType[]>(['categories', 'service']) ??
-        []),
-      ...(queryClient.getQueryData<CategoryType[]>(['categories', 'space']) ??
-        []),
-    ];
-    return (
-      allCategories.find(c => c.id.toString() === ad.categoryId)?.productType ??
-      'product'
-    );
-  }, [ad?.categoryId]);
+  // const productType: ProductType = useMemo(() => {
+  //   if (!ad) return 'product';
+  //   const allCategories = [
+  //     ...(queryClient.getQueryData<CategoryType[]>(['categories', 'product']) ?? []),
+  //     ...(queryClient.getQueryData<CategoryType[]>(['categories', 'service']) ?? []),
+  //     ...(queryClient.getQueryData<CategoryType[]>(['categories', 'space']) ?? []),
+  //   ];
+  //   return allCategories.find(c => c.id.toString() === ad.categoryId)?.productType ?? 'product';
+  // }, [ad?.categoryId]);
 
   const prices: CostType[] = useMemo(() => {
     if (!ad) return [];
     const ph = ad.rub_per_hour;
-    if (productType === 'space') {
-      return [
-        { payment: Math.round(ph * 24), priceUnit: 'rubPerDay' },
-        { payment: Math.round(ph * 24 * 7), priceUnit: 'rubPerWeek' },
-        { payment: Math.round(ph * 24 * 30), priceUnit: 'rubPerMonth' },
-      ];
-    }
+    // space pricing commented out — only products supported
+    // if (productType === 'space') {
+    //   return [
+    //     { payment: Math.round(ph * 24), priceUnit: 'rubPerDay' },
+    //     { payment: Math.round(ph * 24 * 7), priceUnit: 'rubPerWeek' },
+    //     { payment: Math.round(ph * 24 * 30), priceUnit: 'rubPerMonth' },
+    //   ];
+    // }
     return [
       { payment: ph, priceUnit: 'rubPerHour' },
       { payment: Math.round(ph * 24), priceUnit: 'rubPerDay' },
       { payment: Math.round(ph * 24 * 7), priceUnit: 'rubPerWeek' },
     ];
-  }, [ad, productType]);
+  }, [ad]);
+
+  const { mutate: createConversation, isPending: isCreatingChat } =
+    useCreateConversation();
 
   if (isLoading || isReviewsLoading)
     return (
@@ -121,9 +119,6 @@ export default function AdDetails() {
         <ErrorMessage text={l.errorAdNotFound} />
       </ScreenContainer>
     );
-
-  const { mutate: createConversation, isPending: isCreatingChat } =
-    useCreateConversation();
 
   const finishRent = () => {
     console.log('Rent was finished');
@@ -556,7 +551,7 @@ export default function AdDetails() {
               </CustomText>
               <BookingBlock
                 adId={id}
-                minHoursInterval={ad.minHoursInterval}
+                bufferHours={ad.bufferHours}
                 rubPerHour={ad.rub_per_hour}
               />
             </>

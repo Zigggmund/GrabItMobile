@@ -151,6 +151,7 @@ export const translations = {
     adDetailsStep: 'Детали объявления',
     adMediaStep: 'Выбор медиафайлов',
     adMapStep: 'Выбор адреса на карте',
+    btnSearchOnMap: 'Поиск на карте',
     adAllDatesStep: 'Выбор периода бронирования',
     adWeekDaysStep: 'Выбор дней недели',
     adDayTimeStep: 'Выбор временных промежутков',
@@ -418,6 +419,22 @@ export const translations = {
     warningDeleteAd: 'Вы уверены, что хотите удалить объявление?',
     warningDeleteAvatar: 'Вы уверены, что хотите удалить аватар?',
 
+    // Подписка
+    premiumStatus: 'Статус подписки',
+    premiumActive: 'Активна до',
+    premiumInactive: 'Неактивна',
+    planWeekly: 'Неделя',
+    planMonthly: 'Месяц',
+    planQuarterly: '3 месяца',
+    planYearly: 'Год',
+    btnGetPremium: 'Получить PRO',
+    btnActivatePlan: 'Активировать',
+    subscriptionTitle: 'Подписка PRO',
+    subscriptionActivated: 'Подписка активирована!',
+    viewList: 'Список',
+    viewMap: 'Карта',
+    bufferHours: 'Буфер между арендами',
+
     // Валидация
     validationEmail: 'Некорректная почта',
     validationPassword:
@@ -584,6 +601,7 @@ export const translations = {
     adDetailsStep: 'Ad details',
     adMediaStep: 'Select media files',
     adMapStep: 'Select ad address',
+    btnSearchOnMap: 'Search on map',
     adAllDatesStep: 'Select booking period',
     adWeekDaysStep: 'Select weekdays',
     adDayTimeStep: 'Select time slots',
@@ -852,6 +870,22 @@ export const translations = {
       'This profile must be filled in, otherwise it will be deleted after ... days',
     warningDeleteAd: 'Are you sure you want to delete this listing?',
     warningDeleteAvatar: 'Are you sure you want to delete your avatar?',
+
+    // Subscription
+    premiumStatus: 'Subscription status',
+    premiumActive: 'Active until',
+    premiumInactive: 'Inactive',
+    planWeekly: 'Week',
+    planMonthly: 'Month',
+    planQuarterly: '3 months',
+    planYearly: 'Year',
+    btnGetPremium: 'Get PRO',
+    btnActivatePlan: 'Activate',
+    subscriptionTitle: 'PRO Subscription',
+    subscriptionActivated: 'Subscription activated!',
+    viewList: 'List',
+    viewMap: 'Map',
+    bufferHours: 'Buffer between rentals',
 
     // Validation
     validationEmail: 'Incorrect email',

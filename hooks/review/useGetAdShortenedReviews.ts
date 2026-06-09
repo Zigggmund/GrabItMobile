@@ -29,6 +29,7 @@ export const useGetAdShortenedReviews = (adId: number | string) => {
               landlordRating: author.avg_rating_as_owner,
               reviewCount: author.review_count_as_owner,
               phoneNumber: null,
+              isPremium: author.is_premium,
             },
             createdAt: dto.created_at,
             rating: dto.rating,

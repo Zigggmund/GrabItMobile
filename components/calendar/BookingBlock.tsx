@@ -14,7 +14,7 @@ import { useHistory } from '@/hooks/useHistory';
 
 interface Props {
   adId: string;
-  minHoursInterval: number;
+  bufferHours: number;
   rubPerHour: number;
 }
 
@@ -29,7 +29,7 @@ function buildEndISO(endDate: string, endHour: number): string {
   return `${endDate}T${String(endHour).padStart(2, '0')}:00:00Z`;
 }
 
-export function BookingBlock({ adId, minHoursInterval, rubPerHour }: Props) {
+export function BookingBlock({ adId, bufferHours, rubPerHour }: Props) {
   const { navigate } = useHistory();
   const { colors } = useTheme();
   const { l } = useLanguage();
@@ -80,7 +80,7 @@ export function BookingBlock({ adId, minHoursInterval, rubPerHour }: Props) {
 
   const endMinHour =
     endDate === startDate && startHour !== null
-      ? startHour + minHoursInterval
+      ? startHour + bufferHours
       : undefined;
 
   let totalHours: number | null = null;

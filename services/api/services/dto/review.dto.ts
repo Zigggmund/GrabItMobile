@@ -23,6 +23,7 @@ export interface ReviewResponseDto {
   rating: number; // 1–5
   comment: string;
   created_at: string;
+  author_is_premium: boolean;
 }
 
 export type GetReviewsResponseDto = PaginatedResponse<ReviewResponseDto>;

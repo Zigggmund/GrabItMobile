@@ -6,6 +6,7 @@ import { useHistory } from '@/hooks/useHistory';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTheme } from '@/hooks/useTheme';
 
+import { PremiumBadge } from '@/components/common/PremiumBadge';
 import RatingStars from '@/components/common/RatingStars';
 import { CustomText } from '@/components/ui/text/CustomText';
 
@@ -21,10 +22,8 @@ export default function SmallAd({ width, ad }: SmallAdProps) {
   const { l } = useLanguage();
   const { navigate } = useHistory();
   // const isSpace = ad.productType == 'space';
-  // заглушка
-  const isSpace = false;
-  const price = isSpace ? ad.rub_per_hour * 24 : ad.rub_per_hour;
-  const rubPer = isSpace ? l.rubPerDay : l.rubPerHour;
+  const price = ad.rub_per_hour;
+  const rubPer = l.rubPerHour;
 
   return (
     <TouchableOpacity
@@ -57,7 +56,10 @@ export default function SmallAd({ width, ad }: SmallAdProps) {
           height={100}
         />
         <View className={'pt-2 gap-1 px-2'}>
-          <RatingStars rating={ad.rating} />
+          <View className="flex-row items-center gap-1.5">
+            <RatingStars rating={ad.rating} />
+            {ad.ownerIsPremium && <PremiumBadge />}
+          </View>
           <CustomText
             highlight
             style={{ color: colors.theme.blue.primary }}

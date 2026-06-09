@@ -1,4 +1,4 @@
-import { AdPreviewType, ProductType } from '@/types/entities/AdType';
+import { AdPreviewType/*, ProductType*/ } from '@/types/entities/AdType';
 import { CategoryType } from '@/types/entities/CategoryType';
 import { SortingAdsType } from '@/types/SortingType';
 
@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux';
 import { useSearchAds } from '@/hooks/ad/useSearchAds';
 import { useGetProductTypeCategories } from '@/hooks/category/useGetProductTypeCategories';
 import { useDebounce } from '@/hooks/useDebounce';
+import { useHistory } from '@/hooks/useHistory';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTheme } from '@/hooks/useTheme';
 
@@ -23,7 +24,7 @@ import { RootState } from '@/state/store';
 import SearchBar from '@/components/common/bars/SearchBar';
 import ErrorMessage from '@/components/common/ErrorMessage';
 import { SortingMenu } from '@/components/common/SortingMenu';
-import { Tag } from '@/components/common/Tag';
+// import { Tag } from '@/components/common/Tag';
 import SmallAd from '@/components/items/ads/SmallAd';
 import ScreenContainer from '@/components/layout/ScreenContainer';
 import { CategoryModal } from '@/components/modals/CategoryModal';
@@ -73,6 +74,7 @@ interface AppliedFilters {
 export default function Search() {
   const { l } = useLanguage();
   const { colors } = useTheme();
+  const { navigate } = useHistory();
 
   const { width: screenWidth } = useWindowDimensions();
   const numColumns = Math.max(1, Math.floor(screenWidth / SMALL_AD_WIDTH));
@@ -80,7 +82,7 @@ export default function Search() {
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 600);
 
-  const [selectedTag, setSelectedTag] = useState<ProductType | null>(null);
+  // const [selectedTag, setSelectedTag] = useState<ProductType | null>(null);
 
   // без указания categorySlug useGetProductTypeCategories ничего не возвращает
   const categorySlug = 'product';
@@ -111,9 +113,9 @@ export default function Search() {
   // Applied filters - уходят в backend
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilters>({});
 
-  const isSpace = selectedTag === 'space';
-  const displayMultiplier = isSpace ? 24 : 1;
-  const priceUnit = isSpace ? l.rubPerDay : l.rubPerHour;
+  // const isSpace = selectedTag === 'space';
+  // const displayMultiplier = isSpace ? 24 : 1;
+  const priceUnit = l.rubPerHour;
 
   const { data, isLoading, isError, isFetching } = useSearchAds({
     query: debouncedSearch || undefined,
@@ -171,8 +173,8 @@ export default function Search() {
 
     setAppliedFilters(prev => ({
       ...prev, // сохраняем categoryId — он управляется отдельно
-      minPrice: minInt != null ? minInt / displayMultiplier : undefined,
-      maxPrice: maxInt != null ? maxInt / displayMultiplier : undefined,
+      minPrice: minInt != null ? minInt : undefined,
+      maxPrice: maxInt != null ? maxInt : undefined,
       lat: draftFilters.location?.lat,
       lon: draftFilters.location?.lon,
       radiusKm: draftFilters.location?.radiusKm,
@@ -208,12 +210,11 @@ export default function Search() {
     setPage(1);
   };
 
-  const handleTag = (value: ProductType | null) => {
-    const nextValue = selectedTag === value ? null : value;
-    setSelectedTag(nextValue);
-
-    if (nextValue) console.log(`Тег выбран ${value}`);
-  };
+  // const handleTag = (value: ProductType | null) => {
+  //   const nextValue = selectedTag === value ? null : value;
+  //   setSelectedTag(nextValue);
+  //   if (nextValue) console.log(`Тег выбран ${value}`);
+  // };
 
   const handleLocationConfirm = (
     lat: number,
@@ -259,19 +260,13 @@ export default function Search() {
       `Геофильтр (город): ${currentCity}, lat=${coords.lat}, lon=${coords.lon}`,
     );
   };
-  useEffect(() => {
-    setDraftFilters({
-      category: null,
-      minPriceText: '',
-      maxPriceText: '',
-      location: null,
-    });
-
-    setAppliedFilters({});
-    setPriceError(null);
-    setPage(1);
-    setLocationMode('none');
-  }, [selectedTag]);
+  // useEffect(() => {
+  //   setDraftFilters({ category: null, minPriceText: '', maxPriceText: '', location: null });
+  //   setAppliedFilters({});
+  //   setPriceError(null);
+  //   setPage(1);
+  //   setLocationMode('none');
+  // }, [selectedTag]);
 
   if (isLoading && allAds.length === 0) {
     return (
@@ -294,6 +289,18 @@ export default function Search() {
       {/*<View className={'sticky w-full gap-4'} style={{ flex: 1 }}> НЕ РАБОТАЕТ*/}
 
       <View className={'w-full items-center gap-1'}>
+        <View className="flex-row gap-3 justify-center pb-2">
+          <CustomButton
+            text={l.viewList}
+            type="highlighted"
+            onPress={() => {}}
+          />
+          <CustomButton
+            text={l.viewMap}
+            type="secondary"
+            onPress={() => navigate('/(tabs)/ads/map', false)}
+          />
+        </View>
         <SearchBar
           value={search}
           onChangeText={handleSearch}
@@ -333,6 +340,7 @@ export default function Search() {
         ListFooterComponent={() => (isFetching ? <ActivityIndicator /> : null)}
         ListHeaderComponent={
           <View className={'gap-4 items-center pb-4'} style={{ zIndex: 10 }}>
+
             <View className={'flex-row justify-between w-full items-center'}>
 
               <SortingMenu<SortingAdsType>
@@ -374,7 +382,6 @@ export default function Search() {
 
               <TouchableOpacity
                 style={{
-                  opacity: selectedTag == null ? 0.4 : 1,
                   backgroundColor: colors.base.orange.primary,
                   borderWidth: 1,
                   borderColor: colors.base.neutral.blackPrimary,
@@ -382,7 +389,6 @@ export default function Search() {
                   maxWidth: 240,
                 }}
                 className={'gap-2 rounded-xl py-2 px-2'}
-                disabled={selectedTag == null}
                 onPress={() => setCategoryModalVisible(true)}
               >
                 <CustomText
@@ -399,25 +405,11 @@ export default function Search() {
               </TouchableOpacity>
             </View>
 
-            <View className={'flex-row gap-4'}>
-              <Tag
-                label={l.products}
-                selected={selectedTag === 'product'}
-                onPress={() => handleTag('product')}
-              />
-
-              <Tag
-                label={l.services}
-                selected={selectedTag === 'service'}
-                onPress={() => handleTag('service')}
-              />
-
-              <Tag
-                label={l.spaces}
-                selected={selectedTag === 'space'}
-                onPress={() => handleTag('space')}
-              />
-            </View>
+            {/* <View className={'flex-row gap-4'}>
+              <Tag label={l.products} selected={selectedTag === 'product'} onPress={() => handleTag('product')} />
+              <Tag label={l.services} selected={selectedTag === 'service'} onPress={() => handleTag('service')} />
+              <Tag label={l.spaces} selected={selectedTag === 'space'} onPress={() => handleTag('space')} />
+            </View> */}
 
             <View className={'gap-1 w-full'}>
               <View className={'flex-row gap-3 mb-4'}>

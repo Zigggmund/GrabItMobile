@@ -21,6 +21,7 @@ export interface AdPreviewType {
   address: string;
   lat?: number;
   lon?: number;
+  ownerIsPremium?: boolean;
   // productType: ProductType;
   categoryId: string;
   previewImage: MediaType;
@@ -41,7 +42,7 @@ export interface AdDetailsType extends AdPreviewType {
   lat: number;
   lon: number;
   quantity: number;
-  minHoursInterval: number;
+  bufferHours: number;
   media: MediaType[];
   createdDate: string;
   specifications: SpecificationType[];

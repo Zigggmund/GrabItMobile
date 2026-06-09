@@ -54,8 +54,8 @@ export const AdDayTimeStep = ({
       return;
     }
 
-    // добавляем часы с учетом minInterval
-    const minInterval = form.AdFormData.minHoursInterval || 1;
+    // добавляем часы с учетом bufferHours
+    const minInterval = form.AdFormData.bufferHours ?? 1;
 
     const updatedHours = [...selectedHours];
 

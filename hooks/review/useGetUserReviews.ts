@@ -14,6 +14,7 @@ const UNKNOWN_AUTHOR = {
   avatar_url: null as null,
   avg_rating_as_owner: 0,
   review_count_as_owner: 0,
+  is_premium: false,
 };
 
 export const useGetUserReviews = (userId: string, page = 1, sortBy: SortingReviewsType = 'new') => {
@@ -39,6 +40,7 @@ export const useGetUserReviews = (userId: string, page = 1, sortBy: SortingRevie
               landlordRating: author.avg_rating_as_owner,
               reviewCount: author.review_count_as_owner,
               phoneNumber: null,
+              isPremium: author.is_premium,
             },
             createdAt: dto.created_at,
             rating: dto.rating,

@@ -14,6 +14,7 @@ import {
 import { CustomAlert } from '@/components/modals/CustomAlert';
 
 const makeInitialAdData = (): AdFormDataType => ({
+  adType: 'product',
   title: '',
   quantity: 1,
   description: '',
@@ -21,7 +22,7 @@ const makeInitialAdData = (): AdFormDataType => ({
   uriMedias: [],
   weekDays: [false, false, false, false, false, false, false],
   weekDaysTime: [[], [], [], [], [], [], []],
-  minHoursInterval: 1,
+  bufferHours: 1,
 });
 
 export const FormProvider = ({ children }: { children: ReactNode }) => {

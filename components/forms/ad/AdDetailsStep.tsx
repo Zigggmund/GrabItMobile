@@ -42,8 +42,6 @@ export const AdDetailsStep = ({
   //   (form.adCreationFormData.cost || '').toString(),
   // );
 
-  if (!form.AdFormData.adType) return null;
-
   const handleCategory = (value: CategoryType | null) => {
     setCategory(value);
     form.changeAdFormData('categoryId', value?.id.toString() ?? null);
@@ -97,7 +95,7 @@ export const AdDetailsStep = ({
           errorMessage={errors.title}
           placeholder={l.requiredToFillIn}
         />
-        <CustomInput
+        {/* <CustomInput
           value={form.AdFormData.quantity?.toString()}
           label={l.quantity}
           keyboardType="numeric"
@@ -118,7 +116,7 @@ export const AdDetailsStep = ({
           //     isNaN(numericValue) ? null : numericValue,
           //   );
           // }}
-        />
+        /> */}
         <CustomInput
           value={form.AdFormData.description}
           label={l.description}
@@ -153,18 +151,18 @@ export const AdDetailsStep = ({
         />
 
         <CustomInput
-          value={form.AdFormData.minHoursInterval?.toString()}
-          label={`${l.minInterval} (${l.hours})`}
+          value={form.AdFormData.bufferHours?.toString()}
+          label={`${l.bufferHours} (${l.hours})`}
           keyboardType="numeric"
           onChangeText={text => {
             const numericValue = parseInt(text || '');
             form.changeAdFormData(
-              'minHoursInterval',
+              'bufferHours',
               isNaN(numericValue) ? null : numericValue,
             );
           }}
-          errorMessage={errors.minInterval}
-          placeholder={l.requiredToFillIn}
+          errorMessage={errors.bufferHours}
+          placeholder={l.optional}
         />
 
         {/* КАТЕГОРИЯ */}

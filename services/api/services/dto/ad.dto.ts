@@ -24,7 +24,7 @@ export interface AdResponseDto {
   description: string;
   category_id: number;
   price_per_hour: number;
-  quantity: number;
+  // quantity: number;
   buffer_hours: number;
   lat: number;
   lon: number;
@@ -32,6 +32,7 @@ export interface AdResponseDto {
   status: 'active' | 'paused' | 'deleted';
   avg_rating: number;
   review_count: number;
+  owner_is_premium: boolean;
   media: AdMediaDto[];
   attributes: AdAttributeDto[];
   created_at: string;
@@ -78,7 +79,7 @@ export interface CreateListingDto {
   description: string;
   category_id: number;
   price_per_hour: number;
-  quantity: number;
+  // quantity: number;
   buffer_hours?: number;
   lat?: number;
   lon?: number;

@@ -50,7 +50,7 @@
           "asyncRoutes": false
         }
       ],
-я      [
+      [
         "expo-notifications",
         {
           "icon": "./assets/icons/logo.png",

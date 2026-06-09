@@ -14,7 +14,7 @@ export type AdFormDataType = {
   previewImage?: MediaType | null;
   categoryId?: string | null;
   cost?: number | null;
-  minHoursInterval?: number | null;
+  bufferHours?: number | null;
   // cost: CostType[];
   uriMedias: MediaType[];
 

@@ -30,6 +30,7 @@ export interface BookingResponseDto {
   status: BookingStatus;
   cancelled_by?: 'owner' | 'renter' | 'system';
   total_price: number;
+  renter_is_premium: boolean;
   created_at: string;
   updated_at: string;
   pending_extension?: BookingExtensionDto;
@@ -45,6 +46,7 @@ export interface BookingAdInfo {
   cover_url: string | null;
   avg_rating: number;
   review_count: number;
+  owner_is_premium: boolean;
 }
 
 export interface BookingWithAdResponseDto extends BookingResponseDto {

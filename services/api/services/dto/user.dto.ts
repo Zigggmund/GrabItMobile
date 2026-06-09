@@ -18,6 +18,9 @@ export interface UserResponseDto {
   review_count_as_owner: number;
   review_count_as_renter: number;
   username: string;
+  is_premium: boolean;
+  subscription_tier: string;
+  subscription_expires_at?: string;
 }
 
 export interface PublicUserResponseDto {
@@ -32,6 +35,7 @@ export interface PublicUserResponseDto {
   avg_rating_as_renter: number;
   review_count_as_renter: number;
   created_at: string;
+  is_premium: boolean;
 }
 
 export interface UserChangingDto {

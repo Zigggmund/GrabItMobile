@@ -15,6 +15,9 @@ export interface UserType {
   // avatar?: MediaType;
   avatar: string | null;
   language: string;
+  isPremium: boolean;
+  subscriptionTier: string;
+  subscriptionExpiresAt?: string;
   stats: {
     landlordReviews: number;
     renterReviews: number;
@@ -32,6 +35,7 @@ export interface UserCardType {
   landlordRating: number;
   reviewCount: number;
   phoneNumber: string | null;
+  isPremium?: boolean;
 }
 
 

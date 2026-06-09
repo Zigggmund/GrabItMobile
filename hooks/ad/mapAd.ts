@@ -20,6 +20,7 @@ export const mapAd = (dto: AdResponseDto): AdPreviewType => {
     address: dto.address ?? '',
     lat: dto.lat || undefined,
     lon: dto.lon || undefined,
+    ownerIsPremium: dto.owner_is_premium,
     categoryId: String(dto.category_id),
     previewImage: firstMedia
       ? {
@@ -49,7 +50,7 @@ export const mapFullAd = (
     lat: dto.lat,
     lon: dto.lon,
     quantity: dto.quantity,
-    minHoursInterval: dto.buffer_hours,
+    bufferHours: dto.buffer_hours,
     media: allMedia,
     createdDate: dto.created_at,
     specifications: dto.attributes,
@@ -60,6 +61,7 @@ export const mapFullAd = (
       landlordRating: owner.avg_rating_as_owner,
       reviewCount: owner.review_count_as_owner,
       phoneNumber: null,
+      isPremium: owner.is_premium,
     },
     bookingCalendar: '',
     reviews: [],

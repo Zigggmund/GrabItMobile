@@ -7,6 +7,7 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { useTheme } from '@/hooks/useTheme';
 
 import { Category } from '@/components/common/Category';
+import { PremiumBadge } from '@/components/common/PremiumBadge';
 import RatingStars from '@/components/common/RatingStars';
 import { CustomText } from '@/components/ui/text/CustomText';
 
@@ -74,7 +75,10 @@ export default function BigAd({ width, ad }: BigAdProps) {
               style={{ width: '90%' }}
               className={'flex-row justify-between items-center'}
             >
-              <RatingStars rating={ad.rating} />
+              <View className="flex-row items-center gap-1.5">
+                <RatingStars rating={ad.rating} />
+                {ad.ownerIsPremium && <PremiumBadge />}
+              </View>
               <CustomText
                 style={{ color: colors.theme.blue.dark }}
                 numberOfLines={1}

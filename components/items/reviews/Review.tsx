@@ -10,6 +10,7 @@ import { useTheme } from '@/hooks/useTheme';
 import { dateFormat } from '@/utils/dateFormat';
 
 import GreyBlock from '@/components/common/GreyBlock';
+import { PremiumBadge } from '@/components/common/PremiumBadge';
 import { ProfileAvatar } from '@/components/common/ProfileAvatar';
 import RatingStars from '@/components/common/RatingStars';
 import { CustomText } from '@/components/ui/text/CustomText';
@@ -78,13 +79,16 @@ export function Review({
               {dateFormat(review.createdAt)}
             </CustomText>
           </View>
-          <CustomText
-            className={'text-18 font-medium flex-1'}
-            style={{ color: colors.theme.black.primary }}
-            numberOfLines={1}
-          >
-            {review.author.username}
-          </CustomText>
+          <View className="flex-row items-center gap-1.5">
+            <CustomText
+              className={'text-18 font-medium flex-1'}
+              style={{ color: colors.theme.black.primary }}
+              numberOfLines={1}
+            >
+              {review.author.username}
+            </CustomText>
+            {review.author.isPremium && <PremiumBadge size="medium" />}
+          </View>
         </View>
       </View>
       {/* РЕЙТИНГ */}

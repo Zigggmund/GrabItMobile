@@ -25,18 +25,18 @@ export const AdTypeStep = ({ errors }: { errors: Record<string, string> }) => {
         onPress={() => selectOption('product')}
         selected={form.AdFormData.adType == 'product'}
       />
-      <Tag
+      {/* <Tag
         width={140}
         label={l.service}
         onPress={() => selectOption('service')}
         selected={form.AdFormData.adType == 'service'}
-      />
-      <Tag
+      /> */}
+      {/* <Tag
         width={140}
         label={l.space}
         onPress={() => selectOption('space')}
         selected={form.AdFormData.adType == 'space'}
-      />
+      /> */}
       <CustomText
         style={{ color: colors.base.red.primary }}
         className={'text-18'}
