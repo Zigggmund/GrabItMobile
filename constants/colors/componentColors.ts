@@ -3,6 +3,14 @@ import { baseColors } from './baseColors';
 export const componentColors = {
   // кнопки
   button: {
+    premium: {
+      light: {
+        bg: baseColors.yellow.darkSoft,
+      },
+      dark: {
+        bg: baseColors.yellow.darkest,
+      },
+    },
     primary: {
       light: {
         bg: baseColors.orange.bright,

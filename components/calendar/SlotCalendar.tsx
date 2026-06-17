@@ -1,6 +1,8 @@
+import { useMemo, useState } from 'react';
 import { ActivityIndicator, ScrollView, TouchableOpacity, View } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 
+import { useGetCalendar } from '@/hooks/booking/useGetCalendar';
 import { useGetSlots } from '@/hooks/booking/useGetSlots';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTheme } from '@/hooks/useTheme';
@@ -10,6 +12,7 @@ import { CustomText } from '@/components/ui/text/CustomText';
 interface Props {
   adId: string;
   minDate?: string;
+  maxDate?: string;
   mode: 'start' | 'end';
   selected: { date: string | null; hour: number | null };
   onDateChange: (date: string) => void;
@@ -17,10 +20,20 @@ interface Props {
   minHour?: number;
 }
 
-// календарь брони,
+// null → grey (non-working), 0 → light green, 100 → light red
+function utilizationBg(u: number | null): string {
+  if (u === null) return 'rgba(150,150,150,0.15)';
+  if (u === 0) return 'rgba(80,190,80,0.22)';
+  if (u >= 100) return 'rgba(210,50,50,0.25)';
+  const r = Math.round(50 + (u / 100) * 160);
+  const g = Math.round(190 - (u / 100) * 140);
+  return `rgba(${r},${g},55,0.22)`;
+}
+
 export function SlotCalendar({
   adId,
   minDate,
+  maxDate,
   mode,
   selected,
   onDateChange,
@@ -29,22 +42,45 @@ export function SlotCalendar({
 }: Props) {
   const { colors } = useTheme();
   const { l } = useLanguage();
+
+  const today = new Date();
+  const [visibleYear, setVisibleYear] = useState(today.getFullYear());
+  const [visibleMonth, setVisibleMonth] = useState(today.getMonth() + 1);
+
+  const { data: calendar } = useGetCalendar(adId, visibleYear, visibleMonth);
   const { data: slots, isFetching } = useGetSlots(adId, selected.date);
 
-  const markedDates = selected.date
-    ? { [selected.date]: { selected: true, selectedColor: colors.base.orange.primary } }
-    : {};
+  const markedDates = useMemo(() => {
+    const result: Record<string, any> = {};
 
-  const todayStr = new Date().toISOString().split('T')[0];
-  const currentHour = new Date().getHours();
+    calendar?.days.forEach(day => {
+      result[day.date] = {
+        customStyles: {
+          container: { backgroundColor: utilizationBg(day.utilization), borderRadius: 16 },
+        },
+      };
+    });
 
-  // start: 0–23, end: 1–24
+    if (selected.date) {
+      result[selected.date] = {
+        customStyles: {
+          container: { backgroundColor: colors.base.orange.primary, borderRadius: 16 },
+          text: { color: colors.base.neutral.whitePrimary },
+        },
+      };
+    }
+
+    return result;
+  }, [calendar, selected.date, colors]);
+
+  const todayStr = today.toISOString().split('T')[0];
+  const currentHour = today.getHours();
+
   const allHours =
     mode === 'start'
       ? Array.from({ length: 24 }, (_, i) => i)
       : Array.from({ length: 24 }, (_, i) => i + 1);
 
-  // hide hours in the past on today's date
   const visibleHours = allHours.filter(h => {
     if (selected.date === todayStr && h <= currentHour) return false;
     return true;
@@ -69,17 +105,21 @@ export function SlotCalendar({
   return (
     <View className="gap-3">
       <Calendar
+        markingType="custom"
         minDate={minDate}
+        maxDate={maxDate}
         markedDates={markedDates}
         onDayPress={day => onDateChange(day.dateString)}
+        onMonthChange={m => {
+          setVisibleYear(m.year);
+          setVisibleMonth(m.month);
+        }}
         theme={{
           backgroundColor: colors.theme.white.primary,
           calendarBackground: colors.theme.white.primary,
           textSectionTitleColor: colors.theme.blue.bright,
           dayTextColor: colors.theme.black.primary,
           todayTextColor: colors.base.orange.primary,
-          selectedDayTextColor: colors.base.neutral.whitePrimary,
-          selectedDayBackgroundColor: colors.base.orange.primary,
           arrowColor: colors.theme.blue.primary,
           monthTextColor: colors.theme.blue.primary,
           textDisabledColor: colors.components.tag.default.text,

@@ -9,7 +9,7 @@ import { useTheme } from '@/hooks/useTheme';
 
 import { CustomText } from '@/components/ui/text/CustomText';
 
-type buttonType = 'primary' | 'secondary' | 'red' | 'green' | 'highlighted';
+type buttonType = 'primary' | 'secondary' | 'red' | 'green' | 'highlighted' | 'premium';
 
 interface CustomButtonProps extends TouchableOpacityProps {
   type?: buttonType;
@@ -38,6 +38,7 @@ export const CustomButton = ({
   const { colors } = useTheme();
 
   const buttonColorMap = {
+    premium: colors.components.button.premium,
     primary: colors.components.button.primary,
     secondary: colors.components.button.secondary,
     highlighted: { bg: colors.base.orange.dark },
@@ -45,8 +46,7 @@ export const CustomButton = ({
     green: { bg: colors.base.green.bright },
   } as const;
   const colorRef = buttonColorMap[type];
-  const borderWidth =
-    type == 'primary' || type == 'highlighted' ? (isSmall ? 1 : 2) : 0;
+  const borderWidth = type == 'secondary' ? 0 : isSmall ? 1 : 2;
   const isCircled = iconSource && !text.trim();
 
   const sizeClass = isCircled

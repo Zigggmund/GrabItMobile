@@ -33,6 +33,7 @@ export default function AdReviews() {
     id,
     serverPage,
     sortBy,
+    rating !== null ? [rating] : undefined,
   );
   const { data: ad, isLoading: isLoadingAd, isError: isErrorAd } = useGetAd(id);
 

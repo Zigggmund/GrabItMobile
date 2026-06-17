@@ -61,6 +61,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onPress, loading }) => {
         {!loading ? (
           <CustomButton
             textClassName={'text-28'}
+            type={'highlighted'}
             text={l.btnStart}
             onPress={onPress}
             className={'w-full'}

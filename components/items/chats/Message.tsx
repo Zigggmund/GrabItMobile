@@ -1,4 +1,4 @@
-import { TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
 
 import { useLanguage } from '@/hooks/useLanguage';
 import { useProfile } from '@/hooks/user/useProfile';
@@ -19,11 +19,18 @@ interface MessageProps {
 
 function getSystemLabel(eventType: BookingEventType, l: ReturnType<typeof useLanguage>['l']): string {
   switch (eventType) {
-    case 'booking_created':   return l.systemBookingCreated;
-    case 'booking_confirmed': return l.systemBookingConfirmed;
-    case 'booking_rejected':  return l.systemBookingRejected;
-    case 'booking_cancelled': return l.systemBookingCancelled;
-    default:                  return '';
+    case 'booking_created':              return l.systemBookingCreated;
+    case 'booking_confirmed':            return l.systemBookingConfirmed;
+    case 'booking_rejected':             return l.systemBookingRejected;
+    case 'booking_cancelled':            return l.systemBookingCancelled;
+    case 'booking_expired':              return l.systemBookingExpired;
+    case 'booking_active':               return l.systemBookingActive;
+    case 'booking_completed':            return l.systemBookingCompleted;
+    case 'booking_no_show':              return l.systemBookingNoShow;
+    case 'booking_extension_requested':  return l.systemBookingExtensionRequested;
+    case 'booking_extended':             return l.systemBookingExtended;
+    case 'booking_extension_rejected':   return l.systemBookingExtensionRejected;
+    default:                             return '';
   }
 }
 
@@ -66,22 +73,28 @@ export function Message({ message, width, onLongPress }: MessageProps) {
             style={{ justifyContent: 'flex-end' }}
             className="relative flex-row"
           >
-            <CustomIcon
-              source={icons.check}
-              size={12}
-              color={colors.theme.blue.bright}
-            />
-            {isRead && (
-              <CustomIcon
-                source={icons.check}
-                size={12}
-                color={colors.theme.blue.bright}
-              />
+            {message.id.startsWith('temp_') ? (
+              <ActivityIndicator size={12} color={colors.theme.blue.bright} />
+            ) : (
+              <>
+                <CustomIcon
+                  source={icons.check}
+                  size={12}
+                  color={colors.theme.blue.bright}
+                />
+                {isRead && (
+                  <CustomIcon
+                    source={icons.check}
+                    size={12}
+                    color={colors.theme.blue.bright}
+                  />
+                )}
+              </>
             )}
           </View>
         )}
         <CustomText style={{ color: colors.theme.blue.bright }} className="text-12">
-          {timeFormat(message.sentAt)}
+          {message.id.startsWith('temp_') ? '' : timeFormat(message.sentAt)}
         </CustomText>
       </View>
 

@@ -77,7 +77,6 @@ export default function BigAd({ width, ad }: BigAdProps) {
             >
               <View className="flex-row items-center gap-1.5">
                 <RatingStars rating={ad.rating} />
-                {ad.ownerIsPremium && <PremiumBadge />}
               </View>
               <CustomText
                 style={{ color: colors.theme.blue.dark }}
@@ -87,12 +86,15 @@ export default function BigAd({ width, ad }: BigAdProps) {
                 {l.revs}: {ad.reviewCount}
               </CustomText>
             </View>
-            <CustomText
-              style={{ color: colors.theme.blue.dark }}
-              className={'text-14 font-bold'}
-            >
-              {price} {rubPer}
-            </CustomText>
+            <View className={'flex-row justify-between'}>
+              <CustomText
+                style={{ color: colors.theme.blue.dark }}
+                className={'text-14 font-bold'}
+              >
+                {price} {rubPer}
+              </CustomText>
+              {ad.ownerIsPremium && <PremiumBadge />}
+            </View>
             <CustomText
               style={{ color: colors.theme.blue.bright }}
               className={'text-13'}

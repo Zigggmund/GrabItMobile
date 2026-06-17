@@ -7,9 +7,19 @@ import {
   ConversationDto,
   ConversationLastMessageDto,
   MessageDto,
+  ProtoTimestamp,
 } from '@/services/api/services/dto/chat.dto';
 
 export const SYSTEM_SENDER_ID = '00000000-0000-0000-0000-000000000000';
+
+// Protobuf Timestamp приходит как {seconds, nanos} из embedded proto полей в ConversationResponse.
+// REST-эндпоинты (MessageResp, /messages) уже возвращают string — обрабатываем оба варианта.
+type ProtoTs = string | ProtoTimestamp | null | undefined;
+function tsToISO(ts: ProtoTs): string {
+  if (!ts) return '';
+  if (typeof ts === 'string') return ts;
+  return new Date(ts.seconds * 1000 + (ts.nanos ?? 0) / 1_000_000).toISOString();
+}
 
 export function mapMessage(dto: MessageDto): MessageEntity {
   return {
@@ -41,7 +51,7 @@ function mapLastMessage(
     referenceId: dto.reference_id ?? '',
     isDeleted: dto.is_deleted ?? false,
     isEdited: dto.is_edited ?? false,
-    sentAt: dto.sent_at,
+    sentAt: tsToISO(dto.sent_at),
     readAt: dto.read_at ?? null,
   };
 }
@@ -62,6 +72,6 @@ export function mapConversation(dto: ConversationDto): ConversationEntity {
     isMuted: dto.is_muted ?? false,
     blockedByMe: dto.blocked_by_me ?? false,
     blockedByThem: dto.blocked_by_them ?? false,
-    lastMessageAt: dto.last_message_at,
+    lastMessageAt: tsToISO(dto.last_message_at),
   };
 }

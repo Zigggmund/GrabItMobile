@@ -24,6 +24,7 @@ export interface AdPreviewType {
   ownerIsPremium?: boolean;
   // productType: ProductType;
   categoryId: string;
+  categoryName?: string;
   previewImage: MediaType;
   // createdDate: string; // no
 }
@@ -43,6 +44,8 @@ export interface AdDetailsType extends AdPreviewType {
   lon: number;
   quantity: number;
   bufferHours: number;
+  availableFrom: string | null;
+  availableUntil: string | null;
   media: MediaType[];
   createdDate: string;
   specifications: SpecificationType[];

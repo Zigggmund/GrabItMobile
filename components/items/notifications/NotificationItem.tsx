@@ -4,7 +4,9 @@ import { useState } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 
 import { useApproveBooking } from '@/hooks/booking/useApproveBooking';
+import { useApproveExtension } from '@/hooks/booking/useApproveExtension';
 import { useRejectBooking } from '@/hooks/booking/useRejectBooking';
+import { useRejectExtension } from '@/hooks/booking/useRejectExtension';
 import { useHistory } from '@/hooks/useHistory';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTheme } from '@/hooks/useTheme';
@@ -27,18 +29,24 @@ export function NotificationItem({ notification, index, onRead }: Props) {
   const { navigate } = useHistory();
   const approve = useApproveBooking();
   const reject = useRejectBooking();
+  const approveExt = useApproveExtension();
+  const rejectExt = useRejectExtension();
   const [expanded, setExpanded] = useState(false);
   const [actionTaken, setActionTaken] = useState<'approved' | 'rejected' | null>(null);
+  const [extActionTaken, setExtActionTaken] = useState<'approved' | 'rejected' | null>(null);
 
   const data = notification.data;
   const isBookingCreatedForOwner =
     notification.eventType === 'booking.created' && data?.role === 'owner';
+  const isExtensionRequestedForOwner =
+    notification.eventType === 'booking.extension_requested' && data?.role === 'owner';
   const bookingId = data?.booking_id;
 
   const canNavigate =
     !!data &&
     (notification.eventType.startsWith('booking.') ||
-      notification.eventType.startsWith('review.'));
+      notification.eventType.startsWith('review.') ||
+      (notification.eventType === 'message.created' && !!data.conversation_id));
 
   const handlePress = () => {
     setExpanded(prev => !prev);
@@ -48,7 +56,9 @@ export function NotificationItem({ notification, index, onRead }: Props) {
   const handleNavigate = () => {
     if (!data) return;
     const type = notification.eventType;
-    if (type.startsWith('booking.') && data.listing_id) {
+    if (type === 'message.created' && data.conversation_id) {
+      navigate({ pathname: '/(tabs)/chats/[id]', params: { id: data.conversation_id } });
+    } else if (type.startsWith('booking.') && data.listing_id) {
       navigate(
         data.role === 'owner'
           ? { pathname: '/(tabs)/ads/bookings/[id]', params: { id: data.listing_id } }
@@ -130,6 +140,54 @@ export function NotificationItem({ notification, index, onRead }: Props) {
                     disabled={approve.isPending || reject.isPending}
                     onPress={() => {
                       reject.mutate(bookingId, { onSuccess: () => setActionTaken('rejected') });
+                      onRead(notification.id);
+                    }}
+                  />
+                </View>
+              )
+            ) : isExtensionRequestedForOwner && bookingId ? (
+              extActionTaken ? (
+                <View className="flex-row mt-1">
+                  <View
+                    className="px-3 py-1 rounded-full"
+                    style={{
+                      backgroundColor:
+                        extActionTaken === 'approved'
+                          ? colors.base.green.primary
+                          : colors.base.red.primary,
+                    }}
+                  >
+                    <CustomText
+                      className="text-11"
+                      style={{ color: colors.base.neutral.whiteBright }}
+                    >
+                      {extActionTaken === 'approved' ? l.bookingApproved : l.bookingRejected}
+                    </CustomText>
+                  </View>
+                </View>
+              ) : (
+                <View className="flex-row gap-2 mt-1">
+                  <CustomButton
+                    type="green"
+                    isSmall
+                    textClassName="text-11"
+                    className="flex-1"
+                    text={l.btnApprove}
+                    disabled={approveExt.isPending || rejectExt.isPending}
+                    onPress={() => {
+                      approveExt.mutate(bookingId, { onSuccess: () => setExtActionTaken('approved') });
+                      onRead(notification.id);
+                    }}
+                  />
+                  <CustomButton
+                    type="red"
+                    isSmall
+                    textClassName="text-11"
+                    className="flex-1"
+                    text={l.btnReject}
+                    disabled={approveExt.isPending || rejectExt.isPending}
+                    onPress={() => {
+                      rejectExt.mutate(bookingId, { onSuccess: () => setExtActionTaken('rejected') });
                       onRead(notification.id);
                     }}
                   />

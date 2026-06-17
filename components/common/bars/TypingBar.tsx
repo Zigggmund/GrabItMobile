@@ -32,12 +32,12 @@ export default function TypingBar({
   return (
     <>
       <View className={'flex-row gap-4 items-center'}>
-        <CustomIcon
-          source={icons.add}
-          onPress={onAddMedia}
-          size={34}
-          color={colors.components.icon.navIcon.bg}
-        />
+        {/*<CustomIcon*/}
+        {/*  source={icons.add}*/}
+        {/*  onPress={onAddMedia}*/}
+        {/*  size={34}*/}
+        {/*  color={colors.components.icon.navIcon.bg}*/}
+        {/*/>*/}
         <View
           style={{
             backgroundColor: colors.components.bar.search.bg,
@@ -54,7 +54,8 @@ export default function TypingBar({
             placeholderTextColor={colors.components.bar.search.text}
             value={value}
             onChangeText={handleTextChange}
-            returnKeyType="search"
+            returnKeyType="send"
+            onSubmitEditing={onSend}
           />
           <CustomIcon
             onPress={onSend}

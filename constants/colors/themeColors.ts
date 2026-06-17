@@ -17,6 +17,9 @@ export const themeColors = {
       primary: '#F8F8F9',
       bright: '#FFFFFF',
     },
+    yellow: {
+      soft: '#FFF3CC',
+    },
   },
   dark: {
     grey: {
@@ -34,6 +37,9 @@ export const themeColors = {
     white: {
       primary: '#2C3853',
       bright: '#0F172A',
+    },
+    yellow: {
+      soft: '#3D3200',
     },
   },
 };

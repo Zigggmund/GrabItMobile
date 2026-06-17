@@ -540,8 +540,7 @@ export default function AdDetails() {
             )}
           </GreyBlock>
 
-          {/* КАЛЕНДАРЬ */}
-          {!isMine && (
+          {!isMine && ad.availableFrom !== null && (
             <>
               <CustomText
                 style={{ color: colors.theme.blue.primary }}
@@ -553,6 +552,8 @@ export default function AdDetails() {
                 adId={id}
                 bufferHours={ad.bufferHours}
                 rubPerHour={ad.rub_per_hour}
+                availableFrom={ad.availableFrom}
+                availableUntil={ad.availableUntil}
               />
             </>
           )}
@@ -614,6 +615,7 @@ export default function AdDetails() {
         mediaType={mediaType}
         onClose={closePreview}
       />
+
     </ScreenContainer>
   );
 }

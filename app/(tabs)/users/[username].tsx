@@ -6,13 +6,11 @@ import { useLocalSearchParams } from 'expo-router';
 import { useProfileLogout } from '@/hooks/auth/useLogout';
 import { useDeleteAvatar } from '@/hooks/media/useDeleteAvatar';
 import { useHistory } from '@/hooks/useHistory';
-import { useMediaPreview } from '@/hooks/useMediaPreview';
 import { useLanguage } from '@/hooks/useLanguage';
+import { useMediaPreview } from '@/hooks/useMediaPreview';
 import { useGetUserByUsername } from '@/hooks/user/useGetUserByUsername';
 import { useProfile } from '@/hooks/user/useProfile';
 import { useTheme } from '@/hooks/useTheme';
-
-import SubscriptionModal from '@/components/modals/SubscriptionModal';
 
 import { dateFormat } from '@/utils/dateFormat';
 
@@ -23,14 +21,15 @@ import { ProfileAvatar } from '@/components/common/ProfileAvatar';
 import RatingStars from '@/components/common/RatingStars';
 import ScreenContainer from '@/components/layout/ScreenContainer';
 import AvatarUploadModal from '@/components/modals/AvatarUploadModal';
+import { CustomAlert } from '@/components/modals/CustomAlert';
 import EditProfileModal from '@/components/modals/EditProfileModal';
 import { PreviewMediaModal } from '@/components/modals/PreviewMediaModal';
+import SubscriptionModal from '@/components/modals/SubscriptionModal';
 import { CustomButton } from '@/components/ui/button/CustomButton';
 import { CustomIcon } from '@/components/ui/icon/CustomIcon';
 import { CustomText } from '@/components/ui/text/CustomText';
 
 import { icons } from '@/constants/icons';
-import { CustomAlert } from '@/components/modals/CustomAlert';
 
 export default function UserProfile() {
   const { colors } = useTheme();
@@ -39,13 +38,19 @@ export default function UserProfile() {
   const profile = useProfile();
   const { navigate } = useHistory();
   const queryClient = useQueryClient();
-  const { visible, openPreview, closePreview, uri: imageUri } = useMediaPreview();
+  const {
+    visible,
+    openPreview,
+    closePreview,
+    uri: imageUri,
+  } = useMediaPreview();
 
   const deleteAvatar = useDeleteAvatar();
 
   const [avatarModalVisible, setAvatarModalVisible] = useState(false);
   const [editProfileModalVisible, setEditProfileModalVisible] = useState(false);
-  const [subscriptionModalVisible, setSubscriptionModalVisible] = useState(false);
+  const [subscriptionModalVisible, setSubscriptionModalVisible] =
+    useState(false);
   const [avatarVersion, setAvatarVersion] = useState(Date.now());
   // const [completeProfileModalVisible, setCompleteProfileModalVisible] =
   //   useState(false);
@@ -393,7 +398,9 @@ export default function UserProfile() {
                     >
                       {l.premiumActive}{' '}
                       {user.subscriptionExpiresAt
-                        ? new Date(user.subscriptionExpiresAt).toLocaleDateString()
+                        ? new Date(
+                            user.subscriptionExpiresAt,
+                          ).toLocaleDateString()
                         : ''}
                     </CustomText>
                   </View>
@@ -409,8 +416,9 @@ export default function UserProfile() {
               <CustomButton
                 isSmall
                 text={l.btnGetPremium}
+                type={'premium'}
                 onPress={() => setSubscriptionModalVisible(true)}
-                style={{ backgroundColor: colors.base.yellow.darkSoft }}
+                className={'self-center px-12'}
                 textClassName="text-16 font-bold"
               />
             </GreyBlock>

@@ -9,48 +9,17 @@ import { useHistory } from '@/hooks/useHistory';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTheme } from '@/hooks/useTheme';
 
-import { periodsToHours } from '@/utils/periodsToHours';
-
-import { AdFormDataType } from '@/context/FormContext';
-
 import { ProgressBar } from '@/components/common/bars/ProgressBar';
 import { AdAllDatesStep } from '@/components/forms/ad/AdAllDatesStep';
-import { AdDayTimeStep } from '@/components/forms/ad/AdDayTimeStep';
 import { AdDetailsStep } from '@/components/forms/ad/AdDetailsStep';
-// import { AdExceptionsStep } from '@/components/forms/ad/AdExceptionsStep';
 import { AdMapStep } from '@/components/forms/ad/AdMapStep';
 import { AdMediaStep } from '@/components/forms/ad/AdMediaStep';
-import { AdWeekDaysStep } from '@/components/forms/ad/AdWeekDaysStep';
 import { CustomAlert } from '@/components/modals/CustomAlert';
 import { CustomButton } from '@/components/ui/button/CustomButton';
 import { CustomText } from '@/components/ui/text/CustomText';
 
 import { AdService } from '@/services/api/services/adService';
-import { SetAvailabilityDto } from '@/services/api/services/dto/ad.dto';
 import { MediaService } from '@/services/api/services/mediaService';
-
-const buildAvailabilityPayload = (data: AdFormDataType): SetAvailabilityDto => {
-  const fmt = (d: Date) => d.toISOString().split('T')[0];
-  const weekdayHours: Record<string, number[]> = {};
-  data.weekDays.forEach((selected, idx) => {
-    if (!selected) return;
-    const hours = periodsToHours(data.weekDaysTime[idx]).map(h =>
-      parseInt(h.split('-')[0]),
-    );
-    weekdayHours[(idx + 1).toString()] = hours;
-  });
-  const endPlusOne = new Date(data.endDate!);
-  endPlusOne.setDate(endPlusOne.getDate() + 1);
-  return {
-    periods: [
-      {
-        valid_from: fmt(data.firstDate!),
-        valid_until: fmt(endPlusOne),
-        weekday_hours: weekdayHours,
-      },
-    ],
-  };
-};
 
 type StepComponentProps = { errors: Record<string, string> };
 
@@ -59,8 +28,6 @@ const STEPS: { key: string; component: ComponentType<StepComponentProps> }[] = [
   { key: 'adMapStep', component: AdMapStep },
   { key: 'adMediaStep', component: AdMediaStep },
   { key: 'adAllDatesStep', component: AdAllDatesStep },
-  { key: 'adWeekDaysStep', component: AdWeekDaysStep },
-  { key: 'adDayTimeStep', component: AdDayTimeStep },
 ];
 
 interface Props {
@@ -95,6 +62,8 @@ export const EditAdForm = ({ ad }: Props) => {
     form.changeAdFormData('specifications', ad.specifications);
     form.changeAdFormData('previewImage', ad.previewImage);
     form.changeAdFormData('uriMedias', ad.media.filter(m => m.id !== ad.previewImage?.id));
+    if (ad.availableFrom) form.changeAdFormData('firstDate', new Date(ad.availableFrom));
+    if (ad.availableUntil) form.changeAdFormData('endDate', new Date(ad.availableUntil));
   }, []);
 
   const adId = ad.id;
@@ -178,32 +147,6 @@ export const EditAdForm = ({ ad }: Props) => {
         break;
       }
 
-      case 'adWeekDaysStep':
-        if (!form.AdFormData.weekDays.some(item => item)) {
-          stepErrors.weekDays = l.errorWeekDaysNull;
-        }
-        break;
-
-      case 'adDayTimeStep': {
-        const minHours = form.AdFormData.bufferHours ?? 1;
-        form.AdFormData.weekDaysTime.forEach((weekDay, index) => {
-          if (weekDay.length === 0 && form.AdFormData.weekDays[index]) {
-            stepErrors.weekDaysTime = l.errorDayTimeNull;
-          }
-        });
-        const hasShort = form.AdFormData.weekDaysTime.some(
-          (weekDay, index) =>
-            form.AdFormData.weekDays[index] &&
-            weekDay.some(period => {
-              const startH = parseInt(period.startTime.split('-')[0]);
-              const endH = period.endTime === '24' ? 24 : parseInt(period.endTime.split('-')[0]);
-              return endH - startH < minHours;
-            }),
-        );
-        if (hasShort) stepErrors.weekDaysTime = l.errorTimePeriodMinInterval;
-        break;
-      }
-
     }
 
     setErrors(prev => ({ ...prev, [stepKey]: stepErrors }));
@@ -260,8 +203,6 @@ export const EditAdForm = ({ ad }: Props) => {
         ),
       );
 
-      await AdService.setAvailability(adId, buildAvailabilityPayload(data));
-
       form.clear();
       await queryClient.invalidateQueries({ queryKey: ['ad', adId] });
       navigate({ pathname: '/(tabs)/ads/[id]', params: { id: adId } }, false);
@@ -309,7 +250,7 @@ export const EditAdForm = ({ ad }: Props) => {
         <CurrentStepComponent errors={errors[step.key] || {}} />
       </View>
 
-      <View className="flex-row justify-between gap-2 pt-2">
+      <View className="flex-row justify-between gap-16 pt-2">
         <CustomButton
           type={currentStep !== 1 ? 'primary' : 'red'}
           text={currentStep !== 1 ? l.btnBack : l.btnCancel}

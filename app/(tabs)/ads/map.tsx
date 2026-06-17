@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
@@ -26,7 +26,39 @@ import { cityCoordinates, DEFAULT_CITY_RADIUS_KM } from '@/constants/cityCoordin
 import { icons } from '@/constants/icons';
 import { RootState } from '@/state/store';
 
-const EMPTY_MAP_STYLE = { version: 8 as const, sources: {}, layers: [] };
+function makeCirclePolygon(lat: number, lon: number, radiusKm: number, steps = 64) {
+  const coords: [number, number][] = [];
+  for (let i = 0; i <= steps; i++) {
+    const angle = (i / steps) * 2 * Math.PI;
+    const dLon = (radiusKm / (111.32 * Math.cos((lat * Math.PI) / 180))) * Math.cos(angle);
+    const dLat = (radiusKm / 110.574) * Math.sin(angle);
+    coords.push([lon + dLon, lat + dLat]);
+  }
+  return {
+    type: 'Feature' as const,
+    geometry: { type: 'Polygon' as const, coordinates: [coords] },
+    properties: {},
+  };
+}
+
+const OSM_MAP_STYLE = {
+  version: 8 as const,
+  sources: {
+    osm: {
+      type: 'raster' as const,
+      tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+      tileSize: 256,
+      attribution: '© OpenStreetMap contributors',
+    },
+  },
+  layers: [
+    {
+      id: 'osm',
+      type: 'raster' as const,
+      source: 'osm',
+    },
+  ],
+};
 
 interface LocationFilter {
   lat: number;
@@ -58,9 +90,13 @@ export default function AdMapSearchPage() {
 
   const currentCity = useSelector((state: RootState) => state.city.currentCity);
   const cityCoords = cityCoordinates[currentCity];
-  const cameraCenter: [number, number] = [cityCoords.lon, cityCoords.lat];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const cameraRef = useRef<any>(null);
+  const pinPressedRef = useRef(false);
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const selectedIdRef = useRef<string | null>(null);
+  useEffect(() => { selectedIdRef.current = selectedId; }, [selectedId]);
   const [categoryModalVisible, setCategoryModalVisible] = useState(false);
   const [locationMode, setLocationMode] = useState<'none' | 'city' | 'custom'>('city');
   const [priceError, setPriceError] = useState<string | null>(null);
@@ -107,6 +143,13 @@ export default function AdMapSearchPage() {
   const total = data?.total ?? 0;
   const selectedAd = ads.find(ad => ad.id === selectedId) ?? null;
 
+  // Stable — only applied once on Camera mount; city changes handled by useEffect
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const cameraDefaultSettings = useMemo(() => ({
+    centerCoordinate: [cityCoords.lon, cityCoords.lat] as [number, number],
+    zoomLevel: 11,
+  }), []);
+
   const allPinsGeoJSON = useMemo(
     () => ({
       type: 'FeatureCollection' as const,
@@ -143,6 +186,15 @@ export default function AdMapSearchPage() {
     };
   }, [draftFilters.location, locationMode]);
 
+  const searchRadiusGeoJSON = useMemo(() => {
+    if (!draftFilters.location || locationMode === 'none') return null;
+    return makeCirclePolygon(
+      draftFilters.location.lat,
+      draftFilters.location.lon,
+      draftFilters.location.radiusKm,
+    );
+  }, [draftFilters.location, locationMode]);
+
   const parseRadius = (): number => {
     const r = parseFloat(radiusText.replace(',', '.'));
     return isNaN(r) || r <= 0 ? DEFAULT_CITY_RADIUS_KM : r;
@@ -150,10 +202,26 @@ export default function AdMapSearchPage() {
 
   const handlePinPress: React.ComponentProps<typeof MapLibreGL.ShapeSource>['onPress'] = e => {
     const id = e.features?.[0]?.properties?.id as string | undefined;
-    if (id) setSelectedId(prev => (prev === id ? null : id));
+    if (!id) return;
+    pinPressedRef.current = true;
+    setTimeout(() => { pinPressedRef.current = false; }, 100);
+    const isDeselecting = selectedIdRef.current === id;
+    setSelectedId(prev => (prev === id ? null : id));
+    if (!isDeselecting) {
+      const feature = e.features?.[0];
+      if (feature?.geometry?.type === 'Point') {
+        const [lon, lat] = (feature.geometry as Point).coordinates;
+        cameraRef.current?.setCamera({
+          centerCoordinate: [lon, lat],
+          zoomLevel: 14,
+          animationDuration: 400,
+        });
+      }
+    }
   };
 
   const handleMapPress = (e: Feature) => {
+    if (pinPressedRef.current) return;
     const geom = e.geometry;
     if (geom?.type === 'Point') {
       const [lon, lat] = (geom as Point).coordinates;
@@ -161,6 +229,7 @@ export default function AdMapSearchPage() {
       setLocationMode('custom');
       setSelectedId(null);
       setDraftFilters(prev => ({ ...prev, location: { lat, lon, radiusKm: radius } }));
+      // не двигаем камеру — пользователь сам нажал на точку на карте
     }
   };
 
@@ -211,7 +280,26 @@ export default function AdMapSearchPage() {
     const loc = { lat: cityCoords.lat, lon: cityCoords.lon, radiusKm: radius };
     setDraftFilters(prev => ({ ...prev, location: loc }));
     setAppliedFilters(prev => ({ ...prev, ...loc }));
+    cameraRef.current?.setCamera({
+      centerCoordinate: [cityCoords.lon, cityCoords.lat],
+      zoomLevel: 11,
+      animationDuration: 500,
+    });
   };
+
+  // Автоматически обновляем локацию при смене города в Redux (если режим — «город»)
+  useEffect(() => {
+    if (locationMode !== 'city' || !cityCoords) return;
+    const radius = parseRadius();
+    const loc = { lat: cityCoords.lat, lon: cityCoords.lon, radiusKm: radius };
+    setDraftFilters(prev => ({ ...prev, location: loc }));
+    setAppliedFilters(prev => ({ ...prev, ...loc }));
+    cameraRef.current?.setCamera({
+      centerCoordinate: [cityCoords.lon, cityCoords.lat],
+      zoomLevel: 11,
+      animationDuration: 500,
+    });
+  }, [currentCity]);
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.theme.white.primary }}>
@@ -256,30 +344,42 @@ export default function AdMapSearchPage() {
 
         {/* Collapsible filters */}
         {panelExpanded && (
-          <View className="gap-4">
-            {/* Category */}
-            <TouchableOpacity
-              style={{
-                backgroundColor: colors.base.orange.primary,
-                borderWidth: 1,
-                borderColor: colors.base.neutral.blackPrimary,
-              }}
-              className="rounded-xl py-2 px-2"
-              onPress={() => setCategoryModalVisible(true)}
-            >
-              <CustomText
-                className="text-16 font-medium flex-1 text-center"
-                style={{ color: colors.base.neutral.whiteBright }}
-                numberOfLines={2}
+          <View className="gap-3">
+            {/* Radius + Category row */}
+            <View className="flex-row gap-3 items-center">
+              <View className="flex-1">
+                <CustomInput
+                  isSmall
+                  value={radiusText}
+                  onChangeText={setRadiusText}
+                  keyboardType="numeric"
+                  placeholder={l.searchRadius}
+                />
+              </View>
+              <TouchableOpacity
+                style={{
+                  flex: 1,
+                  backgroundColor: colors.base.orange.primary,
+                  borderWidth: 1,
+                  borderColor: colors.base.neutral.blackPrimary,
+                }}
+                className="rounded-xl py-2 px-2"
+                onPress={() => setCategoryModalVisible(true)}
               >
-                {draftFilters.category
-                  ? ((l[draftFilters.category.name as keyof typeof l] as string) ??
-                      draftFilters.category.name)
-                  : l.category}
-              </CustomText>
-            </TouchableOpacity>
+                <CustomText
+                  className="text-14 font-medium text-center"
+                  style={{ color: colors.base.neutral.whiteBright }}
+                  numberOfLines={2}
+                >
+                  {draftFilters.category
+                    ? ((l[draftFilters.category.name as keyof typeof l] as string) ??
+                        draftFilters.category.name)
+                    : l.category}
+                </CustomText>
+              </TouchableOpacity>
+            </View>
 
-            {/* Price + Geo — two columns like search.tsx */}
+            {/* Price + Geo */}
             <View className="gap-1 w-full">
               <View className="flex-row gap-3">
                 {/* Price column */}
@@ -309,13 +409,6 @@ export default function AdMapSearchPage() {
                     }}
                     keyboardType="number-pad"
                     placeholder={`${l.to}, ${l.rubPerHour}`}
-                  />
-                  <CustomInput
-                    isSmall
-                    value={radiusText}
-                    onChangeText={setRadiusText}
-                    keyboardType="numeric"
-                    placeholder={l.searchRadius}
                   />
                 </View>
 
@@ -399,29 +492,44 @@ export default function AdMapSearchPage() {
       <View style={{ flex: 1 }}>
         <MapLibreGL.MapView
           style={{ flex: 1 }}
-          mapStyle={EMPTY_MAP_STYLE}
+          mapStyle={OSM_MAP_STYLE}
           onPress={handleMapPress}
         >
-          <MapLibreGL.Camera zoomLevel={11} centerCoordinate={cameraCenter} />
+          <MapLibreGL.Camera
+            ref={cameraRef}
+            defaultSettings={cameraDefaultSettings}
+          />
 
-          <MapLibreGL.RasterSource
-            id="osmSource"
-            tileUrlTemplates={['https://a.tile.openstreetmap.org/{z}/{x}/{y}.png']}
-            tileSize={256}
-          >
-            <MapLibreGL.RasterLayer id="osmLayer" />
-          </MapLibreGL.RasterSource>
+          {searchRadiusGeoJSON && (
+            <MapLibreGL.ShapeSource id="searchRadius" shape={searchRadiusGeoJSON}>
+              <MapLibreGL.FillLayer
+                id="searchRadiusFill"
+                style={{
+                  fillColor: colors.theme.blue.bright,
+                  fillOpacity: 0.1,
+                }}
+              />
+              <MapLibreGL.LineLayer
+                id="searchRadiusLine"
+                style={{
+                  lineColor: colors.theme.blue.bright,
+                  lineWidth: 2,
+                  lineOpacity: 0.6,
+                }}
+              />
+            </MapLibreGL.ShapeSource>
+          )}
 
           {searchCenterGeoJSON && (
             <MapLibreGL.ShapeSource id="searchCenter" shape={searchCenterGeoJSON}>
               <MapLibreGL.CircleLayer
                 id="searchCenterLayer"
                 style={{
-                  circleRadius: 8,
+                  circleRadius: 6,
                   circleColor: colors.theme.blue.bright,
                   circleStrokeWidth: 2,
                   circleStrokeColor: '#FFFFFF',
-                  circleOpacity: 0.6,
+                  circleOpacity: 0.8,
                 }}
               />
             </MapLibreGL.ShapeSource>

@@ -1,16 +1,7 @@
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 
-// export const API_URL = process.env.EXPO_PUBLIC_API_URL!;
-
-// продакшен
-// export const API_URL = `https://grabit.localhost:8443/api/v1/mobile`;
-
-export const API_URL = `https://grabit.test/api/v1/mobile`;
-// export const API_URL = 'http://192.168.0.241/api/v1/mobile';;
-
-// обращение по adb reverse. теперь localhost на телефоне обращается к localhost пк
-// export const API_URL = 'http://localhost:8080/api/v1/mobile';
+export const API_URL = `https://grab-it.ru/api/v1/mobile`;
 
 export const api = axios.create({
   // withCredentials: true, пока не нужно
@@ -18,6 +9,8 @@ export const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  // повторяющиеся значения: rating=1&rating=2 (Go r.URL.Query()["rating"])
+  paramsSerializer: { indexes: null },
 });
 
 // перехватчик запросов для передачи токена
@@ -26,10 +19,7 @@ api.interceptors.request.use(async config => {
   if (token) {
     config.headers = config.headers ?? {};
     config.headers.Authorization = `Bearer ${token}`;
-    console.log('token', token);
   }
-  // @ts-expect-error sos
-  console.log('REQUEST:', config.baseURL + config.url);
   // console.log(config);
   return config;
 });

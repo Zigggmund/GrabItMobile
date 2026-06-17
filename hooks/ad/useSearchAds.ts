@@ -48,7 +48,7 @@ export const useSearchAds = (params: UseSearchAdsParams) => {
 
   const apiParams: SearchListingsRequestDto = {
     page,
-    // sort_by,
+    sort: params.sort_by,
     page_size: pageSize,
   };
   if (query) apiParams.query = query;

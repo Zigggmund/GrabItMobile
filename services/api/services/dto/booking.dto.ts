@@ -28,24 +28,27 @@ export interface BookingResponseDto {
   start_time: string;
   end_time: string;
   status: BookingStatus;
-  cancelled_by?: 'owner' | 'renter' | 'system';
+  cancelled_by: 'owner' | 'renter' | 'system' | null;
   total_price: number;
   renter_is_premium: boolean;
+  has_my_review: boolean;
   created_at: string;
   updated_at: string;
-  pending_extension?: BookingExtensionDto;
+  pending_extension: BookingExtensionDto | null;
 }
 
 export type GetBookingsResponseDto = PaginatedResponse<BookingResponseDto>;
 
 export interface BookingAdInfo {
   listing_id: string;
+  owner_id: string;
   title: string;
   price_per_hour: number;
-  address: string;
-  cover_url: string | null;
+  address: string | null;
+  status: string;
   avg_rating: number;
   review_count: number;
+  cover_url: string | null;
   owner_is_premium: boolean;
 }
 
@@ -81,4 +84,18 @@ export interface GetBookingsRequestDto {
   page?: number;
   page_size?: number;
   // day?: string; // TODO: filter by overlap with day (backend pending)
+}
+
+// ─── Calendar ─────────────────────────────────────────────────────────────────
+
+export interface CalendarDayDto {
+  date: string;              // "YYYY-MM-DD"
+  utilization: number | null; // 0–100 or null (non-working day)
+}
+
+export interface ListingCalendarResponseDto {
+  listing_id: string;
+  year: number;
+  month: number;
+  days: CalendarDayDto[];
 }

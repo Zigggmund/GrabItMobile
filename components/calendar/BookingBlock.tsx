@@ -16,6 +16,8 @@ interface Props {
   adId: string;
   bufferHours: number;
   rubPerHour: number;
+  availableFrom: string | null;
+  availableUntil: string | null;
 }
 
 const today = new Date().toISOString().split('T')[0];
@@ -29,7 +31,7 @@ function buildEndISO(endDate: string, endHour: number): string {
   return `${endDate}T${String(endHour).padStart(2, '0')}:00:00Z`;
 }
 
-export function BookingBlock({ adId, bufferHours, rubPerHour }: Props) {
+export function BookingBlock({ adId, bufferHours, rubPerHour, availableFrom, availableUntil }: Props) {
   const { navigate } = useHistory();
   const { colors } = useTheme();
   const { l } = useLanguage();
@@ -80,7 +82,7 @@ export function BookingBlock({ adId, bufferHours, rubPerHour }: Props) {
 
   const endMinHour =
     endDate === startDate && startHour !== null
-      ? startHour + bufferHours
+      ? startHour
       : undefined;
 
   let totalHours: number | null = null;
@@ -118,7 +120,8 @@ export function BookingBlock({ adId, bufferHours, rubPerHour }: Props) {
           </CustomText>
           <SlotCalendar
             adId={adId}
-            minDate={today}
+            minDate={availableFrom ?? today}
+            maxDate={availableUntil ?? undefined}
             mode="start"
             selected={{ date: startDate, hour: startHour }}
             onDateChange={handleStartDateChange}
@@ -136,6 +139,7 @@ export function BookingBlock({ adId, bufferHours, rubPerHour }: Props) {
               <SlotCalendar
                 adId={adId}
                 minDate={startDate}
+                maxDate={availableUntil ?? undefined}
                 mode="end"
                 selected={{ date: endDate, hour: endHour }}
                 onDateChange={handleEndDateChange}

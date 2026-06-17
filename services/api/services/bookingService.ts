@@ -12,10 +12,24 @@ import {
   GetBookingsRequestDto,
   GetBookingsResponseDto,
   GetOwnerBookingsResponseDto,
+  ListingCalendarResponseDto,
   RejectBookingDto,
 } from '@/services/api/services/dto/booking.dto';
 
 export class BookingService {
+  static async getCalendar(
+    adId: string,
+    year: number,
+    month: number,
+  ): Promise<ListingCalendarResponseDto> {
+    return unwrap(
+      await api.get<ApiResponse<ListingCalendarResponseDto>>(
+        `/rent/listings/${adId}/calendar`,
+        { params: { year, month } },
+      ),
+    );
+  }
+
   static async getSlots(adId: string, date: string): Promise<number[]> {
     const res = await unwrap(
       await api.get<ApiResponse<{ date: string; available_hours: number[] }>>(

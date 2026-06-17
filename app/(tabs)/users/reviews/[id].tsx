@@ -38,6 +38,7 @@ export default function UserReviews() {
     id,
     serverPage,
     sortBy,
+    rating !== null ? [rating] : undefined,
   );
 
   useEffect(() => {

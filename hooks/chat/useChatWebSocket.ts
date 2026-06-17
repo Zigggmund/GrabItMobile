@@ -104,6 +104,14 @@ export function useChatWebSocket({
     }
   }, []);
 
+  const sendMessage = useCallback((content: string) => {
+    if (wsRef.current?.readyState === WebSocket.OPEN) {
+      wsRef.current.send(JSON.stringify({ type: 'message', content }));
+      return true;
+    }
+    return false;
+  }, []);
+
   useEffect(() => {
     if (!enabled) return;
     unmountedRef.current = false;
@@ -117,5 +125,5 @@ export function useChatWebSocket({
     };
   }, [conversationId, enabled, connect]);
 
-  return { sendTyping };
+  return { sendTyping, sendMessage };
 }

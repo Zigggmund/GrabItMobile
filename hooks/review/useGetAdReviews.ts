@@ -17,14 +17,15 @@ const UNKNOWN_AUTHOR = {
   is_premium: false,
 };
 
-export const useGetAdReviews = (adId: string, page = 1, sortBy: SortingReviewsType = 'new') => {
+export const useGetAdReviews = (adId: string, page = 1, sortBy: SortingReviewsType = 'new', rating?: number[]) => {
   return useQuery<{ items: ReviewType[]; total: number }>({
-    queryKey: ['adReviews', adId, page, sortBy],
+    queryKey: ['adReviews', adId, page, sortBy, rating],
     queryFn: async () => {
       const res = await ReviewService.getAdReviews(adId, {
         page,
         page_size: PAGE_SIZE,
-        sort_by: sortBy,
+        sort: sortBy,
+        rating,
       });
       const items = await Promise.all(
         res.items.map(async dto => {

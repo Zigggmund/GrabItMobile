@@ -56,13 +56,15 @@ export function Chat({ index = 1, chat }: ChatProps) {
             >
               {chat.otherUsername}
             </CustomText>
-            <CustomText
-              style={{ color: colors.theme.grey.dark }}
-              highlight
-              className="text-12"
-            >
-              {dateFormat(chat.lastMessageAt)}
-            </CustomText>
+            { chat.lastMessageAt && (
+              <CustomText
+                style={{ color: colors.theme.grey.dark }}
+                highlight
+                className="text-12"
+              >
+                {dateFormat(chat.lastMessageAt)}
+              </CustomText>
+            )}
           </View>
           <CustomText
             style={{ color: colors.theme.blue.bright }}

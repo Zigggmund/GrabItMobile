@@ -74,7 +74,7 @@ export function BookingItem({
     (role === 'renter' &&
       (booking.status === 'pending' || booking.status === 'approved'));
   const showNoShow = role === 'landlord' && booking.status === 'active';
-  const showReview = booking.status === 'completed';
+  const showReview = booking.status === 'completed' && !booking.has_my_review;
 
   const reviewType =
     role === 'renter' ? 'renter_to_listing' : 'owner_to_renter';

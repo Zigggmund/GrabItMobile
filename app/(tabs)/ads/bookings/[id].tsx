@@ -3,6 +3,7 @@ import { ActivityIndicator, FlatList, View } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { useLocalSearchParams } from 'expo-router';
 
+import { useGetAd } from '@/hooks/ad/useGetAd';
 import { useApproveBooking } from '@/hooks/booking/useApproveBooking';
 import { useCancelBooking } from '@/hooks/booking/useCancelBooking';
 import { useGetAdBookings } from '@/hooks/booking/useGetAdBookings';
@@ -49,6 +50,7 @@ export default function AdBookingsPage() {
     serverPage,
     calendarDate ?? undefined,
   );
+  const { data: ad, isLoading: isLoadingAd, isError: isErrorAd } = useGetAd(id);
 
   const approve = useApproveBooking();
   const reject = useRejectBooking();
@@ -116,7 +118,14 @@ export default function AdBookingsPage() {
     [l],
   );
 
-  if (isError)
+  if (isLoadingAd)
+    return (
+      <ScreenContainer>
+        <ActivityIndicator />
+      </ScreenContainer>
+    );
+
+  if (isError || isErrorAd)
     return (
       <ScreenContainer>
         <ErrorMessage text={l.errorAPI} />
@@ -150,11 +159,20 @@ export default function AdBookingsPage() {
           <View className="gap-4 mb-4">
             <CustomText
               highlight
-              className="text-22 font-bold"
+              className="text-22 font-bold self-center"
               style={{ color: colors.theme.blue.primary }}
             >
               {l.listingBookings}
             </CustomText>
+            {ad && (
+              <CustomText
+                highlight
+                className="text-22 font-bold self-center"
+                style={{ color: colors.theme.black.primary }}
+              >
+                {ad.title}
+              </CustomText>
+            )}
 
             <Calendar
               markedDates={markedDates}

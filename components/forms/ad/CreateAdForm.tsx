@@ -2,6 +2,7 @@ import { TranslationKey } from '@/types/LanguageType';
 
 import { ComponentType, useEffect, useMemo, useState } from 'react';
 import { InteractionManager, View } from 'react-native';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { useForm } from '@/hooks/useForm';
 import { useHistory } from '@/hooks/useHistory';
@@ -71,6 +72,7 @@ export const CreateAdForm = () => {
   const { navigate } = useHistory();
   const form = useForm();
   const { colors } = useTheme();
+  const queryClient = useQueryClient();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -200,41 +202,16 @@ export const CreateAdForm = () => {
         break;
 
       case 'adDayTimeStep': {
-        const minHours = form.AdFormData.bufferHours ?? 1;
         form.AdFormData.weekDaysTime.forEach((weekDay, index) => {
           if (weekDay.length === 0 && form.AdFormData.weekDays[index]) {
             stepErrors.weekDaysTime = l.errorDayTimeNull;
           }
         });
-        const hasShortDayPeriod = form.AdFormData.weekDaysTime.some(
-          (weekDay, index) =>
-            form.AdFormData.weekDays[index] &&
-            weekDay.some(period => {
-              const startH = parseInt(period.startTime.split('-')[0]);
-              const endH = period.endTime === '24' ? 24 : parseInt(period.endTime.split('-')[0]);
-              return endH - startH < minHours;
-            }),
-        );
-        if (hasShortDayPeriod) {
-          stepErrors.weekDaysTime = l.errorTimePeriodMinInterval;
-        }
         break;
       }
 
-      case 'adExceptionsStep': {
-        const minHours = form.AdFormData.bufferHours ?? 1;
-        const hasShortExceptionPeriod = (form.AdFormData.exceptions ?? []).some(ex =>
-          ex.timings.some(period => {
-            const startH = parseInt(period.startTime.split('-')[0]);
-            const endH = period.endTime === '24' ? 24 : parseInt(period.endTime.split('-')[0]);
-            return endH - startH < minHours;
-          }),
-        );
-        if (hasShortExceptionPeriod) {
-          stepErrors.exceptions = l.errorTimePeriodMinInterval;
-        }
+      case 'adExceptionsStep':
         break;
-      }
     }
 
     setErrors(prev => ({ ...prev, [stepKey]: stepErrors }));
@@ -287,7 +264,7 @@ export const CreateAdForm = () => {
         description: data.description,
         category_id: parseInt(data.categoryId!),
         price_per_hour: data.cost!,
-        quantity: data.quantity ?? 1,
+        // quantity: data.quantity ?? 1,
         buffer_hours: data.bufferHours ?? undefined,
         lat: data.latitude ?? undefined,
         lon: data.longitude ?? undefined,
@@ -319,6 +296,7 @@ export const CreateAdForm = () => {
       );
 
       form.clear();
+      await queryClient.invalidateQueries({ queryKey: ['myAds'] });
       navigate('/(tabs)/ads/myAds', false);
     } catch {
       // global MutationCache.onError показывает тост
@@ -361,7 +339,7 @@ export const CreateAdForm = () => {
         <CurrentStepComponent errors={errors[CurrentStepKey] || {}} />
       </View>
 
-      <View className={'flex-row justify-between gap-2 pt-2'}>
+      <View className={'flex-row justify-between gap-16 pt-2'}>
         <CustomButton
           type={form.currentStep != 1 ? 'primary' : 'red'}
           text={form.currentStep != 1 ? l.btnBack : l.btnCancel}

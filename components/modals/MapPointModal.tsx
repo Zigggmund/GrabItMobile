@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   Modal,
   PermissionsAndroid,
@@ -7,18 +7,20 @@ import {
 } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSelector } from 'react-redux';
 import MapLibreGL from '@maplibre/maplibre-react-native';
 import { Feature, Point } from 'geojson';
 
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTheme } from '@/hooks/useTheme';
 
+import { cityCoordinates } from '@/constants/cityCoordinates';
+import { RootState } from '@/state/store';
+
 import { CustomButton } from '@/components/ui/button/CustomButton';
 import CustomInput from '@/components/ui/input/CustomInput';
 import { CustomText } from '@/components/ui/text/CustomText';
 
-// Москва — центр по умолчанию если геолокация недоступна
-const DEFAULT_CENTER: [number, number] = [37.618423, 55.751244];
 const DEFAULT_RADIUS_KM = 5;
 
 const EMPTY_MAP_STYLE = {
@@ -26,6 +28,21 @@ const EMPTY_MAP_STYLE = {
   sources: {},
   layers: [],
 };
+
+function makeCirclePolygon(lat: number, lon: number, radiusKm: number, steps = 64) {
+  const coords: [number, number][] = [];
+  for (let i = 0; i <= steps; i++) {
+    const angle = (i / steps) * 2 * Math.PI;
+    const dLon = (radiusKm / (111.32 * Math.cos((lat * Math.PI) / 180))) * Math.cos(angle);
+    const dLat = (radiusKm / 110.574) * Math.sin(angle);
+    coords.push([lon + dLon, lat + dLat]);
+  }
+  return {
+    type: 'Feature' as const,
+    geometry: { type: 'Polygon' as const, coordinates: [coords] },
+    properties: {},
+  };
+}
 
 interface MapPointModalProps {
   visible: boolean;
@@ -49,6 +66,8 @@ export const MapPointModal = ({
   const { l } = useLanguage();
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
+  const currentCity = useSelector((state: RootState) => state.city.currentCity);
+  const cityCenter = cityCoordinates[currentCity];
 
   // coords: [lat, lon]
   const [coords, setCoords] = useState<[number, number] | null>(
@@ -94,7 +113,10 @@ export const MapPointModal = ({
         pos => {
           setCoords([pos.coords.latitude, pos.coords.longitude]);
         },
-        err => console.warn('Geolocation error:', err),
+        err => {
+          console.warn('Geolocation error:', err);
+          if (cityCenter) setCoords([cityCenter.lat, cityCenter.lon]);
+        },
         { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
       );
     };
@@ -126,10 +148,17 @@ export const MapPointModal = ({
     onClose();
   };
 
-  // если точка выбрана — центрируемся на ней, иначе на Москве
+  const parsedRadius = parseFloat(radiusText.replace(',', '.'));
+  const currentRadius = isNaN(parsedRadius) || parsedRadius <= 0 ? DEFAULT_RADIUS_KM : parsedRadius;
+
+  const radiusGeoJSON = useMemo(() => {
+    if (!coords) return null;
+    return makeCirclePolygon(coords[0], coords[1], currentRadius);
+  }, [coords, currentRadius]);
+
   const cameraCenter: [number, number] = coords
-    ? [coords[1], coords[0]] // MapLibre: [lon, lat]
-    : DEFAULT_CENTER;
+    ? [coords[1], coords[0]]
+    : cityCenter ? [cityCenter.lon, cityCenter.lat] : [37.618423, 55.751244];
 
   return (
     <Modal visible={visible} animationType="slide" onRequestClose={onClose}>
@@ -177,6 +206,19 @@ export const MapPointModal = ({
           >
             <MapLibreGL.RasterLayer id="osmLayer" />
           </MapLibreGL.RasterSource>
+
+          {radiusGeoJSON && (
+            <MapLibreGL.ShapeSource id="radiusSource" shape={radiusGeoJSON}>
+              <MapLibreGL.FillLayer
+                id="radiusFill"
+                style={{ fillColor: colors.theme.blue.bright, fillOpacity: 0.15 }}
+              />
+              <MapLibreGL.LineLayer
+                id="radiusLine"
+                style={{ lineColor: colors.theme.blue.bright, lineWidth: 2, lineOpacity: 0.7 }}
+              />
+            </MapLibreGL.ShapeSource>
+          )}
 
           {coords && (
             <MapLibreGL.ShapeSource

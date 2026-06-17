@@ -5,7 +5,7 @@ export interface UserResponseDto {
   active_listings_count: number;
   avg_rating_as_owner: number | null;
   avg_rating_as_renter: number | null;
-  birth_date: string;
+  birth_date: string | null;
   created_at: string;
   email: string;
   first_name: string;
@@ -20,7 +20,7 @@ export interface UserResponseDto {
   username: string;
   is_premium: boolean;
   subscription_tier: string;
-  subscription_expires_at?: string;
+  subscription_expires_at: string | null;
 }
 
 export interface PublicUserResponseDto {

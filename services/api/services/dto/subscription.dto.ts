@@ -6,5 +6,5 @@ export interface ActivateSubscriptionDto {
 
 export interface SubscriptionResponseDto {
   subscription_tier: string;
-  subscription_expires_at: string;
+  subscription_expires_at: string | null;
 }

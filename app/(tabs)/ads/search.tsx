@@ -99,19 +99,33 @@ export default function Search() {
   );
 
   const currentCity = useSelector((state: RootState) => state.city.currentCity);
+  const cityCoords = cityCoordinates[currentCity];
 
   // Draft filters (UI state) - не вызывают API до "применить"
   const [draftFilters, setDraftFilters] = useState<DraftFilters>({
     category: null,
-
     minPriceText: '',
     maxPriceText: '',
-
-    location: null,
+    location: cityCoords
+      ? { lat: cityCoords.lat, lon: cityCoords.lon, radiusKm: DEFAULT_CITY_RADIUS_KM }
+      : null,
   });
 
   // Applied filters - уходят в backend
-  const [appliedFilters, setAppliedFilters] = useState<AppliedFilters>({});
+  const [appliedFilters, setAppliedFilters] = useState<AppliedFilters>(
+    cityCoords
+      ? { lat: cityCoords.lat, lon: cityCoords.lon, radiusKm: DEFAULT_CITY_RADIUS_KM }
+      : {},
+  );
+
+  // Синхронизируем гео-фильтр при загрузке сохранённого города (city загружается асинхронно из AsyncStorage)
+  useEffect(() => {
+    if (locationMode !== 'city' || !cityCoords) return;
+    const loc = { lat: cityCoords.lat, lon: cityCoords.lon, radiusKm: DEFAULT_CITY_RADIUS_KM };
+    setDraftFilters(prev => ({ ...prev, location: loc }));
+    setAppliedFilters(prev => ({ ...prev, lat: loc.lat, lon: loc.lon, radiusKm: loc.radiusKm }));
+    setPage(1);
+  }, [currentCity]);
 
   // const isSpace = selectedTag === 'space';
   // const displayMultiplier = isSpace ? 24 : 1;

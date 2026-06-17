@@ -11,7 +11,7 @@ export class ReviewService {
   // получение отзывов по объявлению
   static async getUserReviews(
     userId: string | number,
-    params?: { page?: number; page_size?: number; sort_by?: string },
+    params?: { page?: number; page_size?: number; sort?: string; rating?: number[] },
   ): Promise<GetReviewsResponseDto> {
     return unwrap(
       await api.get<ApiResponse<GetReviewsResponseDto>>(
@@ -36,7 +36,7 @@ export class ReviewService {
   // получение отзывов по объявлению
   static async getAdReviews(
     adId: string | number,
-    params?: { page?: number; page_size?: number; sort_by?: string },
+    params?: { page?: number; page_size?: number; sort?: string; rating?: number[] },
   ): Promise<GetReviewsResponseDto> {
     return unwrap(
       await api.get<ApiResponse<GetReviewsResponseDto>>(

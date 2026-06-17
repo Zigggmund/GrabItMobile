@@ -27,7 +27,7 @@ export const AdWeekDaysStep = ({
   };
 
   return (
-    <View className={'gap-2'}>
+    <View className={'gap-2 px-8'}>
       <FlatList
         keyExtractor={item => item}
         data={WEEKDAYS}

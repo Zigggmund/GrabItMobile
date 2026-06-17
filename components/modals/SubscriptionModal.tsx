@@ -51,7 +51,7 @@ export default function SubscriptionModal({ visible, onClose, currentTier, expir
       <View
         style={{
           flex: 1,
-          backgroundColor: colors.theme.grey.dark,
+          backgroundColor: 'rgba(0,0,0,0.5)',
           justifyContent: 'flex-end',
           paddingTop: insets.top,
           paddingBottom: insets.bottom,
@@ -79,7 +79,7 @@ export default function SubscriptionModal({ visible, onClose, currentTier, expir
           {isPremium && expiresAt && (
             <View
               className="rounded-xl px-4 py-3 items-center"
-              style={{ backgroundColor: colors.base.yellow.soft }}
+              style={{ backgroundColor: colors.theme.yellow.soft }}
             >
               <CustomText className="text-14" style={{ color: colors.theme.blue.bright }}>
                 {l.premiumActive}

@@ -6,7 +6,7 @@ export interface NotificationItemDto {
   data: Record<string, string> | null;
   is_read: boolean;
   created_at: string;
-  read_at?: string;
+  read_at: string | null;
 }
 
 export interface GetNotificationsResponseDto {

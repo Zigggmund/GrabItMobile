@@ -3,6 +3,13 @@ export type BookingEventType =
   | 'booking_confirmed'
   | 'booking_rejected'
   | 'booking_cancelled'
+  | 'booking_expired'
+  | 'booking_active'
+  | 'booking_completed'
+  | 'booking_no_show'
+  | 'booking_extension_requested'
+  | 'booking_extended'
+  | 'booking_extension_rejected'
   | '';
 
 export interface MessageEntity {

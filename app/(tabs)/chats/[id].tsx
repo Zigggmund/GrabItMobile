@@ -1,14 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Alert, FlatList, TouchableOpacity, View } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
-import { useQueryClient } from '@tanstack/react-query';
 
 import { useChatWebSocket } from '@/hooks/chat/useChatWebSocket';
 import { useDeleteMessage } from '@/hooks/chat/useDeleteMessage';
 import { useEditMessage } from '@/hooks/chat/useEditMessage';
+import { useGetConversations } from '@/hooks/chat/useGetConversations';
 import { useGetMessages } from '@/hooks/chat/useGetMessages';
 import { useMarkRead } from '@/hooks/chat/useMarkRead';
-import { useSendMessage } from '@/hooks/chat/useSendMessage';
 import { useMuteConversation } from '@/hooks/chat/useMuteConversation';
 import { useUnmuteConversation } from '@/hooks/chat/useUnmuteConversation';
 import { useBlockUser } from '@/hooks/chat/useBlockUser';
@@ -31,7 +30,7 @@ import { CustomText } from '@/components/ui/text/CustomText';
 import { FOOTER_HEIGHT } from '@/constants/sizes';
 import { icons } from '@/constants/icons';
 import { ChatService } from '@/services/api/services/chatService';
-import { ConversationEntity, MessageEntity } from '@/types/entities/ChatType';
+import { BookingEventType, MessageEntity } from '@/types/entities/ChatType';
 
 export default function ChatScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -40,7 +39,6 @@ export default function ChatScreen() {
   const { colors } = useTheme();
   const listRef = useRef<FlatList>(null);
   const { isKeyboardOpen, keyboardHeight } = useKeyboard();
-  const qc = useQueryClient();
 
   const [messages, setMessages] = useState<MessageEntity[]>([]);
   const [text, setText] = useState('');
@@ -59,7 +57,6 @@ export default function ChatScreen() {
   }, [initialData]);
 
   // Mutations
-  const { mutate: sendMsg } = useSendMessage(id);
   const { mutate: editMsg } = useEditMessage(id);
   const { mutate: deleteMsg } = useDeleteMessage(id);
   const { mutate: markRead } = useMarkRead(id);
@@ -68,11 +65,9 @@ export default function ChatScreen() {
   const { mutate: blockUser } = useBlockUser();
   const { mutate: unblockUser } = useUnblockUser();
 
-  // Conversation metadata from cache
-  const cachedConversations = qc.getQueryData<{ items: ConversationEntity[] }>(
-    ['conversations', 1, 20],
-  );
-  const conversation = cachedConversations?.items.find(c => c.id === id);
+  // Conversation metadata
+  const { data: conversationsData } = useGetConversations();
+  const conversation = conversationsData?.items.find(c => c.id === id);
 
   // Compute otherId for block/unblock calls
   const otherId = conversation
@@ -110,7 +105,8 @@ export default function ChatScreen() {
     }
   };
 
-  // Upsert: WS pushes both new messages and updates (edit/delete)
+  // Upsert: WS pushes both new messages and updates (edit/delete).
+  // Also replaces optimistic (temp_*) messages when real echo arrives.
   const upsertMessage = useCallback(
     (msg: MessageEntity) => {
       setMessages(prev => {
@@ -119,6 +115,17 @@ export default function ChatScreen() {
           const updated = [...prev];
           updated[idx] = msg;
           return updated;
+        }
+        // Replace matching optimistic placeholder from same sender
+        if (msg.senderId === user?.id) {
+          const tempIdx = prev.findIndex(
+            m => m.id.startsWith('temp_') && m.content === msg.content,
+          );
+          if (tempIdx >= 0) {
+            const updated = [...prev];
+            updated[tempIdx] = msg;
+            return updated;
+          }
         }
         return [...prev, msg];
       });
@@ -130,7 +137,7 @@ export default function ChatScreen() {
   );
 
   // WebSocket
-  useChatWebSocket({
+  const { sendMessage: wsSendMessage } = useChatWebSocket({
     conversationId: id,
     onMessage: upsertMessage,
     onReconnect: async lastId => {
@@ -200,7 +207,24 @@ export default function ChatScreen() {
       );
       setEditingMessage(null);
     } else {
-      sendMsg(content);
+      const ok = wsSendMessage(content);
+      // Optimistic placeholder: shown immediately, replaced when WS echo arrives
+      if (ok) {
+        const tempMsg: MessageEntity = {
+          id: `temp_${Date.now()}_${Math.random()}`,
+          conversationId: id,
+          senderId: user?.id ?? '',
+          isSystem: false,
+          eventType: '' as BookingEventType,
+          content,
+          referenceId: '',
+          isDeleted: false,
+          isEdited: false,
+          sentAt: new Date().toISOString(),
+          readAt: null,
+        };
+        setMessages(prev => [...prev, tempMsg]);
+      }
     }
   };
 

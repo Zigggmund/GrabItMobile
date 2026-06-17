@@ -10,6 +10,12 @@ export type BookingEventType =
 // ─── Nested last_message in conversation ─────────────────────────────────────
 // Comes from embedded proto struct serialized via encoding/json.
 // Fields with omitempty may be absent when zero value (false, "", 0).
+// Timestamps are Protobuf Timestamp objects {seconds, nanos}, NOT RFC3339 strings.
+
+export interface ProtoTimestamp {
+  seconds: number;
+  nanos: number;
+}
 
 export interface ConversationLastMessageDto {
   message_id: string;
@@ -21,7 +27,7 @@ export interface ConversationLastMessageDto {
   reference_id?: string;
   is_deleted?: boolean;
   is_edited?: boolean;
-  sent_at: string; // RFC3339
+  sent_at: ProtoTimestamp; // proto Timestamp — конвертировать через tsToISO
   read_at?: string; // RFC3339; omitted (not null) if message not read
 }
 
@@ -40,7 +46,7 @@ export interface ConversationDto {
   blocked_by_me?: boolean;
   blocked_by_them?: boolean;
   created_at: string;
-  last_message_at: string;
+  last_message_at: ProtoTimestamp | undefined; // proto Timestamp — конвертировать через tsToISO
   // enriched by BFF
   listing_cover_url: string;
   listing_deleted: boolean;
@@ -60,14 +66,14 @@ export interface MessageDto {
   conversation_id: string;
   sender_id: string;
   message_type: 0 | 1; // 0=text, 1=system
-  event_type: string; // omitempty in Go → may be ""
+  event_type: string | null; // null for regular messages, booking event string for system
   content: string;
-  reference_id: string; // omitempty in Go → may be ""
+  reference_id: string | null; // null for regular messages, booking_id for system
   is_deleted: boolean;
   is_edited: boolean;
   sent_at: string; // RFC3339
   read_at: string | null; // null = not read
-  // edited_at omitted (not needed for current UI)
+  edited_at: string | null;
 }
 
 export interface MessagesPageDto {
